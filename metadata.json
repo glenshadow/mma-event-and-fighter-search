@@ -1,0 +1,6 @@
+{
+  "name": "StandardMMA",
+  "description": "An interactive tracker and database query system for Mixed Martial Arts, allowing fans to search for events, fights, and fighters with full stats.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

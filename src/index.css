@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  color: #ffffff;
+}
+
+/* Custom scrollbars for a clean tech look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Custom classes for outcome colors and badges */
+.text-loss-color {
+  color: #ef4444 !important; /* red-500 for dark mode */
+}
+
+.bg-loss-badge {
+  background-color: rgba(239, 68, 68, 0.1) !important; /* red-500/10 for dark mode */
+}
+
+.border-loss-badge {
+  border-color: rgba(239, 68, 68, 0.2) !important; /* red-500/20 for dark mode */
+}
+
+.text-win-color {
+  color: #10b981 !important; /* emerald-500 for dark mode */
+}
+
+.text-other-color {
+  color: #cbd5e1 !important; /* slate-300 for dark mode */
+}
+
+.bg-other-badge {
+  background-color: rgba(255, 255, 255, 0.12) !important; /* lighter grey background for dark mode */
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.text-other-badge {
+  color: #cbd5e1 !important; /* readable light grey for dark mode */
+}
+
+/* Ensure placeholder text displays ellipsis when truncated on overflow */
+input::placeholder,
+input:focus::placeholder {
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Chrome, Safari, Opera */
+input::-webkit-input-placeholder,
+input:focus::-webkit-input-placeholder {
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Firefox */
+input::-moz-placeholder,
+input:focus::-moz-placeholder {
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* IE 10+ */
+input:-ms-input-placeholder,
+input:focus:-ms-input-placeholder {
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}

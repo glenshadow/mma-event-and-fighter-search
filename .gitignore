@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Exclude JSON data files but keep config files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!metadata.json
