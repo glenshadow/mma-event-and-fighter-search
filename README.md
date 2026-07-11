@@ -84,11 +84,11 @@ StandardMMA uses an offline-first static data model to achieve instantaneous lay
 
 ```mermaid
 graph TD
-    subgraph Data Processing Layer (Proprietary / Offline)
+    subgraph "Data Processing Layer (Proprietary / Offline)"
         R[Raw JSON Bout Scrapes /src/data/raw/*] -->|Parsed by compiler.ts| C[Optimized fighters.json & events-summary.json]
     end
 
-    subgraph Client Application Engine (StandardMMA React Tier)
+    subgraph "Client Application Engine (StandardMMA React Tier)"
         C -->|Static Compilation Import| App[App.tsx State Orchestrator]
         
         H[URL Hash Router] -->|#dashboard| D[DashboardInsights Component]
