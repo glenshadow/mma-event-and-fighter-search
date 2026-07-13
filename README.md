@@ -1,5 +1,7 @@
 # StandardMMA 🥋
 
+**Live Demo:** [https://examplesofmywork.com/standard-mma/](https://examplesofmywork.com/standard-mma/)
+
 StandardMMA is an interactive, professional-grade tracker and analytics platform for Mixed Martial Arts. Designed as a high-performance Combat Sports Intelligence System, it processes and visualizes fight statistics, fighter profiles, and event details to deliver an elegant, data-driven experience.
 
 ---

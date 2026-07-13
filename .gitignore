@@ -13,3 +13,8 @@ coverage/
 !package-lock.json
 !tsconfig.json
 !metadata.json
+
+# Exclude compilation and scraping utility scripts
+src/compiler.ts
+src/scrape-fighter-images.js
+
