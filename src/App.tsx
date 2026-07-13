@@ -345,9 +345,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans relative" id="standard-mma-application">
-      {/* Immersive Atmospheric Ambient Blur Glows */}
-      <div className="absolute top-[-100px] right-[-100px] w-[500px] h-[500px] bg-red-950/20 rounded-full blur-[140px] pointer-events-none z-0"></div>
-      <div className="absolute bottom-[-100px] left-[-100px] w-[500px] h-[500px] bg-blue-950/15 rounded-full blur-[140px] pointer-events-none z-0"></div>
 
       {/* Top Banner Header */}
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
