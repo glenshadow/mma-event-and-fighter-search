@@ -149,7 +149,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
       id={`event-detail-${eventSummary.id}`}
     >
       {/* Event Header Information */}
-      <div className="bg-black/30 p-6 border-b border-white/10 relative overflow-hidden">
+      <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden">
         <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
         <span className={`px-2.5 py-1 text-[9px] font-mono font-bold tracking-widest rounded uppercase inline-block mb-3 relative z-10 ${eventSummary.status.toLowerCase() === 'final' ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-red-500 text-white animate-pulse'}`}>
           {eventSummary.status.toUpperCase()} EVENT INDEX
@@ -184,7 +184,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
       </div>
 
       {/* Fights display section */}
-      <div className="flex-1 p-6 space-y-6 bg-black/10">
+      <div className="flex-1 p-3 sm:p-6 space-y-4 sm:space-y-6 bg-black/10">
         {errorStr ? (
           <div className="flex flex-col items-center justify-center py-12 text-red-500 font-mono text-center gap-3">
             <HelpCircle className="w-8 h-8 text-red-500" />
@@ -274,34 +274,37 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                         )}
 
                         {/* Matchup Duel display */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center relative">
+                        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 items-stretch relative">
                           
                           {/* Red Corner */}
                           {rFighter && (
                             <div 
                               onClick={(e) => { e.stopPropagation(); onSelectFighter(rFighter.fighterId); }}
-                              className="flex flex-col md:flex-row md:items-center gap-3 bg-red-650/10 hover:bg-red-650/15 p-2.5 rounded-xl border border-red-500/20 transition-colors cursor-pointer"
+                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-red-650/10 hover:bg-red-650/15 p-3 rounded-xl border border-red-500/20 hover:border-red-500/40 transition-all cursor-pointer h-full text-center sm:text-left"
                             >
-                              <div className="relative shrink-0">
-                                <CornerFighterBodyShot fighterId={rFighter.fighterId} name={rFighter.name} className="w-14 h-20" isFlipped={false} />
-                                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-red-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
-                                  R
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
+                                <div className="relative shrink-0 mx-auto sm:mx-0">
+                                  <CornerFighterBodyShot fighterId={rFighter.fighterId} name={rFighter.name} className="w-12 h-16 sm:w-14 sm:h-20" isFlipped={false} />
+                                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-red-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
+                                    R
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); onSelectFighter(rFighter.fighterId); }}
-                                  className="inline-flex items-center gap-1.5 font-black italic text-white hover:text-red-400 transition-colors cursor-pointer text-sm tracking-tight uppercase hover:underline text-left"
-                                >
-                                  {rFighter.name} <ArrowRight className="w-3 h-3 shrink-0" />
-                                </button>
-                                <div className="text-[10px] text-white/40 font-mono mt-0.5">
-                                  Scorecard: {rFighter.recordStr}
+                                <div className="min-w-0 flex-1">
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); onSelectFighter(rFighter.fighterId); }}
+                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-red-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
+                                  >
+                                    <span className="whitespace-normal break-words flex-1 text-left">{rFighter.name}</span>
+                                    <ArrowRight className="w-3 h-3 shrink-0 self-center" />
+                                  </button>
+                                  <div className="text-[9px] sm:text-[10px] text-white/40 font-mono mt-0.5 whitespace-normal break-all">
+                                    Scorecard: {rFighter.recordStr}
+                                  </div>
                                 </div>
                               </div>
                               {rFighter.outcome && rFighter.outcome !== 'Unknown' && (
-                                <span className={`px-2 py-0.5 rounded text-[9px] font-mono shrink-0 ${getOutcomeBadgeClass(rFighter.outcome)}`}>
-                                  {rFighter.outcome.toUpperCase()}
+                                <span className={`px-2 py-1 sm:py-0.5 rounded text-[8px] sm:text-[9px] font-mono shrink-0 uppercase tracking-widest text-center w-full sm:w-auto ${getOutcomeBadgeClass(rFighter.outcome)}`}>
+                                  {rFighter.outcome}
                                 </span>
                               )}
                             </div>
@@ -311,28 +314,31 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                           {bFighter && (
                             <div 
                               onClick={(e) => { e.stopPropagation(); onSelectFighter(bFighter.fighterId); }}
-                              className="flex flex-col md:flex-row md:items-center gap-3 bg-indigo-950/20 hover:bg-indigo-950/25 p-2.5 rounded-xl border border-indigo-500/20 transition-colors cursor-pointer"
+                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-indigo-950/20 hover:bg-indigo-950/25 p-3 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-all cursor-pointer h-full text-center sm:text-left"
                             >
-                              <div className="relative shrink-0">
-                                <CornerFighterBodyShot fighterId={bFighter.fighterId} name={bFighter.name} className="w-14 h-20" isFlipped={true} />
-                                <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-indigo-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
-                                  B
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
+                                <div className="relative shrink-0 mx-auto sm:mx-0">
+                                  <CornerFighterBodyShot fighterId={bFighter.fighterId} name={bFighter.name} className="w-12 h-16 sm:w-14 sm:h-20" isFlipped={true} />
+                                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-indigo-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
+                                    B
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); onSelectFighter(bFighter.fighterId); }}
-                                  className="inline-flex items-center gap-1.5 font-black italic text-white hover:text-indigo-400 transition-colors cursor-pointer text-sm tracking-tight uppercase hover:underline text-left"
-                                >
-                                  {bFighter.name} <ArrowRight className="w-3 h-3 shrink-0" />
-                                </button>
-                                <div className="text-[10px] text-white/40 font-mono mt-0.5">
-                                  Scorecard: {bFighter.recordStr}
+                                <div className="min-w-0 flex-1">
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); onSelectFighter(bFighter.fighterId); }}
+                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-indigo-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
+                                  >
+                                    <span className="whitespace-normal break-words flex-1 text-left">{bFighter.name}</span>
+                                    <ArrowRight className="w-3 h-3 shrink-0 self-center" />
+                                  </button>
+                                  <div className="text-[9px] sm:text-[10px] text-white/40 font-mono mt-0.5 whitespace-normal break-all">
+                                    Scorecard: {bFighter.recordStr}
+                                  </div>
                                 </div>
                               </div>
                               {bFighter.outcome && bFighter.outcome !== 'Unknown' && (
-                                <span className={`px-2 py-0.5 rounded text-[9px] font-mono shrink-0 ${getOutcomeBadgeClass(bFighter.outcome)}`}>
-                                  {bFighter.outcome.toUpperCase()}
+                                <span className={`px-2 py-1 sm:py-0.5 rounded text-[8px] sm:text-[9px] font-mono shrink-0 uppercase tracking-widest text-center w-full sm:w-auto ${getOutcomeBadgeClass(bFighter.outcome)}`}>
+                                  {bFighter.outcome}
                                 </span>
                               )}
                             </div>

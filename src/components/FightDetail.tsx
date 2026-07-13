@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { FighterProfile, FightHistoryItem } from '../types';
 import { 
   ArrowLeft, Trophy, Activity, Calendar, Ruler, Scale, 
-  MapPin, Clock, Zap, TrendingUp, Sparkles, AlertCircle 
+  MapPin, Clock, Zap, TrendingUp, Sparkles, AlertCircle, Crown
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
@@ -335,20 +335,20 @@ export default function FightDetail({ fighterAId, fighterBId, fightId, onBack, o
       id={`fight-detail-comparison-${fightId}`}
     >
       {/* Top Banner Action Panel */}
-      <div className="bg-black/40 px-6 py-4 border-b border-white/10 flex items-center justify-between relative z-10">
+      <div className="bg-black/40 px-3 sm:px-6 py-3.5 border-b border-white/10 flex items-center justify-between gap-3 relative z-10">
         <button 
           onClick={onBack}
-          className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shrink-0"
         >
-          <ArrowLeft className="w-4 h-4" /> {backLabel || 'Back to Profile'}
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {backLabel || 'Back to Profile'}
         </button>
-        <span className="text-[10px] text-white/40 font-mono uppercase tracking-widest font-bold">
-          Tactical Fight Detail & Stats Companion
+        <span className="text-[9px] sm:text-[10px] text-white/40 font-mono uppercase tracking-widest font-bold text-right shrink-0">
+          Stats Comparison
         </span>
       </div>
 
       {/* Hero VERSUS Section with Full-Body Shots */}
-      <div className="relative min-h-[360px] md:min-h-[440px] bg-gradient-to-b from-black/50 to-black/10 border-b border-white/5 overflow-hidden flex flex-col justify-end p-6 select-none">
+      <div className="relative min-h-[360px] md:min-h-[440px] bg-gradient-to-b from-black/50 to-black/10 border-b border-white/5 overflow-hidden flex flex-col justify-end p-4 sm:p-6 select-none">
         
         {/* Background Atmosphere Lights */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-red-650/15 rounded-full blur-3xl pointer-events-none"></div>
@@ -362,6 +362,14 @@ export default function FightDetail({ fighterAId, fighterBId, fightId, onBack, o
               <span className="text-[10px] font-mono text-red-500 font-black tracking-widest uppercase bg-red-950/40 border border-red-550/20 px-2.5 py-1 rounded">
                 {match.weightClass || 'UFC Weightclass'} Bout
               </span>
+              {match.accolades && match.accolades.some(acc => acc.Type === 'Belt') && (
+                <div className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500/20 to-yellow-600/20 border border-amber-500/30 px-3 py-1 rounded-full animate-pulse shrink-0">
+                  <Crown className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="text-[10px] font-mono text-amber-400 font-black uppercase tracking-wider">
+                    {match.accolades.find(acc => acc.Type === 'Belt')?.Name || "Championship Bout"}
+                  </span>
+                </div>
+              )}
               <h3 className="text-sm md:text-base font-black italic text-white uppercase tracking-tight">
                 {match.eventName}
               </h3>
@@ -391,63 +399,75 @@ export default function FightDetail({ fighterAId, fighterBId, fightId, onBack, o
           {/* Fighter A (Left Corner) */}
           <div className="flex flex-col items-center justify-end text-center h-full relative group">
             {bodyShotA ? (
-              <div className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-none relative mb-4">
+              <button 
+                onClick={() => onSelectFighter(fighterA.id)}
+                className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
+              >
                 <img 
                   src={bodyShotA} 
                   alt={fighterA.fullName} 
                   className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] filter brightness-105"
                   referrerPolicy="no-referrer"
                 />
-              </div>
+              </button>
             ) : (
-              <div className="h-32 md:h-44 w-32 md:h-44 rounded-full border border-white/15 bg-black/50 flex items-center justify-center text-4xl font-black font-mono text-white/30 uppercase mb-4 shadow-xl">
-                {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
-              </div>
-            )}
-            
-            <div className="space-y-1 z-20 pointer-events-auto bg-black/40 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px]">
-              <span className="text-[9px] text-red-500 font-mono font-black uppercase tracking-widest">RED CORNER</span>
               <button 
                 onClick={() => onSelectFighter(fighterA.id)}
-                className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase hover:text-red-400 cursor-pointer transition-colors tracking-tight text-center w-full truncate"
+                className="h-32 md:h-44 w-32 md:w-44 rounded-full border border-white/15 bg-black/50 hover:bg-white/5 hover:border-red-500/40 transition-all flex items-center justify-center text-4xl font-black font-mono text-white/30 uppercase mb-4 shadow-xl cursor-pointer focus:outline-none"
               >
-                {fighterA.fullName}
+                {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
               </button>
+            )}
+            
+            <button 
+              onClick={() => onSelectFighter(fighterA.id)}
+              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-red-500/30 group-hover:border-red-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+            >
+              <span className="text-[9px] text-red-500 font-mono font-black uppercase tracking-widest">RED CORNER</span>
+              <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
+                {fighterA.fullName}
+              </span>
               {fighterA.nickName && (
                 <span className="text-[10px] text-white/50 italic font-mono block uppercase truncate">&ldquo;{fighterA.nickName}&rdquo;</span>
               )}
-            </div>
+            </button>
           </div>
 
           {/* Fighter B (Blue Corner) */}
           <div className="flex flex-col items-center justify-end text-center h-full relative group">
             {bodyShotB ? (
-              <div className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-none relative mb-4">
+              <button 
+                onClick={() => onSelectFighter(fighterB.id)}
+                className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
+              >
                 <img 
                   src={bodyShotB} 
                   alt={fighterB.fullName} 
                   className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] scale-x-[-1] filter brightness-105"
                   referrerPolicy="no-referrer"
                 />
-              </div>
+              </button>
             ) : (
-              <div className="h-32 md:h-44 w-32 md:h-44 rounded-full border border-white/15 bg-black/50 flex items-center justify-center text-4xl font-black font-mono text-white/30 uppercase mb-4 shadow-xl">
-                {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
-              </div>
-            )}
-
-            <div className="space-y-1 z-20 pointer-events-auto bg-black/40 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px]">
-              <span className="text-[9px] text-indigo-400 font-mono font-black uppercase tracking-widest">BLUE CORNER</span>
               <button 
                 onClick={() => onSelectFighter(fighterB.id)}
-                className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase hover:text-indigo-400 cursor-pointer transition-colors tracking-tight text-center w-full truncate"
+                className="h-32 md:h-44 w-32 md:w-44 rounded-full border border-white/15 bg-black/50 hover:bg-white/5 hover:border-indigo-400/40 transition-all flex items-center justify-center text-4xl font-black font-mono text-white/30 uppercase mb-4 shadow-xl cursor-pointer focus:outline-none"
               >
-                {fighterB.fullName}
+                {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
               </button>
+            )}
+
+            <button 
+              onClick={() => onSelectFighter(fighterB.id)}
+              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-indigo-450/30 group-hover:border-indigo-450/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+            >
+              <span className="text-[9px] text-indigo-400 font-mono font-black uppercase tracking-widest">BLUE CORNER</span>
+              <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
+                {fighterB.fullName}
+              </span>
               {fighterB.nickName && (
                 <span className="text-[10px] text-white/50 italic font-mono block uppercase truncate">&ldquo;{fighterB.nickName}&rdquo;</span>
               )}
-            </div>
+            </button>
           </div>
 
         </div>
@@ -460,24 +480,33 @@ export default function FightDetail({ fighterAId, fighterBId, fightId, onBack, o
             <Trophy className="w-4 h-4 text-amber-500" /> Bout Outcome & Analytics
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+          <div className={`grid grid-cols-1 ${
+            match.accolades && match.accolades.some(acc => acc.Type === 'Belt') 
+              ? 'sm:grid-cols-2 md:grid-cols-4' 
+              : 'sm:grid-cols-3'
+          } gap-4 items-stretch`}>
             
             {/* Fighter A Outcome Card */}
-            <div className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center ${
-              (matchA?.outcome || '').toLowerCase() === 'win' 
-                ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400' 
-                : (matchA?.outcome || '').toLowerCase() === 'loss'
-                  ? 'bg-red-500/10 border-red-500/20 text-red-400'
-                  : 'bg-white/5 border-white/10 text-white/60'
-            }`}>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1">RED OUTCOME</span>
+            <button 
+              onClick={() => onSelectFighter(fighterA.id)}
+              className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center w-full transition-all duration-300 hover:scale-[1.03] cursor-pointer focus:outline-none order-2 md:order-1 ${
+                (matchA?.outcome || '').toLowerCase() === 'win' 
+                  ? 'bg-emerald-500/10 hover:bg-emerald-500/15 border-emerald-500/25 text-emerald-400 hover:border-emerald-500/40' 
+                  : (matchA?.outcome || '').toLowerCase() === 'loss'
+                    ? 'bg-red-500/10 hover:bg-red-500/15 border-red-500/20 text-red-400 hover:border-red-500/35'
+                    : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
+              }`}
+            >
+              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1 truncate max-w-full group-hover:text-white/60">
+                {fighterA.fullName}
+              </span>
               <span className="text-lg font-black italic uppercase">
                 {matchA?.outcome || 'OTHER'}
               </span>
-            </div>
+            </button>
 
             {/* Method / Round detail */}
-            <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center flex flex-col justify-center items-center">
+            <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center flex flex-col justify-center items-center order-3 md:order-2">
               <span className="text-xs font-black italic text-red-500 uppercase tracking-tight mb-1">
                 {match.method || 'Result'}
               </span>
@@ -489,25 +518,45 @@ export default function FightDetail({ fighterAId, fighterBId, fightId, onBack, o
             </div>
 
             {/* Fighter B Outcome Card */}
-            <div className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center ${
-              (matchB?.outcome || '').toLowerCase() === 'win' 
-                ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400' 
-                : (matchB?.outcome || '').toLowerCase() === 'loss'
-                  ? 'bg-red-500/10 border-red-500/20 text-red-400'
-                  : 'bg-white/5 border-white/10 text-white/60'
-            }`}>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1">BLUE OUTCOME</span>
+            <button 
+              onClick={() => onSelectFighter(fighterB.id)}
+              className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center w-full transition-all duration-300 hover:scale-[1.03] cursor-pointer focus:outline-none order-4 md:order-3 ${
+                (matchB?.outcome || '').toLowerCase() === 'win' 
+                  ? 'bg-emerald-500/10 hover:bg-emerald-500/15 border-emerald-500/25 text-emerald-400 hover:border-emerald-500/40' 
+                  : (matchB?.outcome || '').toLowerCase() === 'loss'
+                    ? 'bg-red-500/10 hover:bg-red-500/15 border-red-500/20 text-red-400 hover:border-red-500/35'
+                    : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
+              }`}
+            >
+              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1 truncate max-w-full group-hover:text-white/60">
+                {fighterB.fullName}
+              </span>
               <span className="text-lg font-black italic uppercase">
                 {matchB?.outcome || 'OTHER'}
               </span>
-            </div>
+            </button>
+
+            {/* Championship Belt Card */}
+            {match.accolades && match.accolades.some(acc => acc.Type === 'Belt') && (
+              <div className="bg-gradient-to-b from-amber-500/15 via-yellow-650/10 to-amber-500/5 border border-amber-500/30 rounded-xl p-4 flex flex-col items-center justify-center gap-1.5 text-center shadow-[0_0_20px_rgba(245,158,11,0.05)] order-1 md:order-4 h-full min-h-[90px]">
+                <Crown className="w-5 h-5 text-amber-400 shrink-0 animate-pulse" />
+                <div className="space-y-0.5">
+                  <span className="block text-[9px] text-amber-400 font-mono font-black uppercase tracking-widest leading-none">
+                    Championship Belt Bout
+                  </span>
+                  <span className="block font-black italic text-white text-xs sm:text-sm leading-tight uppercase tracking-tight max-w-full line-clamp-2">
+                    {match.accolades.find(acc => acc.Type === 'Belt')?.Name}
+                  </span>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
       )}
 
       {/* Numerical Stats & Physical specifications Comparison */}
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
         
         <div className="space-y-4">
           <h4 className="text-xs font-black italic text-white uppercase tracking-tight flex items-center gap-2">

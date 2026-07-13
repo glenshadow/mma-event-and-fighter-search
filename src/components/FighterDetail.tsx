@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { FighterProfile } from '../types';
-import { Award, Calendar, Globe, Layers, MapPin, Ruler, User, ExternalLink, ArrowRight, Activity } from 'lucide-react';
+import { Award, Calendar, Globe, Layers, MapPin, Ruler, User, ExternalLink, ArrowRight, Activity, Crown, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
+import CareerTrajectoryGraph from './CareerTrajectoryGraph';
 
 function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighterId: number; name: string; className?: string }) {
   const [error, setError] = useState(false);
+  const [evenFallbackFails, setEvenFallbackFails] = useState(false);
   const images = (fighterImages as any)[fighterId] || { headshot: null, bodyShot: null };
   
   const nameParts = name.trim().split(/\s+/);
@@ -13,22 +15,32 @@ function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighte
   const lastName = nameParts[nameParts.length - 1] || '';
   const initials = `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
 
-  if (images.headshot && !error) {
+  // Official UFC silhouette headshot as fallback
+  const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
+  const headshotUrl = images.headshot || defaultHeadshot;
+
+  if (evenFallbackFails) {
     return (
-      <img
-        src={images.headshot}
-        alt={name}
-        className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
-        onError={() => setError(true)}
-        referrerPolicy="no-referrer"
-      />
+      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-[10px] font-bold shadow-inner shrink-0`}>
+        {initials}
+      </div>
     );
   }
 
   return (
-    <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-[10px] font-bold shadow-inner shrink-0`}>
-      {initials}
-    </div>
+    <img
+      src={error ? defaultHeadshot : headshotUrl}
+      alt={name}
+      className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
+      onError={() => {
+        if (!error) {
+          setError(true);
+        } else {
+          setEvenFallbackFails(true);
+        }
+      }}
+      referrerPolicy="no-referrer"
+    />
   );
 }
 
@@ -149,7 +161,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
       id={`fighter-detail-${currentFighter.id}`}
     >
       {/* Top Header Card */}
-      <div className="bg-black/30 p-6 border-b border-white/10 relative overflow-hidden min-h-[160px] md:min-h-[180px]">
+      <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden min-h-[160px] md:min-h-[180px]">
         {/* Ambient red glow */}
         <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -214,37 +226,37 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
       </div>
 
       {/* Detail Stats / Bio section */}
-      <div className="flex-1 p-6 space-y-6 bg-black/10">
+      <div className="flex-1 p-3 sm:p-6 space-y-4 sm:space-y-6 bg-black/10">
         
         {/* Physical Stats Grid */}
-        <div className="bg-black/20 rounded-2xl border border-white/10 p-5">
+        <div className="bg-black/20 rounded-2xl border border-white/10 p-3 sm:p-5">
           <h3 className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4 flex items-center gap-1.5 font-bold">
             <Activity className="w-3.5 h-3.5 text-red-505" /> Professional athlete specifications
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+            <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
               <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">STANCE stance</span>
               <span className="text-[13px] font-black italic text-white uppercase mt-1 block">
                 {currentFighter.stance || 'Orthodox'}
               </span>
             </div>
 
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+            <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
               <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold font-mono">SPEC HEIGHT</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {formatHeight(currentFighter.height)}
               </span>
             </div>
 
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+            <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
               <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">SPEC REACH</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {currentFighter.reach ? `${currentFighter.reach}.0" (${Math.round(currentFighter.reach * 2.54)} CM)` : 'Unknown'}
               </span>
             </div>
 
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+            <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
               <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">COMBATIVE WEIGHT</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {currentFighter.weight ? `${currentFighter.weight} LBS (${Math.round(currentFighter.weight * 0.453)} KG)` : 'Unknown'}
@@ -266,7 +278,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
         {/* Biography Metadata Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Birth & Residence */}
-          <div className="bg-white/5 border border-white/10 p-5 rounded-2xl space-y-3.5">
+          <div className="bg-white/5 border border-white/10 p-3.5 sm:p-5 rounded-2xl space-y-3.5">
             <h4 className="text-[10px] text-white/40 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
               <Globe className="w-3.5 h-3.5 text-red-500" /> GEOGRAPHIC ROOTS
             </h4>
@@ -299,7 +311,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
           </div>
 
           {/* Age and DOB */}
-          <div className="bg-white/5 border border-white/10 p-5 rounded-2xl space-y-3.5">
+          <div className="bg-white/5 border border-white/10 p-3.5 sm:p-5 rounded-2xl space-y-3.5">
             <h4 className="text-[10px] text-white/40 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
               <Calendar className="w-3.5 h-3.5 text-red-500" /> ATHLETE CHRONICLE
             </h4>
@@ -320,6 +332,15 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
             </div>
           </div>
         </div>
+
+        {/* Career Trajectory Graph */}
+        {currentFighter.fightsParticipated && currentFighter.fightsParticipated.length > 0 && (
+          <CareerTrajectoryGraph 
+            fights={currentFighter.fightsParticipated} 
+            fighterName={currentFighter.fullName}
+            onSelectEvent={onSelectEvent}
+          />
+        )}
 
         {/* Fight History Section */}
         <div className="space-y-4">
@@ -384,29 +405,41 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                       style={{ backgroundColor: leftBorderColorRaw }}
                     />
                     {/* Left: Opponent Info & Headshot */}
-                    <div className="flex items-center gap-4 flex-1">
-                      {/* Outcome badge column */}
-                      <div className="flex flex-col items-center justify-center shrink-0 min-w-[75px] text-center">
-                        <span className={`inline-flex items-center justify-center w-full px-1 py-0.5 text-[10px] rounded-md tracking-wider font-extrabold text-center uppercase ${getOutcomeClass(fight.outcome)}`}>
-                          {fight.outcome ? fight.outcome.toUpperCase() : 'OTHER'}
-                        </span>
-                      </div>
+                    <div className="flex items-start sm:items-center gap-4 flex-1 min-w-0">
+                      {/* Avatar & Outcome column for mobile, row for desktop */}
+                      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 shrink-0 min-w-[75px] sm:min-w-[145px]">
+                        {/* Opponent Avatar */}
+                        <div className="order-1 sm:order-2 relative shrink-0">
+                          <OpponentHeadshot 
+                            fighterId={fight.opponentId} 
+                            name={fight.opponentName || 'Unknown'}
+                            className="w-14 h-14 sm:w-11 sm:h-11 md:w-13 md:h-13 border border-white/10 shadow-md rounded-full"
+                          />
+                        </div>
 
-                      {/* Opponent Avatar */}
-                      <div className="relative shrink-0">
-                        <OpponentHeadshot 
-                          fighterId={fight.opponentId} 
-                          name={fight.opponentName || 'Unknown'}
-                          className="w-11 h-11 md:w-13 md:h-13 border border-white/10 shadow-md rounded-full"
-                        />
+                        {/* Outcome badge column */}
+                        <div className="order-2 sm:order-1 flex flex-col items-center justify-center shrink-0 w-full sm:w-[75px] text-center">
+                          <span className={`inline-flex items-center justify-center w-full px-1.5 py-0.5 text-[10px] rounded-md tracking-wider font-extrabold text-center uppercase ${getOutcomeClass(fight.outcome)}`}>
+                            {fight.outcome ? fight.outcome.toUpperCase() : 'OTHER'}
+                          </span>
+                        </div>
                       </div>
 
                       {/* Fighter & Matchup Detail */}
-                      <div className="space-y-0.5">
+                      <div className="space-y-0.5 min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-[9px] text-white/40 font-mono uppercase tracking-widest font-semibold">Opponent</span>
                           <span className="text-white/20 font-mono">•</span>
                           <span className="text-white/50 font-mono text-[9px] font-bold uppercase tracking-wider">{fight.weightClass || 'UFC Bout'}</span>
+                          {fight.accolades && fight.accolades.some(acc => acc.Type === 'Belt') && (
+                            <>
+                              <span className="text-amber-500 font-mono">•</span>
+                              <span className="inline-flex items-center gap-1 text-amber-400 font-mono text-[9px] font-extrabold uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">
+                                <Crown className="w-3 h-3 text-amber-500 animate-pulse" />
+                                {fight.accolades.find(acc => acc.Type === 'Belt')?.Name || "Title Fight"}
+                              </span>
+                            </>
+                          )}
                         </div>
 
                         <div className="flex items-center">
@@ -416,12 +449,12 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                                 e.stopPropagation();
                                 fight.opponentId && onSelectFighter(fight.opponentId);
                               }}
-                              className="font-black italic text-white group-hover/timeline-card:text-red-450 hover:!text-red-300 text-sm md:text-base tracking-tight transition-colors cursor-pointer text-left uppercase"
+                              className="font-black italic text-white group-hover/timeline-card:text-red-450 hover:!text-red-300 text-sm md:text-base tracking-tight transition-colors cursor-pointer text-left uppercase truncate max-w-full"
                             >
                               {fight.opponentName}
                             </button>
                           ) : (
-                            <span className="font-black italic text-white/60 text-sm md:text-base uppercase">Unknown Opponent</span>
+                            <span className="font-black italic text-white/60 text-sm md:text-base uppercase truncate max-w-full">Unknown Opponent</span>
                           )}
                         </div>
 
@@ -431,15 +464,17 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                               e.stopPropagation();
                               onSelectEvent(fight.eventId);
                             }}
-                            className="text-[11px] text-white/40 hover:text-white transition-colors cursor-pointer font-mono flex items-center gap-1 hover:underline text-left uppercase tracking-tight"
+                            className="group/event-link text-[11px] text-white/50 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-all duration-200 cursor-pointer font-mono inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-left uppercase tracking-wider truncate max-w-full mt-1.5"
                           >
-                            {fight.eventName} 
+                            <span className="truncate text-white/70 group-hover/event-link:text-white">
+                              {fight.eventName}
+                            </span>
                             {fight.eventDate && (
-                              <span className="text-white/30 font-mono">
-                                &nbsp;({new Date(fight.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })})
+                              <span className="text-white/40 font-mono shrink-0 text-[10px]">
+                                ({new Date(fight.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })})
                               </span>
                             )}
-                            <ArrowRight className="w-3 h-3 shrink-0 text-red-500" />
+                            <ArrowRight className="w-3 h-3 shrink-0 text-red-500/70 transition-transform duration-200 group-hover/event-link:translate-x-0.5 group-hover/event-link:text-red-400" />
                           </button>
                         ) : (
                           <div className="text-[11px] text-white/30 font-mono uppercase">

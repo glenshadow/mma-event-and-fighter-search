@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { FighterProfile, EventSummary, StatsSummary } from '../types';
 import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import fighterImages from '../data/fighter-images.json';
 
 interface DashboardProps {
   fighters: FighterProfile[];
@@ -14,24 +15,38 @@ interface DashboardProps {
 
 function DashboardFighterHeadshot({ fighter, className = "w-10 h-10" }: { fighter: FighterProfile; className?: string }) {
   const [error, setError] = useState(false);
+  const [evenFallbackFails, setEvenFallbackFails] = useState(false);
   const initials = `${fighter.firstName?.[0] || ""}${fighter.lastName?.[0] || ""}`.toUpperCase();
 
-  if (fighter.headshot && !error) {
+  // Official UFC silhouette headshot as fallback
+  const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
+  
+  // Resolve from both fighter object and the master fighter-images list for ultimate robustness
+  const cachedHeadshot = (fighterImages as any)[fighter.id]?.headshot;
+  const headshotUrl = fighter.headshot || cachedHeadshot || defaultHeadshot;
+
+  if (evenFallbackFails) {
     return (
-      <img
-        src={fighter.headshot}
-        alt={fighter.fullName}
-        className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
-        onError={() => setError(true)}
-        referrerPolicy="no-referrer"
-      />
+      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-red-600 to-red-900 border border-white/10 text-white font-mono text-[10px] font-bold shadow-inner shrink-0`}>
+        {initials}
+      </div>
     );
   }
 
   return (
-    <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-red-600 to-red-900 border border-white/10 text-white font-mono text-[10px] font-bold shadow-inner shrink-0`}>
-      {initials}
-    </div>
+    <img
+      src={error ? defaultHeadshot : headshotUrl}
+      alt={fighter.fullName}
+      className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
+      onError={() => {
+        if (!error) {
+          setError(true);
+        } else {
+          setEvenFallbackFails(true);
+        }
+      }}
+      referrerPolicy="no-referrer"
+    />
   );
 }
 
@@ -129,9 +144,16 @@ const CHAMPIONS_DATA = [
 ];
 
 export default function DashboardInsights({ fighters, events, statsSummary, champions, onSelectFighter, onSelectEvent }: DashboardProps) {
+  const [visibleUpcomingCount, setVisibleUpcomingCount] = useState(4);
+  const [visibleChampionsCount, setVisibleChampionsCount] = useState(4);
+
   const actualChampions = useMemo(() => {
     return (champions && champions.length > 0) ? champions : CHAMPIONS_DATA;
   }, [champions]);
+
+  const displayedChampions = useMemo(() => {
+    return actualChampions.slice(0, visibleChampionsCount);
+  }, [actualChampions, visibleChampionsCount]);
 
   const upcomingEvents = useMemo(() => {
     return events
@@ -142,6 +164,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       });
   }, [events]);
+
+  const displayedUpcoming = useMemo(() => {
+    return upcomingEvents.slice(0, visibleUpcomingCount);
+  }, [upcomingEvents, visibleUpcomingCount]);
 
   const stats = useMemo(() => {
     if (!fighters.length) return null;
@@ -212,6 +238,8 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         .slice(0, 5);
     }
 
+    const totalFights = events.reduce((sum, e) => sum + (e.fightsCount || 0), 0);
+
     return {
       topWins,
       stanceList,
@@ -219,7 +247,8 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
       recentEventsYears,
       finishList,
       totalEvents: events.length,
-      totalFighters: fighters.length
+      totalFighters: fighters.length,
+      totalFights
     };
   }, [fighters, events, statsSummary]);
 
@@ -270,18 +299,14 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           <span className="text-[10px] tracking-widest text-amber-500 font-bold uppercase font-mono">UFC CHAMPIONSHIP ELITE</span>
         </div>
 
-        {/* Scrollable Container */}
-        <div className="relative group">
-          {/* Edge fade gradient mask overlays to look extra premium */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent scroll-smooth select-none">
-            {actualChampions.map((champ) => (
+        {/* Grid Container */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {displayedChampions.map((champ) => (
               <motion.div
                 key={champ.id}
                 onClick={() => onSelectFighter(champ.id)}
-                className={`relative shrink-0 w-72 h-44 rounded-2xl bg-gradient-to-b ${champ.theme} p-5 overflow-hidden shadow-xl cursor-pointer backdrop-blur-md transition-all flex flex-col justify-between`}
+                className={`relative w-full h-44 rounded-2xl bg-gradient-to-b ${champ.theme} p-5 overflow-hidden shadow-xl cursor-pointer backdrop-blur-md transition-all flex flex-col justify-between hover:scale-[1.02] hover:border-amber-500/30 duration-300`}
               >
                 {/* Gold ambient background glow */}
                 <div className="absolute -right-12 -bottom-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -341,6 +366,17 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               </motion.div>
             ))}
           </div>
+
+          {actualChampions.length > visibleChampionsCount && (
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => setVisibleChampionsCount(prev => prev + 4)}
+                className="flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 hover:border-amber-500/30 border border-white/10 rounded-xl text-xs text-amber-500 hover:text-amber-400 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shadow-lg hover:shadow-amber-500/5 active:scale-95 focus:outline-none"
+              >
+                Load More Champions ({actualChampions.length - visibleChampionsCount} Remaining)
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
 
@@ -361,8 +397,8 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
             <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">LIVE FIGHT SCHEDULER</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {upcomingEvents.map((event) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {displayedUpcoming.map((event) => {
               const eventDate = event.date ? new Date(event.date) : null;
               const formattedDate = eventDate
                 ? eventDate.toLocaleDateString('en-US', {
@@ -410,11 +446,22 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               );
             })}
           </div>
+
+          {upcomingEvents.length > visibleUpcomingCount && (
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={() => setVisibleUpcomingCount(prev => prev + 4)}
+                className="flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 hover:border-red-500/30 border border-white/10 rounded-xl text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shadow-lg hover:shadow-red-500/5 active:scale-95 focus:outline-none"
+              >
+                Load More Events ({upcomingEvents.length - visibleUpcomingCount} Remaining)
+              </button>
+            </div>
+          )}
         </motion.div>
       )}
 
       {/* Overview Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -460,7 +507,28 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
+          transition={{ duration: 0.3, delay: 0.08 }}
+          onClick={() => { window.location.hash = 'events?e_sort=date&e_dir=asc'; }}
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
+          id="stat-fights-card"
+        >
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-650/5 rounded-full blur-xl pointer-events-none"></div>
+          <div>
+            <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block font-bold">Total Fights Logged</span>
+            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-red-500 transition-colors">
+              {stats.totalFights.toLocaleString()}
+            </span>
+            <span className="text-[10px] text-white/30 font-mono">ALL-TIME BOUTS ANALYZED</span>
+          </div>
+          <div className="bg-red-600/10 p-3 rounded-xl border border-red-500/20">
+            <Trophy className="w-6 h-6 text-red-500" />
+          </div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.12 }}
           onClick={() => { window.location.hash = 'events?e_sort=date&e_dir=asc'; }}
           className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
           id="stat-era-card"
@@ -482,23 +550,23 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
       {/* Leaderboards and breakdowns */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Wins Leaderboard */}
+        {/* Most Experienced Fighters */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden"
-          id="wins-leaderboard"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl"
+          id="experience-breakdown"
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-red-500" />
-              <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Career Wins</h3>
+              <ListCollapse className="w-5 h-5 text-red-500" />
+              <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Indexed Fights</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">HALL OF FAME</span>
+            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">EXPERIENCE DEPTH</span>
           </div>
           <div className="space-y-4">
-            {stats.topWins.map((fighter, i) => (
+            {stats.mostExperienced.map((fighter, i) => (
               <div 
                 key={fighter.id} 
                 onClick={() => onSelectFighter(fighter.id)}
@@ -513,17 +581,17 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                     <div className="font-black italic text-white group-hover:text-red-550 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
                     </div>
-                    <div className="text-[10px] text-white/45 font-mono uppercase tracking-wide truncate">
-                      {fighter.nickName ? `"${fighter.nickName}"` : 'Bio Link Details'}
+                    <div className="text-[10px] text-white/40 font-mono flex items-center gap-1.5 capitalize truncate">
+                      {fighter.stance || 'Orthodox'} • {fighter.weight ? `${fighter.weight} lbs` : 'Welterweight'}
                     </div>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="font-mono text-[10px] sm:text-xs font-bold bg-white/10 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-white/15 whitespace-nowrap">
-                    {fighter.record.wins} WINS
+                    {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} FIGHTS
                   </span>
-                  <div className="text-[9px] text-white/40 font-mono mt-1">
-                    ({fighter.record.wins}-{fighter.record.losses}-{fighter.record.draws})
+                  <div className="text-[9px] text-white/45 font-mono mt-1">
+                    ({fighter.record.wins}W - {fighter.record.losses}L)
                   </div>
                 </div>
               </div>
@@ -590,7 +658,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 </div>
                 <div className="text-right">
                   <div className="font-mono text-base font-black italic text-red-500">
-                    {st.percentage}%
+                     {st.percentage}%
                   </div>
                   <div className="text-[10px] text-white/40 font-mono">
                     {st.count.toLocaleString()} Fighters
@@ -601,23 +669,23 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           </div>
         </motion.div>
 
-        {/* Most Experienced Fighters */}
+        {/* Wins Leaderboard */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.15 }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl"
-          id="experience-breakdown"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden"
+          id="wins-leaderboard"
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <ListCollapse className="w-5 h-5 text-red-500" />
-              <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Indexed Fights</h3>
+              <Trophy className="w-5 h-5 text-red-500" />
+              <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Career Wins</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono font-mono">EXPERIENCE DEPTH</span>
+            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">HALL OF FAME</span>
           </div>
           <div className="space-y-4">
-            {stats.mostExperienced.map((fighter, i) => (
+            {stats.topWins.map((fighter, i) => (
               <div 
                 key={fighter.id} 
                 onClick={() => onSelectFighter(fighter.id)}
@@ -632,17 +700,17 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                     <div className="font-black italic text-white group-hover:text-red-550 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
                     </div>
-                    <div className="text-[10px] text-white/40 font-mono flex items-center gap-1.5 capitalize truncate">
-                      {fighter.stance || 'Orthodox'} • {fighter.weight ? `${fighter.weight} lbs` : 'Welterweight'}
+                    <div className="text-[10px] text-white/45 font-mono uppercase tracking-wide truncate">
+                      {fighter.nickName ? `"${fighter.nickName}"` : 'Bio Link Details'}
                     </div>
                   </div>
                 </div>
                 <div className="text-right shrink-0">
                   <span className="font-mono text-[10px] sm:text-xs font-bold bg-white/10 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md border border-white/15 whitespace-nowrap">
-                    {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} FIGHTS
+                    {fighter.record.wins} WINS
                   </span>
-                  <div className="text-[9px] text-white/45 font-mono mt-1">
-                    ({fighter.record.wins}W - {fighter.record.losses}L)
+                  <div className="text-[9px] text-white/40 font-mono mt-1">
+                    ({fighter.record.wins}-{fighter.record.losses}-{fighter.record.draws})
                   </div>
                 </div>
               </div>

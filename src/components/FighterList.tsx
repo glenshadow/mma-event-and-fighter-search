@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { FighterProfile } from '../types';
 import { Search, SlidersHorizontal, Trophy, Award, Trash2, ChevronDown, X } from 'lucide-react';
 import { motion } from 'motion/react';
+import fighterImages from '../data/fighter-images.json';
 
 interface FighterListProps {
   fighters: FighterProfile[];
@@ -26,24 +27,38 @@ const WEIGHT_DIVISIONS = [
 
 function FighterHeadshot({ fighter, className = "w-9 h-9" }: { fighter: FighterProfile; className?: string }) {
   const [error, setError] = useState(false);
+  const [evenFallbackFails, setEvenFallbackFails] = useState(false);
   const initials = `${fighter.firstName?.[0] || ""}${fighter.lastName?.[0] || ""}`.toUpperCase();
 
-  if (fighter.headshot && !error) {
+  // Official UFC silhouette headshot as fallback
+  const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
+  
+  // Resolve from both fighter object and the master fighter-images list for ultimate robustness
+  const cachedHeadshot = (fighterImages as any)[fighter.id]?.headshot;
+  const headshotUrl = fighter.headshot || cachedHeadshot || defaultHeadshot;
+
+  if (evenFallbackFails) {
     return (
-      <img
-        src={fighter.headshot}
-        alt={fighter.fullName}
-        className={`${className} rounded-full object-cover border border-white/10 bg-black/40`}
-        onError={() => setError(true)}
-        referrerPolicy="no-referrer"
-      />
+      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-[10px] font-bold shadow-inner shrink-0`}>
+        {initials}
+      </div>
     );
   }
 
   return (
-    <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-[10px] font-bold shadow-inner shrink-0`}>
-      {initials}
-    </div>
+    <img
+      src={error ? defaultHeadshot : headshotUrl}
+      alt={fighter.fullName}
+      className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
+      onError={() => {
+        if (!error) {
+          setError(true);
+        } else {
+          setEvenFallbackFails(true);
+        }
+      }}
+      referrerPolicy="no-referrer"
+    />
   );
 }
 

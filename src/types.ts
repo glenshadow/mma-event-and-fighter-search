@@ -61,6 +61,7 @@ export interface FightHistoryItem {
   method: string;
   endingRound: number | null;
   endingTime: string | null;
+  accolades?: Accolade[];
 }
 
 export interface FighterProfile {

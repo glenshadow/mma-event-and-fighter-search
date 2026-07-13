@@ -413,7 +413,7 @@ export default function App() {
       </header>
 
       {/* Main Viewport Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 z-10 relative">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-6 z-10 relative">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <motion.div 
