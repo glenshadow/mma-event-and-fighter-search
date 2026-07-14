@@ -15,7 +15,7 @@ function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighte
   const lastName = nameParts[nameParts.length - 1] || '';
   const initials = `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
 
-  // Official UFC silhouette headshot as fallback
+  // Official silhouette headshot as fallback
   const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
   const headshotUrl = images.headshot || defaultHeadshot;
 
@@ -291,7 +291,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                   <span className="text-xs font-bold text-white/80 uppercase">
                     {currentFighter.born?.city ? `${currentFighter.born.city}, ` : ''}
                     {currentFighter.born?.state ? `${currentFighter.born.state}, ` : ''}
-                    {currentFighter.born?.country || 'UFC Record'}
+                    {currentFighter.born?.country || 'MMA Record'}
                   </span>
                 </div>
               </div>
@@ -303,7 +303,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                   <span className="text-xs font-bold text-white/80 uppercase">
                     {currentFighter.fightingOutOf?.city ? `${currentFighter.fightingOutOf.city}, ` : ''}
                     {currentFighter.fightingOutOf?.state ? `${currentFighter.fightingOutOf.state}, ` : ''}
-                    {currentFighter.fightingOutOf?.country || 'UFC Training camp'}
+                    {currentFighter.fightingOutOf?.country || 'Training Camp'}
                   </span>
                 </div>
               </div>
@@ -320,7 +320,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
               <div>
                 <span className="text-[9px] text-white/40 font-mono block font-bold uppercase font-mono">SPECIFIED AGE</span>
                 <span className="text-sm font-black italic text-white uppercase">
-                  {currentFighter.age ? `${currentFighter.age} YEARS OLD` : 'UFC Record'}
+                  {currentFighter.age ? `${currentFighter.age} YEARS OLD` : 'MMA Record'}
                 </span>
               </div>
               <div>
@@ -430,7 +430,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-[9px] text-white/40 font-mono uppercase tracking-widest font-semibold">Opponent</span>
                           <span className="text-white/20 font-mono">•</span>
-                          <span className="text-white/50 font-mono text-[9px] font-bold uppercase tracking-wider">{fight.weightClass || 'UFC Bout'}</span>
+                          <span className="text-white/50 font-mono text-[9px] font-bold uppercase tracking-wider">{fight.weightClass || 'MMA Bout'}</span>
                           {fight.accolades && fight.accolades.some(acc => acc.Type === 'Belt') && (
                             <>
                               <span className="text-amber-500 font-mono">•</span>

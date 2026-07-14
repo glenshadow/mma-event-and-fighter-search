@@ -12,7 +12,7 @@ interface FighterListProps {
 
 const STANCES = ['Orthodox', 'Southpaw', 'Switch', 'Open Stance'];
 
-// Standard UFC Weight division approximations
+// Standard Weight division approximations
 const WEIGHT_DIVISIONS = [
   { name: 'Strawweight (≤115)', min: 0, max: 115 },
   { name: 'Flyweight (116–125)', min: 116, max: 125 },
@@ -30,7 +30,7 @@ function FighterHeadshot({ fighter, className = "w-9 h-9" }: { fighter: FighterP
   const [evenFallbackFails, setEvenFallbackFails] = useState(false);
   const initials = `${fighter.firstName?.[0] || ""}${fighter.lastName?.[0] || ""}`.toUpperCase();
 
-  // Official UFC silhouette headshot as fallback
+  // Official silhouette headshot as fallback
   const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
   
   // Resolve from both fighter object and the master fighter-images list for ultimate robustness
@@ -545,7 +545,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                       Height {sortBy === 'height' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors text-right" onClick={() => handleHeaderClick('fights')}>
-                      Historic Bouts {sortBy === 'fights' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+                      Bouts {sortBy === 'fights' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
                   </tr>
                 </thead>
@@ -635,7 +635,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         {fighter.record.wins} - {fighter.record.losses} - {fighter.record.draws}
                       </div>
                       <div className="text-[10px] text-white/40 font-mono mt-0.5 uppercase tracking-tighter">
-                        {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} historic bouts
+                        {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} bouts
                       </div>
                     </div>
                   </div>

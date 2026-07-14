@@ -10,7 +10,7 @@ interface EventListProps {
 }
 
 const ERAS = [
-  { name: 'UFC Pioneer Era (1993-2000)', startYear: 1993, endYear: 2000 },
+  { name: 'Pioneer Era (1993-2000)', startYear: 1993, endYear: 2000 },
   { name: 'Zuffa Boom Era (2001-2010)', startYear: 2001, endYear: 2010 },
   { name: 'Fox Network Era (2011-2018)', startYear: 2011, endYear: 2018 },
   { name: 'ESPN & Modern Era (2019-Present)', startYear: 2019, endYear: 2027 }

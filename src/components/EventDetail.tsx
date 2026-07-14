@@ -9,16 +9,14 @@ interface EventDetailProps {
   onSelectFighter: (id: number) => void;
 }
 
-function CornerFighterBodyShot({ 
+function CornerFighterHeadshot({ 
   fighterId, 
   name, 
-  className = "w-14 h-20", 
-  isFlipped = false 
+  className = "w-12 h-12 sm:w-14 sm:h-14" 
 }: { 
   fighterId: number; 
   name: string; 
   className?: string; 
-  isFlipped?: boolean;
 }) {
   const [error, setError] = useState(false);
   const images = (fighterImages as any)[fighterId] || { headshot: null, bodyShot: null };
@@ -28,16 +26,15 @@ function CornerFighterBodyShot({
   const lastName = nameParts[nameParts.length - 1] || '';
   const initials = `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
 
-  const activeImage = images.bodyShot || images.headshot;
+  const activeImage = images.headshot || images.bodyShot;
 
   if (activeImage && !error) {
-    const isBodyShot = !!images.bodyShot;
     return (
-      <div className={`${className} rounded-lg overflow-hidden border border-white/10 bg-black/40 flex items-end justify-center shrink-0 relative`}>
+      <div className={`${className} rounded-full overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center shrink-0 relative`}>
         <img
           src={activeImage}
           alt={name}
-          className={`h-full w-full ${isBodyShot ? 'object-contain object-bottom' : 'object-cover'} ${isFlipped ? 'scale-x-[-1]' : ''}`}
+          className="h-full w-full object-cover object-center"
           onError={() => setError(true)}
           referrerPolicy="no-referrer"
         />
@@ -46,7 +43,7 @@ function CornerFighterBodyShot({
   }
 
   return (
-    <div className={`${className} rounded-lg flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-xs font-bold shadow-inner shrink-0`}>
+    <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-xs font-bold shadow-inner shrink-0`}>
       {initials}
     </div>
   );
@@ -284,7 +281,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div className="relative shrink-0 mx-auto sm:mx-0">
-                                  <CornerFighterBodyShot fighterId={rFighter.fighterId} name={rFighter.name} className="w-12 h-16 sm:w-14 sm:h-20" isFlipped={false} />
+                                  <CornerFighterHeadshot fighterId={rFighter.fighterId} name={rFighter.name} className="w-12 h-12 sm:w-14 sm:h-14" />
                                   <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-red-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
                                     R
                                   </div>
@@ -318,7 +315,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div className="relative shrink-0 mx-auto sm:mx-0">
-                                  <CornerFighterBodyShot fighterId={bFighter.fighterId} name={bFighter.name} className="w-12 h-16 sm:w-14 sm:h-20" isFlipped={true} />
+                                  <CornerFighterHeadshot fighterId={bFighter.fighterId} name={bFighter.name} className="w-12 h-12 sm:w-14 sm:h-14" />
                                   <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-indigo-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
                                     B
                                   </div>

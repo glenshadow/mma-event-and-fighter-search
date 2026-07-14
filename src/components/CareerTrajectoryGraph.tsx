@@ -81,7 +81,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
       outcome: 'Debut Preparation',
       opponentName: 'Career Start',
       opponentId: 0,
-      eventName: 'UFC Debut Preparation',
+      eventName: 'Debut Preparation',
       eventDate: sortedFights[0]?.eventDate 
         ? new Date(new Date(sortedFights[0].eventDate).getTime() - 30 * 24 * 60 * 60 * 1000).toISOString()
         : null,
@@ -344,16 +344,16 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
             );
           })}
 
-          {/* Dotted Peak Guideline */}
+          {/* Dotted Peak Guideline (Horizontal line at peak height) */}
           {peakPoint && peakIndex >= 0 && (
             <g>
               <line
-                x1={getCoords(peakIndex, peakPoint.score).x}
-                y1={paddingTop}
-                x2={getCoords(peakIndex, peakPoint.score).x}
-                y2={paddingTop + chartHeight}
+                x1={paddingLeft}
+                y1={getCoords(peakIndex, peakPoint.score).y}
+                x2={dimensions.width - paddingRight}
+                y2={getCoords(peakIndex, peakPoint.score).y}
                 stroke="#f59e0b"
-                strokeOpacity={0.3}
+                strokeOpacity={0.35}
                 strokeDasharray="3, 3"
                 strokeWidth={1}
               />
@@ -517,7 +517,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
                 </span>
               ) : activeIndex === 1 ? (
                 <span className="font-mono text-[9px] uppercase bg-red-500/15 text-red-400 px-2 py-0.5 rounded border border-red-500/25 font-bold shrink-0">
-                  UFC Octagon Debut
+                  Octagon Debut
                 </span>
               ) : (
                 <span className="font-mono text-[9px] uppercase bg-white/5 text-white/50 px-2 py-0.5 rounded border border-white/10 font-bold shrink-0">

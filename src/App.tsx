@@ -348,7 +348,7 @@ export default function App() {
 
       {/* Top Banner Header */}
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Logo & title */}
           <div 
@@ -356,8 +356,12 @@ export default function App() {
             className="flex items-center gap-3 cursor-pointer hover:opacity-90 select-none transition-all"
             title="Go to Dashboard"
           >
-            <div className="w-9 h-9 bg-red-650 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0 shadow-lg shadow-red-950/40">
-              <HandFist className="w-5 h-5 text-white animate-pulse" />
+            <div className="relative flex items-center justify-center shrink-0">
+              {/* Perfectly centered ambient red glow */}
+              <div className="absolute w-6 h-6 bg-red-600/40 rounded-full blur-md animate-pulse pointer-events-none"></div>
+              <div className="relative w-9 h-9 bg-black/60 border border-white/15 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0">
+                <HandFist className="w-5 h-5 text-white animate-pulse" />
+              </div>
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tighter italic text-white flex items-center gap-1">
@@ -370,23 +374,23 @@ export default function App() {
           </div>
 
           {/* Desktop Tab Selector and Indicators */}
-          <div className="flex flex-wrap items-center gap-4">
-            <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl">
+          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+            <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-full md:w-auto justify-between md:justify-start">
               <button
                 onClick={() => { window.location.hash = ''; }}
-                className={`px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <Trophy className="w-3.5 h-3.5" /> Dashboard
               </button>
               <button
                 onClick={() => { window.location.hash = 'fighters'; }}
-                className={`px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <Users className="w-3.5 h-3.5" /> Fighters
               </button>
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className={`px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <CalendarDays className="w-3.5 h-3.5" /> Events
               </button>
@@ -413,7 +417,7 @@ export default function App() {
       </header>
 
       {/* Main Viewport Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-4 md:px-6 py-4 md:py-6 z-10 relative">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 py-4 md:py-6 z-10 relative">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <motion.div 
@@ -557,6 +561,7 @@ export default function App() {
                       : 'Back to Profile'
                 }
                 onSelectFighter={handleSelectFighterFromAnywhere}
+                onSelectEvent={handleSelectEventFromAnywhere}
               />
             </motion.div>
           )}
@@ -565,7 +570,7 @@ export default function App() {
 
       {/* Immersive Footer status bar info */}
       <footer className="bg-black/80 backdrop-blur-md border-t border-white/10 z-10 text-white/50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex gap-6 flex-wrap justify-center md:justify-start">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
