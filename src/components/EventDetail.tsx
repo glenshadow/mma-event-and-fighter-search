@@ -3,6 +3,8 @@ import { EventSummary, EventDetailed, WorkerFight } from '../types';
 import { Calendar, MapPin, Award, Scale, HelpCircle, User, ArrowRight, Crown } from 'lucide-react';
 import { motion } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
+import ImageWithLoader from './ImageWithLoader';
+import { isLegitimateFighterImage } from '../utils/image-validator';
 
 interface EventDetailProps {
   eventSummary: EventSummary;
@@ -26,19 +28,20 @@ function CornerFighterHeadshot({
   const lastName = nameParts[nameParts.length - 1] || '';
   const initials = `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
 
-  const activeImage = images.headshot || images.bodyShot;
+  const activeImageCandidate = images.headshot || images.bodyShot;
+  const activeImage = activeImageCandidate && isLegitimateFighterImage(activeImageCandidate, firstName, lastName, name)
+    ? activeImageCandidate 
+    : null;
 
   if (activeImage && !error) {
     return (
-      <div className={`${className} rounded-full overflow-hidden border border-white/10 bg-black/40 flex items-center justify-center shrink-0 relative`}>
-        <img
-          src={activeImage}
-          alt={name}
-          className="h-full w-full object-cover object-center"
-          onError={() => setError(true)}
-          referrerPolicy="no-referrer"
-        />
-      </div>
+      <ImageWithLoader
+        src={activeImage}
+        alt={name}
+        className={`${className} rounded-full overflow-hidden border border-white/10 bg-black/40 shrink-0`}
+        onError={() => setError(true)}
+        referrerPolicy="no-referrer"
+      />
     );
   }
 
@@ -120,11 +123,11 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
   const getOutcomeBadgeClass = (outcome: string) => {
     switch (outcome.toLowerCase().trim()) {
       case 'win':
-        return 'bg-green-500/10 text-green-450 border border-green-500/20 font-black italic';
+        return 'bg-green-500/15 text-white border border-green-500/35 font-black italic';
       case 'loss':
-        return 'bg-red-650/15 text-red-500 border border-red-500/30 font-black italic';
+        return 'bg-red-500/15 text-white border border-red-500/35 font-black italic';
       case 'draw':
-        return 'bg-amber-500/10 text-amber-400 border border-amber-500/20 font-black italic';
+        return 'bg-amber-500/15 text-white border border-amber-500/35 font-black italic';
       default:
         return 'bg-white/5 text-white/60 border border-white/10';
     }
@@ -146,9 +149,9 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
       id={`event-detail-${eventSummary.id}`}
     >
       {/* Event Header Information */}
-      <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden">
+      <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden min-h-[140px] flex flex-col justify-center">
         <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
-        <span className={`px-2.5 py-1 text-[9px] font-mono font-bold tracking-widest rounded uppercase inline-block mb-3 relative z-10 ${eventSummary.status.toLowerCase() === 'final' ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-red-500 text-white animate-pulse'}`}>
+        <span className={`px-2.5 py-1 text-[9px] font-mono font-bold tracking-widest rounded uppercase inline-block mb-3 relative z-10 self-start ${eventSummary.status.toLowerCase() === 'final' ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-red-500 text-white animate-pulse'}`}>
           {eventSummary.status.toUpperCase()} EVENT INDEX
         </span>
 
@@ -156,10 +159,15 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
           {eventSummary.name}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-white/60 relative z-10 font-mono">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-red-500 shrink-0" />
-            <span className="uppercase tracking-tight">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-white/60 relative z-10 font-mono">
+          <div className="flex flex-col gap-0.5 col-span-1 justify-center">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-red-500 shrink-0" />
+              <span className="uppercase tracking-tight font-bold text-white/80">
+                DATE & TIME
+              </span>
+            </div>
+            <span className="text-[10px] text-white/40 uppercase tracking-wider pl-6 block">
               {eventSummary.date ? new Date(eventSummary.date).toLocaleDateString(undefined, {
                 weekday: 'long',
                 year: 'numeric',
@@ -171,10 +179,17 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-red-500 shrink-0" />
-            <span className="truncate uppercase tracking-tight">
-              {eventSummary.location}
+          <div className="flex flex-col gap-0.5 col-span-1 justify-center">
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-amber-500 shrink-0" />
+              <span className="truncate uppercase tracking-tight font-bold text-white/80">
+                {detailed?.location?.venue ? detailed.location.venue : (eventSummary.venue || 'VENUE TBA')}
+              </span>
+            </div>
+            <span className="text-[10px] text-white/40 uppercase tracking-wider pl-6 block">
+              {detailed?.location
+                ? `${detailed.location.city}, ${detailed.location.state ? detailed.location.state + ', ' : ''}${detailed.location.country}`
+                : eventSummary.location}
             </span>
           </div>
         </div>
@@ -273,23 +288,20 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                         {/* Matchup Duel display */}
                         <div className="grid grid-cols-2 gap-2.5 sm:gap-4 items-stretch relative">
                           
-                          {/* Red Corner */}
+                          {/* Fighter A */}
                           {rFighter && (
                             <div 
                               onClick={(e) => { e.stopPropagation(); onSelectFighter(rFighter.fighterId); }}
-                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-red-650/10 hover:bg-red-650/15 p-3 rounded-xl border border-red-500/20 hover:border-red-500/40 transition-all cursor-pointer h-full text-center sm:text-left"
+                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/[0.02] hover:bg-white/[0.05] p-3 rounded-xl border border-white/10 hover:border-white/20 transition-all cursor-pointer h-full text-center sm:text-left"
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div className="relative shrink-0 mx-auto sm:mx-0">
                                   <CornerFighterHeadshot fighterId={rFighter.fighterId} name={rFighter.name} className="w-12 h-12 sm:w-14 sm:h-14" />
-                                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-red-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
-                                    R
-                                  </div>
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <button 
                                     onClick={(e) => { e.stopPropagation(); onSelectFighter(rFighter.fighterId); }}
-                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-red-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
+                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-amber-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
                                   >
                                     <span className="whitespace-normal break-words flex-1 text-left">{rFighter.name}</span>
                                     <ArrowRight className="w-3 h-3 shrink-0 self-center" />
@@ -307,23 +319,20 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                             </div>
                           )}
 
-                          {/* Blue Corner */}
+                          {/* Fighter B */}
                           {bFighter && (
                             <div 
                               onClick={(e) => { e.stopPropagation(); onSelectFighter(bFighter.fighterId); }}
-                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-indigo-950/20 hover:bg-indigo-950/25 p-3 rounded-xl border border-indigo-500/20 hover:border-indigo-500/40 transition-all cursor-pointer h-full text-center sm:text-left"
+                              className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/[0.02] hover:bg-white/[0.05] p-3 rounded-xl border border-white/10 hover:border-white/20 transition-all cursor-pointer h-full text-center sm:text-left"
                             >
                               <div className="flex flex-col sm:flex-row sm:items-center gap-3 min-w-0 w-full sm:w-auto">
                                 <div className="relative shrink-0 mx-auto sm:mx-0">
                                   <CornerFighterHeadshot fighterId={bFighter.fighterId} name={bFighter.name} className="w-12 h-12 sm:w-14 sm:h-14" />
-                                  <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-indigo-600 border border-white/10 flex items-center justify-center text-[9px] font-black italic text-white select-none z-10">
-                                    B
-                                  </div>
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <button 
                                     onClick={(e) => { e.stopPropagation(); onSelectFighter(bFighter.fighterId); }}
-                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-indigo-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
+                                    className="inline-flex items-center gap-1 font-black italic text-white hover:text-amber-400 transition-colors cursor-pointer text-xs sm:text-sm tracking-tight uppercase hover:underline text-left leading-tight w-full"
                                   >
                                     <span className="whitespace-normal break-words flex-1 text-left">{bFighter.name}</span>
                                     <ArrowRight className="w-3 h-3 shrink-0 self-center" />

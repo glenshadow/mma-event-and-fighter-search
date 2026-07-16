@@ -1,8 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FighterProfile } from '../types';
-import { Search, SlidersHorizontal, Trophy, Award, Trash2, ChevronDown, X } from 'lucide-react';
+import { Search, SlidersHorizontal, Trophy, Award, Trash2, ChevronDown, X, ArrowUpNarrowWide, ArrowDownNarrowWide } from 'lucide-react';
 import { motion } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
+import ImageWithLoader from './ImageWithLoader';
+import { getFighterHeadshotUrl } from '../utils/image-validator';
 
 interface FighterListProps {
   fighters: FighterProfile[];
@@ -33,9 +35,9 @@ function FighterHeadshot({ fighter, className = "w-9 h-9" }: { fighter: FighterP
   // Official silhouette headshot as fallback
   const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
   
-  // Resolve from both fighter object and the master fighter-images list for ultimate robustness
-  const cachedHeadshot = (fighterImages as any)[fighter.id]?.headshot;
-  const headshotUrl = fighter.headshot || cachedHeadshot || defaultHeadshot;
+  // Resolve from both fighter object and the master fighter-images list for ultimate robustness, validating to filter out mismatches
+  const validatedHeadshot = getFighterHeadshotUrl(fighter);
+  const headshotUrl = validatedHeadshot || defaultHeadshot;
 
   if (evenFallbackFails) {
     return (
@@ -46,7 +48,7 @@ function FighterHeadshot({ fighter, className = "w-9 h-9" }: { fighter: FighterP
   }
 
   return (
-    <img
+    <ImageWithLoader
       src={error ? defaultHeadshot : headshotUrl}
       alt={fighter.fullName}
       className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
@@ -391,70 +393,92 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
 
           <div className="flex items-center gap-1.5 relative sm:self-auto self-start">
             <span className="text-white/40 font-mono">Sort:</span>
-            <div className="relative">
-              <button 
-                type="button"
-                onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[125px] text-left relative"
-              >
-                <span>
-                  {(() => {
-                    const found = [
-                      { value: 'default', label: 'Default' },
-                      { value: 'wins', label: 'Most Wins' },
-                      { value: 'losses', label: 'Most Losses' },
-                      { value: 'draws', label: 'Most Draws' },
-                      { value: 'fights', label: 'Most Experienced' },
-                      { value: 'winrate', label: 'Win Rate' },
-                      { value: 'stance', label: 'Stance' },
-                      { value: 'name', label: 'Alphabetical' },
-                      { value: 'age', label: 'Age' },
-                      { value: 'weight', label: 'Weight' },
-                      { value: 'height', label: 'Height' }
-                    ].find(o => o.value === sortBy);
-                    return found ? found.label : 'Default';
-                  })()}
-                </span>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
-              </button>
+            <div className="flex items-center gap-1.5">
+              <div className="relative">
+                <button 
+                  type="button"
+                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[125px] text-left relative"
+                >
+                  <span>
+                    {(() => {
+                      const found = [
+                        { value: 'default', label: 'Default' },
+                        { value: 'wins', label: 'Most Wins' },
+                        { value: 'losses', label: 'Most Losses' },
+                        { value: 'draws', label: 'Most Draws' },
+                        { value: 'fights', label: 'Most Experienced' },
+                        { value: 'winrate', label: 'Win Rate' },
+                        { value: 'stance', label: 'Stance' },
+                        { value: 'name', label: 'Alphabetical' },
+                        { value: 'age', label: 'Age' },
+                        { value: 'weight', label: 'Weight' },
+                        { value: 'height', label: 'Height' }
+                      ].find(o => o.value === sortBy);
+                      return found ? found.label : 'Default';
+                    })()}
+                  </span>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                </button>
 
-              {isSortOpen && (
-                <>
-                  <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsSortOpen(false)} />
-                  <div className="absolute right-0 mt-1 w-44 bg-zinc-950 border border-white/10 rounded-xl shadow-2xl py-1.5 z-50 font-mono text-[11px] max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    {[
-                      { value: 'default', label: 'Default' },
-                      { value: 'wins', label: 'Most Wins' },
-                      { value: 'losses', label: 'Most Losses' },
-                      { value: 'draws', label: 'Most Draws' },
-                      { value: 'fights', label: 'Most Experienced' },
-                      { value: 'winrate', label: 'Win Rate' },
-                      { value: 'stance', label: 'Stance' },
-                      { value: 'name', label: 'Alphabetical' },
-                      { value: 'age', label: 'Age' },
-                      { value: 'weight', label: 'Weight' },
-                      { value: 'height', label: 'Height' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => {
-                          setSortBy(opt.value as any);
-                          if (opt.value === 'default') {
-                            setSortDirection('default');
-                          } else {
-                            setSortDirection('desc');
-                          }
-                          setIsSortOpen(false);
-                        }}
-                        className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${sortBy === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
-                      >
-                        <span>{opt.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
+                {isSortOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsSortOpen(false)} />
+                    <div className="absolute right-0 mt-1 w-44 bg-zinc-950 border border-white/10 rounded-xl shadow-2xl py-1.5 z-50 font-mono text-[11px] max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                      {[
+                        { value: 'default', label: 'Default' },
+                        { value: 'wins', label: 'Most Wins' },
+                        { value: 'losses', label: 'Most Losses' },
+                        { value: 'draws', label: 'Most Draws' },
+                        { value: 'fights', label: 'Most Experienced' },
+                        { value: 'winrate', label: 'Win Rate' },
+                        { value: 'stance', label: 'Stance' },
+                        { value: 'name', label: 'Alphabetical' },
+                        { value: 'age', label: 'Age' },
+                        { value: 'weight', label: 'Weight' },
+                        { value: 'height', label: 'Height' }
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => {
+                            setSortBy(opt.value as any);
+                            if (opt.value === 'default') {
+                              setSortDirection('default');
+                            } else {
+                              setSortDirection('desc');
+                            }
+                            setIsSortOpen(false);
+                          }}
+                          className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${sortBy === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
+                        >
+                          <span>{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const nextDir = sortDirection === 'asc' ? 'desc' : 'asc';
+                  if (sortBy === 'default') {
+                    setSortBy('name');
+                  }
+                  setSortDirection(nextDir);
+                }}
+                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-red-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
+                title={sortDirection === 'asc' ? "Ascending Order" : "Descending Order"}
+                aria-label={sortDirection === 'asc' ? "Sort ascending" : "Sort descending"}
+              >
+                {sortDirection === 'asc' ? (
+                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                ) : (
+                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                )}
+              </button>
             </div>
           </div>
         </div>

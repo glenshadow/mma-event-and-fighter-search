@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { EventSummary } from '../types';
-import { Search, SlidersHorizontal, CalendarDays, FilterX, Clock, ChevronDown, X } from 'lucide-react';
+import { EventSummary, EventDetailed } from '../types';
+import { Search, SlidersHorizontal, CalendarDays, FilterX, Clock, ChevronDown, X, ArrowUpNarrowWide, ArrowDownNarrowWide } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface EventListProps {
@@ -64,7 +64,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
     return null;
   });
 
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'location' | 'fights' | 'id' | 'status' | 'default'>(() => {
+  const [sortBy, setSortBy] = useState<'name' | 'date' | 'venue' | 'location' | 'fights' | 'id' | 'status' | 'default'>(() => {
     const searchParams = new URLSearchParams(window.location.search);
     let val = searchParams.get('e_sort');
     if (!val) {
@@ -158,7 +158,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
     setVisibleCount(40);
   };
 
-  const handleHeaderClick = (field: 'name' | 'date' | 'location' | 'fights' | 'id' | 'status') => {
+  const handleHeaderClick = (field: 'name' | 'date' | 'venue' | 'location' | 'fights' | 'id' | 'status') => {
     if (sortBy !== field) {
       setSortBy(field);
       setSortDirection('asc');
@@ -248,6 +248,11 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
           valB = b.fightsCount;
           break;
 
+        case 'venue':
+          valA = a.venue || '';
+          valB = b.venue || '';
+          break;
+
         case 'location':
           valA = a.location || '';
           valB = b.location || '';
@@ -299,7 +304,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/40" />
           <input 
             type="text" 
-            placeholder="Search events, venues, card cities..." 
+            placeholder="Search events..." 
             value={searchQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
             className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-red-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/40 outline-none font-mono transition-colors"
@@ -340,59 +345,75 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
 
           <div className="flex items-center gap-1.5 relative sm:self-auto self-start">
             <span className="text-white/40 font-mono">Order:</span>
-            <div className="relative">
-              <button 
-                type="button"
-                onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[130px] text-left relative"
-              >
-                <span>
-                  {(() => {
-                    const found = [
-                      { value: 'default', label: 'Default' },
-                      { value: 'reverse-chronological', label: 'Newest First' },
-                      { value: 'chronological', label: 'Oldest First' },
-                      { value: 'fights', label: 'Bout Count' },
-                      { value: 'name', label: 'Card Name (A-Z)' },
-                      { value: 'location', label: 'Venue / Location' },
-                      { value: 'id', label: 'Event ID' },
-                      { value: 'status', label: 'Status' }
-                    ].find(o => o.value === getSelectValue());
-                    return found ? found.label : 'Default';
-                  })()}
-                </span>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
-              </button>
+            <div className="flex items-center gap-1.5">
+              <div className="relative">
+                <button 
+                  type="button"
+                  onClick={() => setIsSortOpen(!isSortOpen)}
+                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[130px] text-left relative"
+                >
+                  <span>
+                    {(() => {
+                      const found = [
+                        { value: 'default', label: 'Default' },
+                        { value: 'reverse-chronological', label: 'Newest First' },
+                        { value: 'chronological', label: 'Oldest First' },
+                        { value: 'fights', label: 'Bout Count' },
+                        { value: 'name', label: 'Card Name (A-Z)' },
+                        { value: 'venue', label: 'Venue' },
+                        { value: 'location', label: 'Location' },
+                        { value: 'status', label: 'Status' }
+                      ].find(o => o.value === getSelectValue());
+                      return found ? found.label : 'Default';
+                    })()}
+                  </span>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                </button>
 
-              {isSortOpen && (
-                <>
-                  <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsSortOpen(false)} />
-                  <div className="absolute right-0 mt-1 w-44 bg-zinc-950 border border-white/10 rounded-xl shadow-2xl py-1.5 z-50 font-mono text-[11px] max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    {[
-                      { value: 'default', label: 'Default' },
-                      { value: 'reverse-chronological', label: 'Newest First' },
-                      { value: 'chronological', label: 'Oldest First' },
-                      { value: 'fights', label: 'Bout Count' },
-                      { value: 'name', label: 'Card Name (A-Z)' },
-                      { value: 'location', label: 'Venue / Location' },
-                      { value: 'id', label: 'Event ID' },
-                      { value: 'status', label: 'Status' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.value}
-                        type="button"
-                        onClick={() => {
-                          handleSelectChange(opt.value);
-                          setIsSortOpen(false);
-                        }}
-                        className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${getSelectValue() === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
-                      >
-                        <span>{opt.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
+                {isSortOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40 cursor-default" onClick={() => setIsSortOpen(false)} />
+                    <div className="absolute right-0 mt-1 w-44 bg-zinc-950 border border-white/10 rounded-xl shadow-2xl py-1.5 z-50 font-mono text-[11px] max-h-[85vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                      {[
+                        { value: 'default', label: 'Default' },
+                        { value: 'reverse-chronological', label: 'Newest First' },
+                        { value: 'chronological', label: 'Oldest First' },
+                        { value: 'fights', label: 'Bout Count' },
+                        { value: 'name', label: 'Card Name (A-Z)' },
+                        { value: 'venue', label: 'Venue' },
+                        { value: 'location', label: 'Location' },
+                        { value: 'status', label: 'Status' }
+                      ].map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => {
+                            handleSelectChange(opt.value);
+                            setIsSortOpen(false);
+                          }}
+                          className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${getSelectValue() === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
+                        >
+                          <span>{opt.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-red-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
+                title={sortDirection === 'asc' ? "Ascending Order" : "Descending Order"}
+                aria-label={sortDirection === 'asc' ? "Sort ascending" : "Sort descending"}
+              >
+                {sortDirection === 'asc' ? (
+                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                ) : (
+                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -464,8 +485,11 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('date')}>
                       Date {sortBy === 'date' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
+                    <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('venue')}>
+                      Venue {sortBy === 'venue' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+                    </th>
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('location')}>
-                      Venue / Location {sortBy === 'location' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+                      Location {sortBy === 'location' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('status')}>
                       Status {sortBy === 'status' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
@@ -483,6 +507,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                       month: 'short',
                       day: 'numeric'
                     }) : 'TBA';
+                    const venueName = e.venue;
                     return (
                       <tr 
                         key={e.id}
@@ -494,6 +519,13 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                         </td>
                         <td className="py-3.5 px-4 font-mono text-white/80">
                           {formattedDate}
+                        </td>
+                        <td className="py-3.5 px-4 text-white/90 font-medium">
+                          {venueName && venueName !== 'Venue TBA' && venueName !== 'N/A' ? (
+                            venueName
+                          ) : (
+                            <span className="text-white/30 italic">Venue TBA</span>
+                          )}
                         </td>
                         <td className="py-3.5 px-4 text-white/60">
                           {e.location || 'N/A'}
@@ -524,6 +556,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                   month: 'short',
                   day: 'numeric'
                 }) : 'TBA';
+                const venueName = e.venue;
                 
                 return (
                   <div 
@@ -536,10 +569,15 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                         {e.name}
                       </div>
                       
-                      <div className="flex items-center gap-2 mt-1.5 text-[11px] font-mono text-white/40 uppercase tracking-tight">
-                        <span>{formattedDate}</span>
-                        <span>•</span>
-                        <span className="truncate">{e.location || 'Stad. Venue'}</span>
+                      <div className="flex flex-col gap-1 mt-1.5 text-[11px] font-mono text-white/40 uppercase tracking-tight">
+                        <div className="flex items-center gap-2">
+                          <span>{formattedDate}</span>
+                          <span>•</span>
+                          <span className="text-red-400 font-bold truncate max-w-[150px]">
+                            {venueName && venueName !== 'Venue TBA' && venueName !== 'N/A' ? venueName : 'Venue TBA'}
+                          </span>
+                        </div>
+                        <span className="truncate text-[10px] text-white/30 lowercase first-letter:uppercase">{e.location || 'N/A'}</span>
                       </div>
                     </div>
 

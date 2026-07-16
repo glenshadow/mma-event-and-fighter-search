@@ -7,6 +7,8 @@ import {
 import { motion } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
 import DualTrajectoryGraph from './DualTrajectoryGraph';
+import ImageWithLoader from './ImageWithLoader';
+import { getFighterHeadshotUrl, getFighterBodyShotUrl } from '../utils/image-validator';
 
 interface FightDetailProps {
   fighterAId: number;
@@ -83,24 +85,82 @@ export default function FightDetail({
     async function loadFighters() {
       setLoading(true);
       setErrorStr(null);
+      
+      let loadedA: FighterProfile | null = null;
+      let loadedB: FighterProfile | null = null;
+      
       try {
-        const [fA, fB] = await Promise.all([
-          fetchFighterDetail(fighterAId),
-          fetchFighterDetail(fighterBId)
-        ]);
-
+        loadedA = await fetchFighterDetail(fighterAId);
+      } catch (err) {
+        console.warn(`Could not fetch details for fighter A (${fighterAId}):`, err);
+      }
+      
+      try {
+        loadedB = await fetchFighterDetail(fighterBId);
+      } catch (err) {
+        console.warn(`Could not fetch details for fighter B (${fighterBId}):`, err);
+      }
+      
+      // If BOTH failed to load, then we really cannot show anything
+      if (!loadedA && !loadedB) {
         if (isMounted) {
-          setFighterA(fA);
-          setFighterB(fB);
-        }
-      } catch (err: any) {
-        if (isMounted) {
-          setErrorStr(err.message || 'Failed to initialize fighter profiles for comparison.');
-        }
-      } finally {
-        if (isMounted) {
+          setErrorStr(`Fighter profiles for comparison (IDs: ${fighterAId}, ${fighterBId}) could not be loaded.`);
           setLoading(false);
         }
+        return;
+      }
+      
+      // Now, if one failed to load, construct a fallback using the other's fight history
+      if (!loadedA && loadedB) {
+        const matchingFight = loadedB.fightsParticipated?.find(f => f.opponentId === fighterAId);
+        const name = matchingFight?.opponentName || `Fighter #${fighterAId}`;
+        const nameParts = name.trim().split(/\s+/);
+        const firstName = nameParts[0] || 'Unknown';
+        const lastName = nameParts.slice(1).join(' ') || 'Fighter';
+        
+        loadedA = {
+          id: fighterAId,
+          firstName,
+          lastName,
+          fullName: name,
+          nickName: null,
+          record: { wins: 0, losses: 0, draws: 0, noContests: 0 },
+          age: null,
+          stance: 'Orthodox',
+          height: null,
+          weight: null,
+          headshot: null,
+          fightsParticipated: []
+        };
+      }
+      
+      if (!loadedB && loadedA) {
+        const matchingFight = loadedA.fightsParticipated?.find(f => f.opponentId === fighterBId);
+        const name = matchingFight?.opponentName || `Fighter #${fighterBId}`;
+        const nameParts = name.trim().split(/\s+/);
+        const firstName = nameParts[0] || 'Unknown';
+        const lastName = nameParts.slice(1).join(' ') || 'Fighter';
+        
+        loadedB = {
+          id: fighterBId,
+          firstName,
+          lastName,
+          fullName: name,
+          nickName: null,
+          record: { wins: 0, losses: 0, draws: 0, noContests: 0 },
+          age: null,
+          stance: 'Orthodox',
+          height: null,
+          weight: null,
+          headshot: null,
+          fightsParticipated: []
+        };
+      }
+
+      if (isMounted) {
+        setFighterA(loadedA);
+        setFighterB(loadedB);
+        setLoading(false);
       }
     }
 
@@ -144,11 +204,31 @@ export default function FightDetail({
   const matchB = fighterB.fightsParticipated?.find(f => f.fightId === fightId);
   const match = matchA || matchB;
 
+  // Helper to infer missing outcomes symmetrically if one of them has it
+  const getFighterOutcome = (isFighterA: boolean) => {
+    const currentMatch = isFighterA ? matchA : matchB;
+    if (currentMatch?.outcome) {
+      return currentMatch.outcome;
+    }
+    const opponentMatch = isFighterA ? matchB : matchA;
+    if (opponentMatch?.outcome) {
+      const oppOutcome = opponentMatch.outcome.toLowerCase().trim();
+      if (oppOutcome === 'win' || oppOutcome === 'w') return 'Loss';
+      if (oppOutcome === 'loss' || oppOutcome === 'l') return 'Win';
+      if (oppOutcome === 'draw' || oppOutcome === 'd') return 'Draw';
+      if (oppOutcome === 'no contest' || oppOutcome === 'no_contest') return 'No Contest';
+    }
+    return 'OTHER';
+  };
+
   // Retrieve images and body-shots
-  const imagesA = (fighterImages as any)[fighterA.id] || {};
-  const imagesB = (fighterImages as any)[fighterB.id] || {};
-  const bodyShotA = imagesA.bodyShot || imagesA.headshot || null;
-  const bodyShotB = imagesB.bodyShot || imagesB.headshot || null;
+  const headshotA = getFighterHeadshotUrl(fighterA);
+  const headshotB = getFighterHeadshotUrl(fighterB);
+  const validatedBodyShotA = getFighterBodyShotUrl(fighterA);
+  const validatedBodyShotB = getFighterBodyShotUrl(fighterB);
+
+  const bodyShotA = validatedBodyShotA || headshotA || null;
+  const bodyShotB = validatedBodyShotB || headshotB || null;
 
   const fightDateStr = match?.eventDate;
 
@@ -636,76 +716,114 @@ export default function FightDetail({
         {/* Fighters Side-by-Side Full Body Layout */}
         <div className="grid grid-cols-2 h-full items-end gap-1 relative z-10 pt-20">
           
-          {/* Fighter A (Left Corner) */}
+          {/* Fighter A */}
           <div className="flex flex-col items-center justify-end text-center h-full relative group">
-            {bodyShotA ? (
-              <button 
-                onClick={() => onSelectFighter(fighterA.id)}
-                className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
-              >
-                <img 
-                  src={bodyShotA} 
-                  alt={fighterA.fullName} 
-                  className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] filter brightness-105"
-                  referrerPolicy="no-referrer"
-                />
-              </button>
-            ) : (
-              <button 
-                onClick={() => onSelectFighter(fighterA.id)}
-                className="h-56 md:h-80 w-full flex items-center justify-center text-4xl font-black font-mono text-white/10 uppercase mb-4 shadow-inner pointer-events-auto cursor-pointer focus:outline-none"
-              >
-                {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
-              </button>
-            )}
+            <button 
+              onClick={() => onSelectFighter(fighterA.id)}
+              className="w-full flex flex-col items-center justify-end pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
+            >
+              {/* Mobile View: Headshot */}
+              <div className="block md:hidden">
+                {headshotA ? (
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 overflow-hidden bg-black/40 shadow-lg mb-2 flex items-center justify-center">
+                    <ImageWithLoader 
+                      src={headshotA} 
+                      alt={fighterA.fullName} 
+                      className="w-full h-full object-cover object-top"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-2xl mb-2">
+                    {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
+                  </div>
+                )}
+              </div>
+
+              {/* Tablet/Desktop View: Body Shot */}
+              <div className="hidden md:flex h-80 w-full items-end justify-center overflow-hidden">
+                {bodyShotA ? (
+                  <ImageWithLoader 
+                    src={bodyShotA} 
+                    alt={fighterA.fullName} 
+                    className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] filter brightness-105"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center text-4xl font-black font-mono text-white/10 uppercase mb-4 shadow-inner">
+                    {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
+                  </div>
+                )}
+              </div>
+            </button>
             
             <button 
               onClick={() => onSelectFighter(fighterA.id)}
-              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-red-500/30 group-hover:border-red-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-amber-500/30 group-hover:border-amber-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
             >
-              <span className="text-[9px] text-red-500 font-mono font-black uppercase tracking-widest">RED CORNER</span>
               <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
                 {fighterA.fullName}
               </span>
-              {fighterA.nickName && (
+              {fighterA.nickName ? (
                 <span className="text-[10px] text-white/50 italic font-mono block uppercase truncate">&ldquo;{fighterA.nickName}&rdquo;</span>
+              ) : (
+                <span className="text-[10px] text-transparent select-none italic font-mono block uppercase truncate" aria-hidden="true">&ldquo;Placeholder&rdquo;</span>
               )}
             </button>
           </div>
 
-          {/* Fighter B (Blue Corner) */}
+          {/* Fighter B */}
           <div className="flex flex-col items-center justify-end text-center h-full relative group">
-            {bodyShotB ? (
-              <button 
-                onClick={() => onSelectFighter(fighterB.id)}
-                className="h-56 md:h-80 w-full flex items-end justify-center overflow-hidden pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
-              >
-                <img 
-                  src={bodyShotB} 
-                  alt={fighterB.fullName} 
-                  className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] scale-x-[-1] filter brightness-105"
-                  referrerPolicy="no-referrer"
-                />
-              </button>
-            ) : (
-              <button 
-                onClick={() => onSelectFighter(fighterB.id)}
-                className="h-56 md:h-80 w-full flex items-center justify-center text-4xl font-black font-mono text-white/10 uppercase mb-4 shadow-inner pointer-events-auto cursor-pointer focus:outline-none"
-              >
-                {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
-              </button>
-            )}
+            <button 
+              onClick={() => onSelectFighter(fighterB.id)}
+              className="w-full flex flex-col items-center justify-end pointer-events-auto relative mb-4 cursor-pointer hover:scale-[1.03] transition-transform duration-300 focus:outline-none"
+            >
+              {/* Mobile View: Headshot */}
+              <div className="block md:hidden">
+                {headshotB ? (
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 overflow-hidden bg-black/40 shadow-lg mb-2 flex items-center justify-center">
+                    <ImageWithLoader 
+                      src={headshotB} 
+                      alt={fighterB.fullName} 
+                      className="w-full h-full object-cover object-top scale-x-[-1]"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-2xl mb-2">
+                    {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
+                  </div>
+                )}
+              </div>
+
+              {/* Tablet/Desktop View: Body Shot */}
+              <div className="hidden md:flex h-80 w-full items-end justify-center overflow-hidden">
+                {bodyShotB ? (
+                  <ImageWithLoader 
+                    src={bodyShotB} 
+                    alt={fighterB.fullName} 
+                    className="h-full object-contain object-bottom drop-shadow-[0_15px_24px_rgba(0,0,0,0.85)] scale-x-[-1] filter brightness-105"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center text-4xl font-black font-mono text-white/10 uppercase mb-4 shadow-inner">
+                    {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
+                  </div>
+                )}
+              </div>
+            </button>
 
             <button 
               onClick={() => onSelectFighter(fighterB.id)}
-              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-indigo-450/30 group-hover:border-indigo-450/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-amber-500/30 group-hover:border-amber-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
             >
-              <span className="text-[9px] text-indigo-400 font-mono font-black uppercase tracking-widest">BLUE CORNER</span>
               <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
                 {fighterB.fullName}
               </span>
-              {fighterB.nickName && (
+              {fighterB.nickName ? (
                 <span className="text-[10px] text-white/50 italic font-mono block uppercase truncate">&ldquo;{fighterB.nickName}&rdquo;</span>
+              ) : (
+                <span className="text-[10px] text-transparent select-none italic font-mono block uppercase truncate" aria-hidden="true">&ldquo;Placeholder&rdquo;</span>
               )}
             </button>
           </div>
@@ -730,9 +848,9 @@ export default function FightDetail({
             <button 
               onClick={() => onSelectFighter(fighterA.id)}
               className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center w-full transition-all duration-300 hover:scale-[1.03] cursor-pointer focus:outline-none order-2 md:order-1 ${
-                (matchA?.outcome || '').toLowerCase() === 'win' 
+                getFighterOutcome(true).toLowerCase() === 'win' 
                   ? 'bg-emerald-500/10 hover:bg-emerald-500/15 border-emerald-500/25 text-emerald-400 hover:border-emerald-500/40' 
-                  : (matchA?.outcome || '').toLowerCase() === 'loss'
+                  : getFighterOutcome(true).toLowerCase() === 'loss'
                     ? 'bg-red-500/10 hover:bg-red-500/15 border-red-500/20 text-red-400 hover:border-red-500/35'
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
               }`}
@@ -741,7 +859,7 @@ export default function FightDetail({
                 {fighterA.fullName}
               </span>
               <span className="text-lg font-black italic uppercase">
-                {matchA?.outcome || 'OTHER'}
+                {getFighterOutcome(true)}
               </span>
             </button>
 
@@ -761,9 +879,9 @@ export default function FightDetail({
             <button 
               onClick={() => onSelectFighter(fighterB.id)}
               className={`p-4 rounded-xl border flex flex-col items-center justify-center text-center w-full transition-all duration-300 hover:scale-[1.03] cursor-pointer focus:outline-none order-4 md:order-3 ${
-                (matchB?.outcome || '').toLowerCase() === 'win' 
+                getFighterOutcome(false).toLowerCase() === 'win' 
                   ? 'bg-emerald-500/10 hover:bg-emerald-500/15 border-emerald-500/25 text-emerald-400 hover:border-emerald-500/40' 
-                  : (matchB?.outcome || '').toLowerCase() === 'loss'
+                  : getFighterOutcome(false).toLowerCase() === 'loss'
                     ? 'bg-red-500/10 hover:bg-red-500/15 border-red-500/20 text-red-400 hover:border-red-500/35'
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
               }`}
@@ -772,7 +890,7 @@ export default function FightDetail({
                 {fighterB.fullName}
               </span>
               <span className="text-lg font-black italic uppercase">
-                {matchB?.outcome || 'OTHER'}
+                {getFighterOutcome(false)}
               </span>
             </button>
 
@@ -828,22 +946,20 @@ export default function FightDetail({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             {/* Fighter A Probability Display */}
-            <div className="bg-red-500/5 border border-red-500/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-a">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-a">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
               
               {/* Headshot on the LEFT ("end-left") */}
               <div className="shrink-0 relative z-10" id="prediction-headshot-fighter-a">
-                {imagesA.headshot ? (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-red-500/30 overflow-hidden bg-black/40">
-                    <img 
-                      src={imagesA.headshot} 
-                      alt={fighterA.fullName} 
-                      className="w-full h-full object-cover object-top"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                {headshotA ? (
+                  <ImageWithLoader 
+                    src={headshotA} 
+                    alt={fighterA.fullName} 
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40"
+                    referrerPolicy="no-referrer"
+                  />
                 ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-red-500/30 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-red-400 text-base sm:text-lg">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-base sm:text-lg">
                     {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
                   </div>
                 )}
@@ -851,7 +967,7 @@ export default function FightDetail({
 
               {/* Text details on the RIGHT */}
               <div className="flex flex-col items-end text-right relative z-10 flex-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-red-400 uppercase bg-red-950/40 border border-red-500/20 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
+                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
                   {fighterA.fullName}
                 </span>
                 <span className="text-3xl sm:text-4xl font-black italic font-mono text-white leading-none font-sans">
@@ -864,12 +980,12 @@ export default function FightDetail({
             </div>
 
             {/* Fighter B Probability Display */}
-            <div className="bg-blue-500/5 border border-blue-500/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-b">
-              <div className="absolute top-0 left-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
+            <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-b">
+              <div className="absolute top-0 left-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
               
               {/* Text details on the LEFT */}
               <div className="flex flex-col items-start text-left relative z-10 flex-1 order-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-blue-400 uppercase bg-blue-950/40 border border-blue-500/20 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
+                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
                   {fighterB.fullName}
                 </span>
                 <span className="text-3xl sm:text-4xl font-black italic font-mono text-white leading-none font-sans">
@@ -882,17 +998,15 @@ export default function FightDetail({
 
               {/* Headshot on the RIGHT ("end-right") */}
               <div className="shrink-0 relative z-10 order-2" id="prediction-headshot-fighter-b">
-                {imagesB.headshot ? (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-blue-500/30 overflow-hidden bg-black/40">
-                    <img 
-                      src={imagesB.headshot} 
-                      alt={fighterB.fullName} 
-                      className="w-full h-full object-cover object-top"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
+                {headshotB ? (
+                  <ImageWithLoader 
+                    src={headshotB} 
+                    alt={fighterB.fullName} 
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40"
+                    referrerPolicy="no-referrer"
+                  />
                 ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-blue-500/30 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-blue-400 text-base sm:text-lg">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-base sm:text-lg">
                     {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
                   </div>
                 )}
@@ -904,18 +1018,18 @@ export default function FightDetail({
           <div className="space-y-1.5">
             <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
               <div 
-                className="bg-gradient-to-r from-red-600 to-red-500 h-full transition-all duration-500" 
+                className="bg-gradient-to-r from-amber-600 to-amber-500 h-full transition-all duration-500" 
                 style={{ width: `${prediction.probA}%` }}
               />
               <div 
-                className="bg-gradient-to-r from-blue-500 to-blue-650 h-full transition-all duration-500" 
+                className="bg-gradient-to-r from-zinc-500 to-zinc-650 h-full transition-all duration-500" 
                 style={{ width: `${prediction.probB}%` }}
               />
             </div>
             <div className="flex justify-between items-center text-[9px] font-mono text-white/40 uppercase tracking-widest">
-              <span>{fighterA.lastName || 'RED'} ({prediction.probA}%)</span>
+              <span>{fighterA.lastName || 'FIGHTER A'} ({prediction.probA}%)</span>
               <span>PROBABILITY RATIO</span>
-              <span>{fighterB.lastName || 'BLUE'} ({prediction.probB}%)</span>
+              <span>{fighterB.lastName || 'FIGHTER B'} ({prediction.probB}%)</span>
             </div>
           </div>
 
@@ -948,19 +1062,17 @@ export default function FightDetail({
                           </span>
                         </div>
                         <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                          favA 
-                            ? 'bg-red-500/10 text-red-400 border border-red-500/20' 
-                            : favB 
-                              ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                              : 'bg-white/5 text-white/40 border border-white/5'
+                          favA || favB 
+                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
+                            : 'bg-white/5 text-white/40 border border-white/5'
                         }`}>
-                          {favA ? 'RED ADVANTAGE' : favB ? 'BLUE ADVANTAGE' : 'EVEN'}
+                          {favA ? `${(fighterA.lastName || 'Fighter A').toUpperCase()} ADVANTAGE` : favB ? `${(fighterB.lastName || 'Fighter B').toUpperCase()} ADVANTAGE` : 'EVEN'}
                         </span>
                       </div>
 
                       <div className="grid grid-cols-3 gap-2 items-center text-center font-mono text-[10px]">
                         {/* Redcorner metric */}
-                        <div className={`text-right ${favA ? 'text-red-400 font-bold' : 'text-white/60'}`}>
+                        <div className={`text-right ${favA ? 'text-amber-400 font-bold' : 'text-white/60'}`}>
                           {b.valA}
                           <span className="text-[8px] text-white/30 block">
                             {b.scoreA > 0 ? `+${b.scoreA.toFixed(1)} pts` : b.scoreA < 0 ? `${b.scoreA.toFixed(1)} pts` : '0.0 pts'}
@@ -970,12 +1082,12 @@ export default function FightDetail({
                         {/* Mid-label line */}
                         <div className="h-[1px] bg-white/10 relative">
                           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full ${
-                            favA ? 'bg-red-500' : favB ? 'bg-blue-500' : 'bg-white/35'
+                            favA || favB ? 'bg-amber-500' : 'bg-white/35'
                           }`} />
                         </div>
 
                         {/* Bluecorner metric */}
-                        <div className={`text-left ${favB ? 'text-blue-400 font-bold' : 'text-white/60'}`}>
+                        <div className={`text-left ${favB ? 'text-amber-400 font-bold' : 'text-white/60'}`}>
                           {b.valB}
                           <span className="text-[8px] text-white/30 block">
                             {b.scoreB > 0 ? `+${b.scoreB.toFixed(1)} pts` : b.scoreB < 0 ? `${b.scoreB.toFixed(1)} pts` : '0.0 pts'}
@@ -992,14 +1104,14 @@ export default function FightDetail({
 
         <div className="space-y-4">
           <h4 className="text-xs font-black italic text-white uppercase tracking-tight flex items-center gap-2">
-            <Activity className="w-4 h-4 text-red-500" /> Statistical & Physical Head-to-Head
+            <Activity className="w-4 h-4 text-amber-500" /> Statistical & Physical Head-to-Head
           </h4>
 
           {/* Stance matching alert badge */}
           <div className="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center gap-2.5 text-xs text-white/60 uppercase tracking-wider font-mono">
-            <Zap className="w-3.5 h-3.5 text-red-500 shrink-0" />
+            <Zap className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <span>Tactical Stance Matchup:</span>
-            <span className="font-extrabold text-red-550">{stanceMatchup()}</span>
+            <span className="font-extrabold text-amber-500">{stanceMatchup()}</span>
           </div>
 
           <div className="bg-black/25 rounded-2xl border border-white/10 overflow-hidden divide-y divide-white/5">
@@ -1007,8 +1119,8 @@ export default function FightDetail({
             {/* TAIL OF THE TAPE TABLE HEADER */}
             <div className="bg-white/[0.02] py-2.5 px-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center border-b border-white/5 text-center">
               <div className="text-right">
-                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-red-500 uppercase bg-red-950/40 border border-red-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
-                  RED CORNER
+                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-amber-500 uppercase bg-amber-950/40 border border-amber-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
+                  FIGHTER A
                 </span>
                 <span className="block text-xs sm:text-sm font-black italic uppercase text-white tracking-tight mt-1 truncate pr-2">
                   {fighterA.lastName || fighterA.fullName}
@@ -1020,8 +1132,8 @@ export default function FightDetail({
                 </span>
               </div>
               <div className="text-left">
-                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-blue-400 uppercase bg-blue-950/40 border border-blue-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
-                  BLUE CORNER
+                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-amber-500 uppercase bg-amber-950/40 border border-amber-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
+                  FIGHTER B
                 </span>
                 <span className="block text-xs sm:text-sm font-black italic uppercase text-white tracking-tight mt-1 truncate pr-2">
                   {fighterB.lastName || fighterB.fullName}
@@ -1044,7 +1156,7 @@ export default function FightDetail({
                 {ageA > 0 && ageB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                       style={{ width: `${ageBar.pct1}%` }}
                     />
                   </div>
@@ -1053,7 +1165,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <Calendar className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <Calendar className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   AGE AT BOUT
                 </span>
@@ -1072,7 +1184,7 @@ export default function FightDetail({
                 {ageA > 0 && ageB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                       style={{ width: `${ageBar.pct2}%` }}
                     />
                   </div>
@@ -1095,7 +1207,7 @@ export default function FightDetail({
                 {valA > 0 && valB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                       style={{ width: `${heightBar.pct1}%` }}
                     />
                   </div>
@@ -1104,7 +1216,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <Ruler className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <Ruler className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   HEIGHT
                 </span>
@@ -1123,7 +1235,7 @@ export default function FightDetail({
                 {valA > 0 && valB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                       style={{ width: `${heightBar.pct2}%` }}
                     />
                   </div>
@@ -1146,7 +1258,7 @@ export default function FightDetail({
                 {reachA > 0 && reachB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                       style={{ width: `${reachBar.pct1}%` }}
                     />
                   </div>
@@ -1155,7 +1267,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <Sparkles className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   WINGSPAN
                 </span>
@@ -1174,7 +1286,7 @@ export default function FightDetail({
                 {reachA > 0 && reachB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                       style={{ width: `${reachBar.pct2}%` }}
                     />
                   </div>
@@ -1200,7 +1312,7 @@ export default function FightDetail({
                 {(fightWeightA.lbs || 0) > 0 && (fightWeightB.lbs || 0) > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                       style={{ width: `${weightBar.pct1}%` }}
                     />
                   </div>
@@ -1209,9 +1321,9 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <Scale className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <Scale className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
-                  WEIGHT BOUT
+                  BOUT WEIGHT
                 </span>
               </div>
 
@@ -1231,7 +1343,7 @@ export default function FightDetail({
                 {(fightWeightA.lbs || 0) > 0 && (fightWeightB.lbs || 0) > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                       style={{ width: `${weightBar.pct2}%` }}
                     />
                   </div>
@@ -1253,7 +1365,7 @@ export default function FightDetail({
                 )}
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                   <div 
-                    className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                    className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                     style={{ width: `${winRateBar.pct1}%` }}
                   />
                 </div>
@@ -1261,7 +1373,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <TrendingUp className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <TrendingUp className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   WIN RATE
                 </span>
@@ -1279,7 +1391,7 @@ export default function FightDetail({
                 )}
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                   <div 
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                    className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                     style={{ width: `${winRateBar.pct2}%` }}
                   />
                 </div>
@@ -1298,7 +1410,7 @@ export default function FightDetail({
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                   <div 
-                    className="bg-gradient-to-l from-red-500 to-red-600 h-full rounded-full" 
+                    className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
                     style={{ width: `${winsBar.pct1}%` }}
                   />
                 </div>
@@ -1306,7 +1418,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <Trophy className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <Trophy className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   RECORD
                 </span>
@@ -1322,7 +1434,7 @@ export default function FightDetail({
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                   <div 
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 h-full rounded-full" 
+                    className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
                     style={{ width: `${winsBar.pct2}%` }}
                   />
                 </div>
@@ -1355,7 +1467,7 @@ export default function FightDetail({
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
-                <TrendingUp className="w-3.5 h-3.5 text-red-500 mb-1" />
+                <TrendingUp className="w-3.5 h-3.5 text-amber-500 mb-1" />
                 <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   RECENT FORM
                 </span>

@@ -4,6 +4,8 @@ import { Award, Calendar, Globe, Layers, MapPin, Ruler, User, ExternalLink, Arro
 import { motion, AnimatePresence } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
 import CareerTrajectoryGraph from './CareerTrajectoryGraph';
+import ImageWithLoader from './ImageWithLoader';
+import { getFighterHeadshotUrl, getFighterBodyShotUrl, isLegitimateFighterImage } from '../utils/image-validator';
 
 function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighterId: number; name: string; className?: string }) {
   const [error, setError] = useState(false);
@@ -17,7 +19,9 @@ function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighte
 
   // Official silhouette headshot as fallback
   const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
-  const headshotUrl = images.headshot || defaultHeadshot;
+  const headshotUrl = images.headshot && isLegitimateFighterImage(images.headshot, firstName, lastName, name)
+    ? images.headshot 
+    : defaultHeadshot;
 
   if (evenFallbackFails) {
     return (
@@ -28,7 +32,7 @@ function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighte
   }
 
   return (
-    <img
+    <ImageWithLoader
       src={error ? defaultHeadshot : headshotUrl}
       alt={name}
       className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
@@ -53,10 +57,12 @@ interface FighterDetailProps {
 export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent }: FighterDetailProps) {
   const [detailedFighter, setDetailedFighter] = useState<FighterProfile | null>(null);
   const [loading, setLoading] = useState(false);
+  const [headshotError, setHeadshotError] = useState(false);
 
   // Dynamically load complete fighter details (with full fight history)
   useEffect(() => {
     let isMounted = true;
+    setHeadshotError(false);
     
     async function fetchDetail() {
       setLoading(true);
@@ -120,6 +126,8 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
   }, [fighter.id]);
 
   const currentFighter = detailedFighter || fighter;
+  const headshotUrl = getFighterHeadshotUrl(currentFighter);
+  const bodyShotUrl = getFighterBodyShotUrl(currentFighter);
 
   // Convert height in inches to feet-inches
   const formatHeight = (inches: number | null) => {
@@ -141,11 +149,11 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
   const getOutcomeClass = (outcome: string) => {
     switch (outcome.toLowerCase().trim()) {
       case 'win':
-        return 'bg-emerald-500/10 text-win-color border border-emerald-500/20 font-black italic';
+        return 'bg-green-500/15 text-white border border-green-500/35 font-black italic';
       case 'loss':
-        return 'bg-loss-badge text-loss-color border border-loss-badge font-black italic';
+        return 'bg-red-500/15 text-white border border-red-500/35 font-black italic';
       default:
-        return 'bg-other-badge text-other-badge border font-black italic';
+        return 'bg-white/5 text-white/60 border border-white/10 font-black italic';
     }
   };
 
@@ -166,10 +174,10 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
         <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
 
         {/* Full-body fighter profile standing tall on the right */}
-        {currentFighter.bodyShot && (
-          <div className="absolute right-4 md:right-12 top-0 bottom-0 w-1/3 md:w-1/2 select-none pointer-events-none z-0 flex justify-end items-end">
+        {bodyShotUrl && (
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 md:w-1/2 select-none pointer-events-none z-0 flex justify-end items-end">
             <img 
-              src={currentFighter.bodyShot} 
+              src={bodyShotUrl} 
               alt="" 
               className="h-[200%] w-auto max-w-none object-contain opacity-40 md:opacity-75 translate-y-[52%]" 
               referrerPolicy="no-referrer"
@@ -183,21 +191,19 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-5 relative z-10">
           <div className="relative shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border border-white/15 bg-black/40 flex items-center justify-center shadow-lg">
-            {currentFighter.headshot ? (
-              <img 
-                src={currentFighter.headshot} 
+            {headshotUrl && !headshotError ? (
+              <ImageWithLoader 
+                src={headshotUrl} 
                 alt={currentFighter.fullName} 
                 className="w-full h-full object-cover shrink-0"
                 referrerPolicy="no-referrer"
-                onError={(e) => {
-                  (e.currentTarget as any).style.display = 'none';
-                  const fb = e.currentTarget.parentElement?.querySelector('.fallback-badge');
-                  if (fb) (fb as any).classList.remove('hidden');
+                onError={() => {
+                  setHeadshotError(true);
                 }}
               />
             ) : null}
 
-            <div className={`fallback-badge ${currentFighter.headshot ? 'hidden' : ''} absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 text-2xl font-black font-mono`}>
+            <div className={`fallback-badge ${headshotUrl && !headshotError ? 'hidden' : ''} absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 text-slate-700 text-2xl font-black font-mono`}>
               {`${currentFighter.firstName?.[0] || ""}${currentFighter.lastName?.[0] || ""}`.toUpperCase()}
             </div>
           </div>
@@ -217,7 +223,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                 {currentFighter.record.wins}W - {currentFighter.record.losses}L - {currentFighter.record.draws}D
                 {currentFighter.record.noContests > 0 && ` (${currentFighter.record.noContests} NC)`}
               </span>
-              <span className="text-[11px] text-white/40 font-mono uppercase tracking-widest">
+              <span className="text-[11px] text-white/70 bg-black/30 px-2.5 py-1 rounded-lg border border-white/5 font-mono uppercase tracking-widest backdrop-blur-[2px] shadow-sm">
                 {winPercentage}% WINRATE
               </span>
             </div>

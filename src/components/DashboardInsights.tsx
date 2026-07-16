@@ -3,6 +3,8 @@ import { FighterProfile, EventSummary, StatsSummary } from '../types';
 import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight, Target, Activity, Info } from 'lucide-react';
 import { motion } from 'motion/react';
 import fighterImages from '../data/fighter-images.json';
+import ImageWithLoader from './ImageWithLoader';
+import { getFighterHeadshotUrl } from '../utils/image-validator';
 // @ts-ignore
 import heroBannerImage from '../assets/images/mma_blueprint_hero_1784042998091.jpg';
 
@@ -23,9 +25,9 @@ function DashboardFighterHeadshot({ fighter, className = "w-10 h-10" }: { fighte
   // Official silhouette headshot as fallback
   const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
   
-  // Resolve from both fighter object and the master fighter-images list for ultimate robustness
-  const cachedHeadshot = (fighterImages as any)[fighter.id]?.headshot;
-  const headshotUrl = fighter.headshot || cachedHeadshot || defaultHeadshot;
+  // Resolve from both fighter object and the master fighter-images list for ultimate robustness, validating to filter out mismatches
+  const validatedHeadshot = getFighterHeadshotUrl(fighter);
+  const headshotUrl = validatedHeadshot || defaultHeadshot;
 
   if (evenFallbackFails) {
     return (
@@ -36,7 +38,7 @@ function DashboardFighterHeadshot({ fighter, className = "w-10 h-10" }: { fighte
   }
 
   return (
-    <img
+    <ImageWithLoader
       src={error ? defaultHeadshot : headshotUrl}
       alt={fighter.fullName}
       className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
@@ -249,7 +251,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
       recentEventsYears,
       finishList,
       totalEvents: events.length,
-      totalFighters: fighters.length,
+      totalFighters: 4330,
       totalFights
     };
   }, [fighters, events, statsSummary]);
@@ -320,7 +322,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 onClick={() => { window.location.hash = 'fighters'; }}
                 className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-red-500/50 group cursor-pointer"
               >
-                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-red-400 transition-colors">ACTIVE FIGHTERS</span>
+                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-red-400 transition-colors">TRACKED FIGHTERS</span>
                 <span className="text-lg font-black italic text-red-500 group-hover:scale-105 inline-block transition-transform">{(stats.totalFighters || 0).toLocaleString()}</span>
               </button>
               <button
@@ -344,7 +346,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           <div className="lg:col-span-5 relative flex items-center justify-center">
             <div className="relative w-full max-w-md aspect-[16/9] lg:aspect-square bg-zinc-950/90 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
               {/* Background blueprint graphic */}
-              <img
+              <ImageWithLoader
                 src={heroBannerImage}
                 alt="MMA Blueprint Combat Schematic"
                 className="w-full h-full object-cover opacity-75 pointer-events-none filter saturate-75 brightness-95"
@@ -352,19 +354,19 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               />
 
               {/* Statistical Overlay 1: Real-time data model tracking */}
-              <div className="absolute top-4 left-4 bg-black/75 border border-red-500/30 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg">
-                <div className="flex items-center gap-1.5 text-red-400 font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                  <span>RED CORNER</span>
+              <div className="absolute top-4 left-4 bg-black/75 border border-white/10 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg">
+                <div className="flex items-center gap-1.5 text-amber-400 font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                  <span>FIGHTER A</span>
                 </div>
                 <div className="text-white/60 font-medium">STANCE: SOUTHPAW</div>
                 <div className="text-white/60 font-medium">RECORD: 18-3-0</div>
               </div>
 
               {/* Statistical Overlay 2: Dynamic division metadata */}
-              <div className="absolute bottom-4 right-4 bg-black/75 border border-amber-500/30 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg text-right">
+              <div className="absolute bottom-4 right-4 bg-black/75 border border-white/10 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg text-right">
                 <div className="flex items-center justify-end gap-1.5 text-amber-400 font-bold">
-                  <span>BLUE CORNER</span>
+                  <span>FIGHTER B</span>
                   <Target className="w-2.5 h-2.5 text-amber-500" />
                 </div>
                 <div className="text-white/60 font-medium">STANCE: ORTHODOX</div>
@@ -374,7 +376,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               {/* Statistical Overlay 3: Strike Trajectory Arc label */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
                 <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-full border-2 border-red-500/20 border-dashed animate-spin flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-full border-2 border-white/10 border-dashed animate-spin flex items-center justify-center">
                     <div className="w-6 h-6 rounded-full border border-amber-500/30"></div>
                   </div>
                   <span className="text-[8px] font-mono text-white/50 mt-1 uppercase tracking-wider bg-black/50 px-1 rounded">PEAK_REF_X</span>
@@ -382,7 +384,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               </div>
 
               {/* Subtle grid HUD scanning line */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/5 to-transparent h-1/3 w-full animate-[pulse_3s_infinite] pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent h-1/3 w-full animate-[pulse_3s_infinite] pointer-events-none"></div>
             </div>
           </div>
         </div>
@@ -419,7 +421,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 {/* Full Body Shot overlapping or positioned cleanly on the right */}
                 <div className="absolute right-1 bottom-0 h-40 w-32 flex items-end justify-center pointer-events-none overflow-hidden select-none">
                   {champ.bodyShot ? (
-                    <img
+                    <ImageWithLoader
                       src={champ.bodyShot}
                       alt={champ.fullName}
                       className="object-contain max-h-full w-full transform drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]"

@@ -6,7 +6,7 @@ import FighterDetail from './components/FighterDetail';
 import EventList from './components/EventList';
 import EventDetail from './components/EventDetail';
 import FightDetail from './components/FightDetail';
-import { Trophy, CalendarDays, Users, HandFist, Info, AlertTriangle, Menu, X, ArrowLeft } from 'lucide-react';
+import { Trophy, CalendarDays, Users, HandFist, Info, AlertTriangle, Menu, X, ArrowLeft, ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 function parseHash(hash: string) {
@@ -129,6 +129,29 @@ export default function App() {
   // History tracking refs
   const previousHashRef = useRef<string | null>(null);
   const currentHashRef = useRef<string>(window.location.hash);
+  
+  // Scroll restoration positions cache
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+
+  // Floating scroll-to-top tracking
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > window.innerHeight) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Bulk loading on bootstrap
   useEffect(() => {
@@ -231,6 +254,10 @@ export default function App() {
   // Synchronize state with URL hash
   useEffect(() => {
     function handleHashChange() {
+      // Save scroll position for the page/hash we are transitioning AWAY from
+      const prevHashKey = currentHashRef.current || '#dashboard';
+      scrollPositionsRef.current[prevHashKey] = window.scrollY;
+
       const newHash = window.location.hash;
       const parsed = parseHash(newHash);
       
@@ -284,9 +311,27 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
   
-  // Reset scrollbar to top on navigation or detail view changes
+  // Restore scroll position or default to top on navigation or detail view changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as any });
+    const currentHash = window.location.hash || '#dashboard';
+    const saved = scrollPositionsRef.current[currentHash] || 0;
+    
+    // Attempt instant scroll
+    window.scrollTo({ top: saved, behavior: 'instant' as any });
+    
+    // Also schedule secondary scrolls in case of rendering/layout delay
+    const timer1 = setTimeout(() => {
+      window.scrollTo({ top: saved, behavior: 'instant' as any });
+    }, 20);
+
+    const timer2 = setTimeout(() => {
+      window.scrollTo({ top: saved, behavior: 'instant' as any });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, [activeTab, selectedFighterId, selectedEventId, showFighterDetail, showEventDetail]);
 
   // Connected cross-linking helper: Select a fighter from anywhere
@@ -309,8 +354,23 @@ export default function App() {
     }
   };
 
-  // Find active profiles based on selections
-  const activeFighter = fighters.find(f => f.id === selectedFighterId) || null;
+  // Find active profiles based on selections, or generate a fallback/loading skeleton if selected but not in standard summary list
+  const activeFighter = selectedFighterId !== null 
+    ? (fighters.find(f => f.id === selectedFighterId) || {
+        id: selectedFighterId,
+        firstName: '',
+        lastName: '',
+        fullName: 'Loading Profile...',
+        nickName: null,
+        record: { wins: 0, losses: 0, draws: 0, noContests: 0 },
+        age: null,
+        stance: null,
+        height: null,
+        weight: null,
+        headshot: null,
+        fightsParticipated: []
+      } as FighterProfile)
+    : null;
   const activeEventSummary = events.find(e => e.id === selectedEventId) || null;
 
   if (isLoading) {
@@ -582,6 +642,25 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Scroll-to-Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            key="scroll-to-top"
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            onClick={scrollToTop}
+            id="scroll-to-top-button"
+            className="fixed bottom-6 right-6 z-50 p-3 sm:p-3.5 bg-black/80 backdrop-blur-md border border-red-500/30 hover:border-red-500 text-red-500 hover:text-white rounded-full shadow-2xl shadow-red-500/5 cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 flex items-center justify-center group"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -327,8 +327,8 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
   return (
     <div className="bg-[#121212] border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden flex flex-col gap-4">
       {/* Background radial glows */}
-      <div className="absolute top-0 left-0 w-44 h-44 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-44 h-44 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-0 w-44 h-44 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-44 h-44 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
@@ -345,12 +345,12 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
         {/* Legend */}
         <div className="flex gap-4 self-start sm:self-auto text-[10px] font-mono uppercase tracking-wider">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 bg-red-500 rounded" />
-            <span className="text-red-400 font-bold">{nameA.split(' ').slice(-1)[0]} (Red)</span>
+            <span className="w-2.5 h-1 bg-amber-500 rounded" />
+            <span className="text-amber-400 font-bold">{nameA.split(' ').slice(-1)[0]}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 bg-blue-500 rounded" />
-            <span className="text-blue-400 font-bold">{nameB.split(' ').slice(-1)[0]} (Blue)</span>
+            <span className="w-2.5 h-1 bg-teal-500 rounded" />
+            <span className="text-teal-400 font-bold">{nameB.split(' ').slice(-1)[0]}</span>
           </div>
         </div>
       </div>
@@ -374,13 +374,13 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
           onTouchEnd={handleMouseLeave}
         >
           <defs>
-            <linearGradient id="glowRed" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ef4444" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
+            <linearGradient id="glowAmber" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
             </linearGradient>
-            <linearGradient id="glowBlue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+            <linearGradient id="glowTeal" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.15" />
+              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -415,32 +415,32 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
           })}
 
           {/* Glowing area under path */}
-          {areaA && <path d={areaA} fill="url(#glowRed)" />}
-          {areaB && <path d={areaB} fill="url(#glowBlue)" />}
+          {areaA && <path d={areaA} fill="url(#glowAmber)" />}
+          {areaB && <path d={areaB} fill="url(#glowTeal)" />}
 
-          {/* Red line (Fighter A) */}
+          {/* Amber line (Fighter A) */}
           {pathDataA && (
             <path
               d={pathDataA}
               fill="none"
-              stroke="#ef4444"
+              stroke="#f59e0b"
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="drop-shadow-[0_0_4px_rgba(239,68,68,0.2)]"
+              className="drop-shadow-[0_0_4px_rgba(245,158,11,0.2)]"
             />
           )}
 
-          {/* Blue line (Fighter B) */}
+          {/* Teal line (Fighter B) */}
           {pathDataB && (
             <path
               d={pathDataB}
               fill="none"
-              stroke="#3b82f6"
+              stroke="#14b8a6"
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="drop-shadow-[0_0_4px_rgba(59,130,246,0.2)]"
+              className="drop-shadow-[0_0_4px_rgba(20,184,166,0.2)]"
             />
           )}
 
@@ -457,28 +457,28 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
                 strokeWidth={1}
               />
               
-              {/* snap point A dot (Red) */}
+              {/* snap point A dot (Amber) */}
               {activeData.a && (
                 <g>
                   <circle
                     cx={getCoords(activeData.a.point.time, activeData.a.point.score).x}
                     cy={getCoords(activeData.a.point.time, activeData.a.point.score).y}
                     r={6}
-                    fill="#ef4444"
+                    fill="#f59e0b"
                     stroke="#121212"
                     strokeWidth={1.5}
                   />
                 </g>
               )}
 
-              {/* snap point B dot (Blue) */}
+              {/* snap point B dot (Teal) */}
               {activeData.b && (
                 <g>
                   <circle
                     cx={getCoords(activeData.b.point.time, activeData.b.point.score).x}
                     cy={getCoords(activeData.b.point.time, activeData.b.point.score).y}
                     r={6}
-                    fill="#3b82f6"
+                    fill="#14b8a6"
                     stroke="#121212"
                     strokeWidth={1.5}
                   />
@@ -506,11 +506,11 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
         {activeData && (activeData.a || activeData.b) ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 divide-y md:divide-y-0 md:divide-x divide-white/5">
             
-            {/* Red Fighter Snap Detail */}
+            {/* Fighter A Snap Detail */}
             {activeData.a && activeData.a.index > 0 ? (
               <div className="space-y-1 md:pr-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded border border-red-500/20 font-bold">
+                  <span className="font-mono text-[9px] uppercase bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/20 font-bold">
                     {nameA} (Bout #{activeData.a.index})
                   </span>
                   <span className="text-white/30 text-[9px] font-mono">
@@ -539,11 +539,11 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
               </div>
             )}
 
-            {/* Blue Fighter Snap Detail */}
+            {/* Fighter B Snap Detail */}
             {activeData.b && activeData.b.index > 0 ? (
               <div className="space-y-1 pt-3 md:pt-0 md:pl-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/20 font-bold">
+                  <span className="font-mono text-[9px] uppercase bg-teal-500/10 text-teal-400 px-1.5 py-0.5 rounded border border-teal-500/20 font-bold">
                     {nameB} (Bout #{activeData.b.index})
                   </span>
                   <span className="text-white/30 text-[9px] font-mono">

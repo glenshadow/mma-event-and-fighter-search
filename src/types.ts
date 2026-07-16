@@ -4,6 +4,7 @@ export interface EventSummary {
   date: string | null;
   status: string;
   location: string;
+  venue: string;
   fightsCount: number;
 }
 
