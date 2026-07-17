@@ -379,7 +379,7 @@ export default function App() {
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, ease: 'linear', duration: 1.5 }}
-          className="w-12 h-12 rounded-full border-4 border-slate-800 border-t-red-500"
+          className="w-12 h-12 rounded-full border-4 border-slate-800 border-t-amber-500"
         />
         <div className="space-y-1 text-center">
           <h1 className="text-sm font-bold uppercase tracking-widest text-slate-100">Syncing StandardMMA Archives</h1>
@@ -417,15 +417,15 @@ export default function App() {
             title="Go to Dashboard"
           >
             <div className="relative flex items-center justify-center shrink-0">
-              {/* Perfectly centered ambient red glow */}
-              <div className="absolute w-6 h-6 bg-red-600/40 rounded-full blur-md animate-pulse pointer-events-none"></div>
+              {/* Perfectly centered ambient amber glow */}
+              <div className="absolute w-6 h-6 bg-amber-500/30 rounded-full blur-md animate-pulse pointer-events-none"></div>
               <div className="relative w-9 h-9 bg-black/60 border border-white/15 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0">
                 <HandFist className="w-5 h-5 text-white animate-pulse" />
               </div>
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tighter italic text-white flex items-center gap-1">
-                StandardMMA <span className="not-italic text-[10px] font-mono font-bold tracking-widest text-red-500 bg-red-950/50 border border-red-550/20 px-1.5 py-0.5 rounded ml-2">DATA</span>
+                StandardMMA <span className="not-italic text-[10px] font-mono font-bold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded ml-2">DATA</span>
               </h1>
               <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase">
                 COMBAT SPORTS INTEL SYSTEM
@@ -438,19 +438,19 @@ export default function App() {
             <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-full md:w-auto justify-between md:justify-start">
               <button
                 onClick={() => { window.location.hash = ''; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <Trophy className="w-3.5 h-3.5" /> Dashboard
               </button>
               <button
                 onClick={() => { window.location.hash = 'fighters'; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <Users className="w-3.5 h-3.5" /> Fighters
               </button>
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-red-600 text-white shadow font-bold' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               >
                 <CalendarDays className="w-3.5 h-3.5" /> Events
               </button>
@@ -468,7 +468,7 @@ export default function App() {
                 <span className="text-[11px] text-white/60 font-mono">1,319 Cards</span>
               </div>
               <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></div>
               </div>
             </div>
           </div>
@@ -513,7 +513,7 @@ export default function App() {
                     onClick={() => {
                       window.location.hash = 'fighters';
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider"
+                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider"
                   >
                     <ArrowLeft className="w-4 h-4" /> Back to Fighter Directory
                   </button>
@@ -559,7 +559,7 @@ export default function App() {
                     onClick={() => {
                       window.location.hash = 'events';
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider"
+                    className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider"
                   >
                     <ArrowLeft className="w-4 h-4" /> Back to Events Directory
                   </button>
@@ -654,7 +654,7 @@ export default function App() {
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             onClick={scrollToTop}
             id="scroll-to-top-button"
-            className="fixed bottom-6 right-6 z-50 p-3 sm:p-3.5 bg-black/80 backdrop-blur-md border border-red-500/30 hover:border-red-500 text-red-500 hover:text-white rounded-full shadow-2xl shadow-red-500/5 cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-500/50 flex items-center justify-center group"
+            className="fixed bottom-6 right-6 z-50 p-3 sm:p-3.5 bg-black/80 backdrop-blur-md border border-amber-500/30 hover:border-amber-500 text-amber-500 hover:text-zinc-950 hover:bg-amber-500 rounded-full shadow-2xl shadow-amber-500/5 cursor-pointer transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/50 flex items-center justify-center group"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300" />

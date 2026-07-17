@@ -176,7 +176,7 @@ export default function FightDetail({
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, ease: 'linear', duration: 1.5 }}
-          className="w-10 h-10 rounded-full border-4 border-white/5 border-t-red-500"
+          className="w-10 h-10 rounded-full border-4 border-white/5 border-t-amber-500"
         />
         <span>Analyzing Combat Specs & Loading Telemetry...</span>
       </div>
@@ -185,13 +185,13 @@ export default function FightDetail({
 
   if (errorStr || !fighterA || !fighterB) {
     return (
-      <div className="bg-red-500/10 border border-red-550/20 p-8 rounded-2xl max-w-xl mx-auto space-y-4 text-center" id="fight-detail-error">
-        <AlertCircle className="w-10 h-10 text-red-500 mx-auto" />
+      <div className="bg-amber-500/10 border border-amber-500/20 p-8 rounded-2xl max-w-xl mx-auto space-y-4 text-center" id="fight-detail-error">
+        <AlertCircle className="w-10 h-10 text-amber-500 mx-auto" />
         <h2 className="font-bold text-sm uppercase tracking-wide text-slate-100">Tactical Comparison Failed</h2>
         <p className="text-xs text-slate-400 font-mono leading-relaxed">{errorStr || 'Unable to load fighters'}</p>
         <button 
           onClick={onBack}
-          className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-red-400 font-mono tracking-widest font-bold uppercase transition-all cursor-pointer inline-flex items-center gap-2"
+          className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-amber-400 font-mono tracking-widest font-bold uppercase transition-all cursor-pointer inline-flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" /> Return to Previous View
         </button>
@@ -637,6 +637,151 @@ export default function FightDetail({
 
   const prediction = calculatePrediction();
 
+  // Color configuration based on fight outcome
+  const outcomeA = getFighterOutcome(true).toLowerCase().trim();
+  const outcomeB = getFighterOutcome(false).toLowerCase().trim();
+  const hasVerifiableOutcome = (outcomeA === 'win' || outcomeA === 'loss' || outcomeB === 'win' || outcomeB === 'loss');
+  const isWinnerA = outcomeA === 'win' || outcomeB === 'loss';
+  const isWinnerB = outcomeB === 'win' || outcomeA === 'loss';
+
+  interface FighterTheme {
+    text: string;
+    textHover: string;
+    bgGlow: string;
+    bgGlowHalf: string;
+    borderGlow: string;
+    borderGlowHover: string;
+    badgeText: string;
+    bg500: string;
+    gradientFrom: string;
+    gradientTo: string;
+    gradientRFrom: string;
+    gradientRTo: string;
+    primaryClass: string;
+  }
+
+  // Default theme settings (Fuchsia vs Sky)
+  let themeA: FighterTheme = {
+    text: 'text-fuchsia-400',
+    textHover: 'hover:text-fuchsia-400',
+    bgGlow: 'bg-fuchsia-500/10',
+    bgGlowHalf: 'bg-fuchsia-500/5',
+    borderGlow: 'border-fuchsia-500/20',
+    borderGlowHover: 'hover:border-fuchsia-500/30 group-hover:border-fuchsia-500/30',
+    badgeText: 'text-fuchsia-400',
+    bg500: 'bg-fuchsia-500',
+    gradientFrom: 'from-fuchsia-500',
+    gradientTo: 'to-fuchsia-600',
+    gradientRFrom: 'from-fuchsia-600',
+    gradientRTo: 'to-fuchsia-500',
+    primaryClass: 'fuchsia'
+  };
+
+  let themeB: FighterTheme = {
+    text: 'text-sky-400',
+    textHover: 'hover:text-sky-400',
+    bgGlow: 'bg-blue-650/10',
+    bgGlowHalf: 'bg-sky-500/5',
+    borderGlow: 'border-sky-500/20',
+    borderGlowHover: 'hover:border-sky-500/30 group-hover:border-sky-500/30',
+    badgeText: 'text-sky-400',
+    bg500: 'bg-sky-500',
+    gradientFrom: 'from-sky-500',
+    gradientTo: 'to-sky-600',
+    gradientRFrom: 'from-sky-600',
+    gradientRTo: 'to-sky-500',
+    primaryClass: 'sky'
+  };
+
+  if (hasVerifiableOutcome) {
+    if (isWinnerA) {
+      themeA = {
+        text: 'text-emerald-400',
+        textHover: 'hover:text-emerald-400',
+        bgGlow: 'bg-emerald-500/10',
+        bgGlowHalf: 'bg-emerald-500/5',
+        borderGlow: 'border-emerald-500/20',
+        borderGlowHover: 'hover:border-emerald-500/30 group-hover:border-emerald-500/30',
+        badgeText: 'text-emerald-400',
+        bg500: 'bg-emerald-500',
+        gradientFrom: 'from-emerald-500',
+        gradientTo: 'to-emerald-600',
+        gradientRFrom: 'from-emerald-600',
+        gradientRTo: 'to-emerald-500',
+        primaryClass: 'emerald'
+      };
+      themeB = {
+        text: 'text-red-500',
+        textHover: 'hover:text-red-500',
+        bgGlow: 'bg-red-500/10',
+        bgGlowHalf: 'bg-red-500/5',
+        borderGlow: 'border-red-500/20',
+        borderGlowHover: 'hover:border-red-500/30 group-hover:border-red-500/30',
+        badgeText: 'text-red-400',
+        bg500: 'bg-red-500',
+        gradientFrom: 'from-red-500',
+        gradientTo: 'to-red-600',
+        gradientRFrom: 'from-red-600',
+        gradientRTo: 'to-red-500',
+        primaryClass: 'red'
+      };
+    } else {
+      themeA = {
+        text: 'text-red-500',
+        textHover: 'hover:text-red-500',
+        bgGlow: 'bg-red-500/10',
+        bgGlowHalf: 'bg-red-500/5',
+        borderGlow: 'border-red-500/20',
+        borderGlowHover: 'hover:border-red-500/30 group-hover:border-red-500/30',
+        badgeText: 'text-red-400',
+        bg500: 'bg-red-500',
+        gradientFrom: 'from-red-500',
+        gradientTo: 'to-red-600',
+        gradientRFrom: 'from-red-600',
+        gradientRTo: 'to-red-500',
+        primaryClass: 'red'
+      };
+      themeB = {
+        text: 'text-emerald-400',
+        textHover: 'hover:text-emerald-400',
+        bgGlow: 'bg-emerald-500/10',
+        bgGlowHalf: 'bg-emerald-500/5',
+        borderGlow: 'border-emerald-500/20',
+        borderGlowHover: 'hover:border-emerald-500/30 group-hover:border-emerald-500/30',
+        badgeText: 'text-emerald-400',
+        bg500: 'bg-emerald-500',
+        gradientFrom: 'from-emerald-500',
+        gradientTo: 'to-emerald-600',
+        gradientRFrom: 'from-emerald-600',
+        gradientRTo: 'to-emerald-500',
+        primaryClass: 'emerald'
+      };
+    }
+  }
+
+  // Props for DualTrajectoryGraph
+  const graphThemeA = {
+    primaryClass: themeA.primaryClass,
+    textClass: themeA.badgeText,
+    bgClass: themeA.bgGlow,
+    bg5Class: themeA.bgGlowHalf,
+    bg500Class: themeA.bg500,
+    borderClass: themeA.borderGlow,
+    glowId: 'glowDynamicA',
+    hex: themeA.primaryClass === 'fuchsia' ? '#d946ef' : themeA.primaryClass === 'emerald' ? '#10b981' : '#ef4444'
+  };
+
+  const graphThemeB = {
+    primaryClass: themeB.primaryClass,
+    textClass: themeB.badgeText,
+    bgClass: themeB.bgGlow,
+    bg5Class: themeB.bgGlowHalf,
+    bg500Class: themeB.bg500,
+    borderClass: themeB.borderGlow,
+    glowId: 'glowDynamicB',
+    hex: themeB.primaryClass === 'sky' ? '#38bdf8' : themeB.primaryClass === 'emerald' ? '#10b981' : '#ef4444'
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 15 }}
@@ -649,11 +794,11 @@ export default function FightDetail({
       <div className="bg-black/40 px-3 sm:px-6 py-3.5 border-b border-white/10 flex items-center justify-between gap-3 relative z-10">
         <button 
           onClick={onBack}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shrink-0"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shrink-0"
         >
           <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {backLabel || 'Back to Profile'}
         </button>
-        <span className="text-[9px] sm:text-[10px] text-white/40 font-mono uppercase tracking-widest font-bold text-right shrink-0">
+        <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-widest font-bold text-right shrink-0">
           Stats Comparison
         </span>
       </div>
@@ -662,15 +807,15 @@ export default function FightDetail({
       <div className="relative min-h-[360px] md:min-h-[440px] bg-gradient-to-b from-black/50 to-black/10 border-b border-white/5 overflow-hidden flex flex-col justify-end p-4 sm:p-6 select-none">
         
         {/* Background Atmosphere Lights */}
-        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-red-650/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-64 h-64 bg-blue-650/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className={`absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-64 h-64 ${themeA.bgGlow} rounded-full blur-3xl pointer-events-none`}></div>
+        <div className={`absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-64 h-64 ${themeB.bgGlow} rounded-full blur-3xl pointer-events-none`}></div>
         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1px] bg-gradient-to-b from-white/15 via-white/5 to-transparent pointer-events-none hidden md:block"></div>
 
         {/* Dynamic Matchup Header Info */}
         <div className="absolute top-8 left-6 right-6 flex flex-col items-center text-center z-20 space-y-2 pointer-events-auto">
           {match ? (
             <>
-              <span className="text-[10px] font-mono text-red-500 font-black tracking-widest uppercase bg-red-950/40 border border-red-550/20 px-2.5 py-1 rounded">
+              <span className="text-[10px] font-mono text-amber-500 font-black tracking-widest uppercase bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded">
                 {match.weightClass || 'MMA Weightclass'} Bout
               </span>
               {match.accolades && match.accolades.some(acc => acc.Type === 'Belt') && (
@@ -684,7 +829,7 @@ export default function FightDetail({
               {onSelectEvent && match.eventId ? (
                 <button 
                   onClick={() => onSelectEvent(match.eventId)}
-                  className="text-sm md:text-base font-black italic text-white uppercase tracking-tight hover:text-red-500 cursor-pointer transition-colors focus:outline-none focus:text-red-500 text-center max-w-full truncate px-1"
+                  className="text-sm md:text-base font-black italic text-white uppercase tracking-tight hover:text-amber-500 cursor-pointer transition-colors focus:outline-none focus:text-amber-500 text-center max-w-full truncate px-1"
                 >
                   {match.eventName}
                 </button>
@@ -694,13 +839,13 @@ export default function FightDetail({
                 </h3>
               )}
               {match.eventDate && (
-                <span className="text-[11px] text-white/40 font-mono uppercase tracking-widest">
+                <span className="text-[11px] text-white/65 font-mono uppercase tracking-widest">
                   {new Date(match.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
                 </span>
               )}
             </>
           ) : (
-            <span className="text-[10px] font-mono text-white/30 tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">
+            <span className="text-[10px] font-mono text-white/60 tracking-widest uppercase bg-white/5 border border-white/10 px-2.5 py-1 rounded">
               Hypothetical Fighter Matchup
             </span>
           )}
@@ -734,7 +879,7 @@ export default function FightDetail({
                     />
                   </div>
                 ) : (
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-2xl mb-2">
+                  <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black ${themeA.text} text-2xl mb-2`}>
                     {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
                   </div>
                 )}
@@ -759,8 +904,22 @@ export default function FightDetail({
             
             <button 
               onClick={() => onSelectFighter(fighterA.id)}
-              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-amber-500/30 group-hover:border-amber-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+              className={`space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 ${themeA.borderGlowHover} transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none`}
             >
+              {(() => {
+                const outcome = getFighterOutcome(true).toLowerCase();
+                if (outcome === 'win' || outcome === 'w') {
+                  return <span className="text-[10px] font-black tracking-widest text-emerald-400 uppercase font-mono">WIN</span>;
+                } else if (outcome === 'loss' || outcome === 'l') {
+                  return <span className="text-[10px] font-black tracking-widest text-red-500 uppercase font-mono">LOSS</span>;
+                } else if (outcome === 'draw' || outcome === 'd') {
+                  return <span className="text-[10px] font-black tracking-widest text-neutral-400 uppercase font-mono">DRAW</span>;
+                } else if (outcome === 'no contest' || outcome === 'no_contest' || outcome === 'nc') {
+                  return <span className="text-[10px] font-black tracking-widest text-neutral-400 uppercase font-mono">NC</span>;
+                } else {
+                  return null;
+                }
+              })()}
               <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
                 {fighterA.fullName}
               </span>
@@ -790,7 +949,7 @@ export default function FightDetail({
                     />
                   </div>
                 ) : (
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-2xl mb-2">
+                  <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white/20 bg-black/40 flex items-center justify-center font-mono font-black ${themeB.text} text-2xl mb-2`}>
                     {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
                   </div>
                 )}
@@ -815,8 +974,22 @@ export default function FightDetail({
 
             <button 
               onClick={() => onSelectFighter(fighterB.id)}
-              className="space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 hover:border-amber-500/30 group-hover:border-amber-500/30 transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none"
+              className={`space-y-1 z-20 pointer-events-auto bg-black/40 hover:bg-black/60 ${themeB.borderGlowHover} transition-all backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-white/10 shadow-lg max-w-[170px] sm:max-w-[220px] text-center w-full cursor-pointer flex flex-col items-center focus:outline-none`}
             >
+              {(() => {
+                const outcome = getFighterOutcome(false).toLowerCase();
+                if (outcome === 'win' || outcome === 'w') {
+                  return <span className="text-[10px] font-black tracking-widest text-emerald-400 uppercase font-mono">WIN</span>;
+                } else if (outcome === 'loss' || outcome === 'l') {
+                  return <span className="text-[10px] font-black tracking-widest text-red-500 uppercase font-mono">LOSS</span>;
+                } else if (outcome === 'draw' || outcome === 'd') {
+                  return <span className="text-[10px] font-black tracking-widest text-neutral-400 uppercase font-mono">DRAW</span>;
+                } else if (outcome === 'no contest' || outcome === 'no_contest' || outcome === 'nc') {
+                  return <span className="text-[10px] font-black tracking-widest text-neutral-400 uppercase font-mono">NC</span>;
+                } else {
+                  return null;
+                }
+              })()}
               <span className="block font-black italic text-white text-xs sm:text-sm md:text-base leading-tight uppercase transition-colors tracking-tight text-center w-full truncate">
                 {fighterB.fullName}
               </span>
@@ -834,7 +1007,7 @@ export default function FightDetail({
       {/* Fight Detail Outcome Box if match is active */}
       {match && (
         <div className="bg-[#121212] border-b border-white/10 p-5 md:p-6 space-y-4">
-          <div className="flex items-center gap-2 text-red-500 font-bold italic uppercase tracking-wider text-xs border-b border-white/5 pb-2">
+          <div className="flex items-center gap-2 text-amber-500 font-bold italic uppercase tracking-wider text-xs border-b border-white/5 pb-2">
             <Trophy className="w-4 h-4 text-amber-500" /> Bout Outcome & Analytics
           </div>
           
@@ -855,7 +1028,7 @@ export default function FightDetail({
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
               }`}
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1 truncate max-w-full group-hover:text-white/60">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1 truncate max-w-full group-hover:text-white/85">
                 {fighterA.fullName}
               </span>
               <span className="text-lg font-black italic uppercase">
@@ -865,7 +1038,7 @@ export default function FightDetail({
 
             {/* Method / Round detail */}
             <div className="bg-white/5 p-4 rounded-xl border border-white/5 text-center flex flex-col justify-center items-center order-3 md:order-2">
-              <span className="text-xs font-black italic text-red-500 uppercase tracking-tight mb-1">
+              <span className="text-xs font-black italic text-amber-500 uppercase tracking-tight mb-1">
                 {match.method || 'Result'}
               </span>
               {match.endingRound && (
@@ -886,7 +1059,7 @@ export default function FightDetail({
                     : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/60 hover:border-white/20'
               }`}
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-white/40 block mb-1 truncate max-w-full group-hover:text-white/60">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-white/65 block mb-1 truncate max-w-full group-hover:text-white/85">
                 {fighterB.fullName}
               </span>
               <span className="text-lg font-black italic uppercase">
@@ -922,6 +1095,8 @@ export default function FightDetail({
             fightsB={fighterB.fightsParticipated}
             nameA={fighterA.fullName}
             nameB={fighterB.fullName}
+            colorThemeA={graphThemeA}
+            colorThemeB={graphThemeB}
             onSelectEvent={(eventId) => {
               window.location.hash = `events/${eventId}`;
             }}
@@ -939,7 +1114,7 @@ export default function FightDetail({
                 Predictive Matchup Simulation
               </h4>
             </div>
-            <div className="text-[9px] font-mono text-white/40 uppercase bg-black/30 border border-white/5 px-2 py-1 rounded max-w-xs leading-normal">
+            <div className="text-[10px] font-mono text-white/65 uppercase bg-black/30 border border-white/5 px-2 py-1 rounded max-w-xs leading-normal">
               🔮 Computed strictly via pre-fight variables. Independent of real outcome.
             </div>
           </div>
@@ -947,7 +1122,7 @@ export default function FightDetail({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
             {/* Fighter A Probability Display */}
             <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-a">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+              <div className={`absolute top-0 right-0 w-24 h-24 ${themeA.bgGlowHalf} rounded-full blur-3xl pointer-events-none`} />
               
               {/* Headshot on the LEFT ("end-left") */}
               <div className="shrink-0 relative z-10" id="prediction-headshot-fighter-a">
@@ -959,7 +1134,7 @@ export default function FightDetail({
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-base sm:text-lg">
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeA.text} text-base sm:text-lg`}>
                     {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
                   </div>
                 )}
@@ -967,13 +1142,13 @@ export default function FightDetail({
 
               {/* Text details on the RIGHT */}
               <div className="flex flex-col items-end text-right relative z-10 flex-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
+                <span className={`text-[10px] font-mono font-bold tracking-widest ${themeA.badgeText} bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full`}>
                   {fighterA.fullName}
                 </span>
                 <span className="text-3xl sm:text-4xl font-black italic font-mono text-white leading-none font-sans">
                   {prediction.probA}%
                 </span>
-                <span className="text-[9px] font-mono text-white/50 uppercase tracking-wider mt-1">
+                <span className="text-[10px] font-mono text-white/70 uppercase tracking-wider mt-1">
                   Predicted Probability
                 </span>
               </div>
@@ -981,17 +1156,17 @@ export default function FightDetail({
 
             {/* Fighter B Probability Display */}
             <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4 flex items-center justify-between relative overflow-hidden gap-4" id="prediction-card-fighter-b">
-              <div className="absolute top-0 left-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+              <div className={`absolute top-0 left-0 w-24 h-24 ${themeB.bgGlowHalf} rounded-full blur-3xl pointer-events-none`} />
               
               {/* Text details on the LEFT */}
               <div className="flex flex-col items-start text-left relative z-10 flex-1 order-1">
-                <span className="text-[10px] font-mono font-bold tracking-widest text-amber-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full">
+                <span className={`text-[10px] font-mono font-bold tracking-widest ${themeB.badgeText} bg-white/5 border border-white/10 px-2 py-0.5 rounded mb-1.5 truncate max-w-full`}>
                   {fighterB.fullName}
                 </span>
                 <span className="text-3xl sm:text-4xl font-black italic font-mono text-white leading-none font-sans">
                   {prediction.probB}%
                 </span>
-                <span className="text-[9px] font-mono text-white/50 uppercase tracking-wider mt-1">
+                <span className="text-[10px] font-mono text-white/70 uppercase tracking-wider mt-1">
                   Predicted Probability
                 </span>
               </div>
@@ -1006,7 +1181,7 @@ export default function FightDetail({
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black text-amber-500 text-base sm:text-lg">
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeB.text} text-base sm:text-lg`}>
                     {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
                   </div>
                 )}
@@ -1018,15 +1193,15 @@ export default function FightDetail({
           <div className="space-y-1.5">
             <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
               <div 
-                className="bg-gradient-to-r from-amber-600 to-amber-500 h-full transition-all duration-500" 
+                className={`bg-gradient-to-r ${themeA.gradientRFrom} ${themeA.gradientRTo} h-full transition-all duration-500`} 
                 style={{ width: `${prediction.probA}%` }}
               />
               <div 
-                className="bg-gradient-to-r from-zinc-500 to-zinc-650 h-full transition-all duration-500" 
+                className={`bg-gradient-to-r ${themeB.gradientRFrom} ${themeB.gradientRTo} h-full transition-all duration-500`} 
                 style={{ width: `${prediction.probB}%` }}
               />
             </div>
-            <div className="flex justify-between items-center text-[9px] font-mono text-white/40 uppercase tracking-widest">
+            <div className="flex justify-between items-center text-[10px] font-mono text-white/65 uppercase tracking-widest">
               <span>{fighterA.lastName || 'FIGHTER A'} ({prediction.probA}%)</span>
               <span>PROBABILITY RATIO</span>
               <span>{fighterB.lastName || 'FIGHTER B'} ({prediction.probB}%)</span>
@@ -1057,14 +1232,16 @@ export default function FightDetail({
                           <span className="text-[11px] font-black italic text-white uppercase tracking-tight block">
                             {b.label}
                           </span>
-                          <span className="text-[9px] text-white/40 block font-mono leading-none mt-0.5">
+                          <span className="text-[10px] text-white/65 block font-mono leading-none mt-1">
                             {b.desc}
                           </span>
                         </div>
-                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                          favA || favB 
-                            ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' 
-                            : 'bg-white/5 text-white/40 border border-white/5'
+                        <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${
+                          favA 
+                            ? `${themeA.bgGlow} ${themeA.badgeText} border ${themeA.borderGlow}` 
+                            : favB
+                            ? `${themeB.bgGlow} ${themeB.badgeText} border ${themeB.borderGlow}`
+                            : 'bg-white/5 text-white/65 border border-white/10'
                         }`}>
                           {favA ? `${(fighterA.lastName || 'Fighter A').toUpperCase()} ADVANTAGE` : favB ? `${(fighterB.lastName || 'Fighter B').toUpperCase()} ADVANTAGE` : 'EVEN'}
                         </span>
@@ -1072,9 +1249,9 @@ export default function FightDetail({
 
                       <div className="grid grid-cols-3 gap-2 items-center text-center font-mono text-[10px]">
                         {/* Redcorner metric */}
-                        <div className={`text-right ${favA ? 'text-amber-400 font-bold' : 'text-white/60'}`}>
+                        <div className={`text-right ${favA ? `${themeA.badgeText} font-bold` : 'text-white/60'}`}>
                           {b.valA}
-                          <span className="text-[8px] text-white/30 block">
+                          <span className="text-[10px] text-white/60 block mt-0.5">
                             {b.scoreA > 0 ? `+${b.scoreA.toFixed(1)} pts` : b.scoreA < 0 ? `${b.scoreA.toFixed(1)} pts` : '0.0 pts'}
                           </span>
                         </div>
@@ -1082,14 +1259,14 @@ export default function FightDetail({
                         {/* Mid-label line */}
                         <div className="h-[1px] bg-white/10 relative">
                           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full ${
-                            favA || favB ? 'bg-amber-500' : 'bg-white/35'
+                            favA ? themeA.bg500 : favB ? themeB.bg500 : 'bg-white/35'
                           }`} />
                         </div>
 
                         {/* Bluecorner metric */}
-                        <div className={`text-left ${favB ? 'text-amber-400 font-bold' : 'text-white/60'}`}>
+                        <div className={`text-left ${favB ? `${themeB.badgeText} font-bold` : 'text-white/60'}`}>
                           {b.valB}
-                          <span className="text-[8px] text-white/30 block">
+                          <span className="text-[10px] text-white/60 block mt-0.5">
                             {b.scoreB > 0 ? `+${b.scoreB.toFixed(1)} pts` : b.scoreB < 0 ? `${b.scoreB.toFixed(1)} pts` : '0.0 pts'}
                           </span>
                         </div>
@@ -1117,12 +1294,9 @@ export default function FightDetail({
           <div className="bg-black/25 rounded-2xl border border-white/10 overflow-hidden divide-y divide-white/5">
             
             {/* TAIL OF THE TAPE TABLE HEADER */}
-            <div className="bg-white/[0.02] py-2.5 px-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center border-b border-white/5 text-center">
+            <div className="bg-white/[0.02] py-3.5 px-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center border-b border-white/5 text-center">
               <div className="text-right">
-                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-amber-500 uppercase bg-amber-950/40 border border-amber-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
-                  FIGHTER A
-                </span>
-                <span className="block text-xs sm:text-sm font-black italic uppercase text-white tracking-tight mt-1 truncate pr-2">
+                <span className="block text-sm sm:text-base font-black italic uppercase text-white tracking-tight truncate pr-2">
                   {fighterA.lastName || fighterA.fullName}
                 </span>
               </div>
@@ -1132,285 +1306,282 @@ export default function FightDetail({
                 </span>
               </div>
               <div className="text-left">
-                <span className="text-[8px] sm:text-[10px] font-mono font-bold tracking-widest text-amber-500 uppercase bg-amber-950/40 border border-amber-500/20 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
-                  FIGHTER B
-                </span>
-                <span className="block text-xs sm:text-sm font-black italic uppercase text-white tracking-tight mt-1 truncate pr-2">
+                <span className="block text-sm sm:text-base font-black italic uppercase text-white tracking-tight truncate pl-2">
                   {fighterB.lastName || fighterB.fullName}
                 </span>
               </div>
             </div>
 
             {/* AGE COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageA < ageB ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageA < ageB ? themeA.text : 'text-white'}`}>
                   {ageA > 0 ? `${ageA} YRS` : 'Unknown'}
                 </span>
-                {ageA > 0 && ageB > 0 && ageA < ageB && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (YOUNGER, +{ageB - ageA} YRS)
-                  </span>
-                )}
                 {ageA > 0 && ageB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                      className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                       style={{ width: `${ageBar.pct1}%` }}
                     />
                   </div>
+                )}
+                {ageA > 0 && ageB > 0 && ageA < ageB && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeA.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (YOUNGER, +{ageB - ageA} YRS)
+                  </span>
                 )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <Calendar className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   AGE AT BOUT
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageB < ageA ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageB < ageA ? themeB.text : 'text-white'}`}>
                   {ageB > 0 ? `${ageB} YRS` : 'Unknown'}
                 </span>
-                {ageA > 0 && ageB > 0 && ageB < ageA && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (YOUNGER, +{ageA - ageB} YRS)
-                  </span>
-                )}
                 {ageA > 0 && ageB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                      className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                       style={{ width: `${ageBar.pct2}%` }}
                     />
                   </div>
+                )}
+                {ageA > 0 && ageB > 0 && ageB < ageA && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeB.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (YOUNGER, +{ageA - ageB} YRS)
+                  </span>
                 )}
               </div>
             </div>
 
             {/* HEIGHT COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valA > valB ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valA > valB ? themeA.text : 'text-white'}`}>
                   {displayHeight(fighterA.height)}
                 </span>
-                {valA > valB && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(valA - valB).toFixed(0)}&rdquo;)
-                  </span>
-                )}
                 {valA > 0 && valB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                      className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                       style={{ width: `${heightBar.pct1}%` }}
                     />
                   </div>
+                )}
+                {valA > valB && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeA.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(valA - valB).toFixed(0)}&rdquo;)
+                  </span>
                 )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <Ruler className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   HEIGHT
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valB > valA ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valB > valA ? themeB.text : 'text-white'}`}>
                   {displayHeight(fighterB.height)}
                 </span>
-                {valB > valA && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(valB - valA).toFixed(0)}&rdquo;)
-                  </span>
-                )}
                 {valA > 0 && valB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                      className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                       style={{ width: `${heightBar.pct2}%` }}
                     />
                   </div>
+                )}
+                {valB > valA && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeB.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(valB - valA).toFixed(0)}&rdquo;)
+                  </span>
                 )}
               </div>
             </div>
 
             {/* REACH COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachA > reachB ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachA > reachB ? themeA.text : 'text-white'}`}>
                   {reachA > 0 ? `${reachA}.0"` : 'Unknown'}
                 </span>
-                {reachA > reachB && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(reachA - reachB).toFixed(0)}&rdquo;)
-                  </span>
-                )}
                 {reachA > 0 && reachB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                      className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                       style={{ width: `${reachBar.pct1}%` }}
                     />
                   </div>
+                )}
+                {reachA > reachB && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeA.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(reachA - reachB).toFixed(0)}&rdquo;)
+                  </span>
                 )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   WINGSPAN
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachB > reachA ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachB > reachA ? themeB.text : 'text-white'}`}>
                   {reachB > 0 ? `${reachB}.0"` : 'Unknown'}
                 </span>
-                {reachB > reachA && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(reachB - reachA).toFixed(0)}&rdquo;)
-                  </span>
-                )}
                 {reachA > 0 && reachB > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                      className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                       style={{ width: `${reachBar.pct2}%` }}
                     />
                   </div>
+                )}
+                {reachB > reachA && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeB.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(reachB - reachA).toFixed(0)}&rdquo;)
+                  </span>
                 )}
               </div>
             </div>
 
             {/* COMBATIVE WEIGHT COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightA.lbs || 0) > (fightWeightB.lbs || 0) ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightA.lbs || 0) > (fightWeightB.lbs || 0) ? themeA.text : 'text-white'}`}>
                   {fightWeightA.lbs ? `${fightWeightA.lbs} LBS` : 'N/A'}
                 </span>
-                <span className="text-[8px] sm:text-[9px] text-white/40 font-mono block uppercase tracking-wider mt-0.5 leading-none">
+                <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
                   {fightWeightA.kg ? `${fightWeightA.kg} KG` : 'N/A'}
                 </span>
-                {(fightWeightA.lbs || 0) > (fightWeightB.lbs || 0) && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-1 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(fightWeightA.lbs || 0) - (fightWeightB.lbs || 0)} LBS)
-                  </span>
-                )}
                 {(fightWeightA.lbs || 0) > 0 && (fightWeightB.lbs || 0) > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                     <div 
-                      className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                      className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                       style={{ width: `${weightBar.pct1}%` }}
                     />
                   </div>
+                )}
+                {(fightWeightA.lbs || 0) > (fightWeightB.lbs || 0) && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeA.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(fightWeightA.lbs || 0) - (fightWeightB.lbs || 0)} LBS)
+                  </span>
                 )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <Scale className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   BOUT WEIGHT
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightB.lbs || 0) > (fightWeightA.lbs || 0) ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightB.lbs || 0) > (fightWeightA.lbs || 0) ? themeB.text : 'text-white'}`}>
                   {fightWeightB.lbs ? `${fightWeightB.lbs} LBS` : 'N/A'}
                 </span>
-                <span className="text-[8px] sm:text-[9px] text-white/40 font-mono block uppercase tracking-wider mt-0.5 leading-none">
+                <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
                   {fightWeightB.kg ? `${fightWeightB.kg} KG` : 'N/A'}
                 </span>
-                {(fightWeightB.lbs || 0) > (fightWeightA.lbs || 0) && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-1 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(fightWeightB.lbs || 0) - (fightWeightA.lbs || 0)} LBS)
-                  </span>
-                )}
                 {(fightWeightA.lbs || 0) > 0 && (fightWeightB.lbs || 0) > 0 && (
                   <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                     <div 
-                      className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                      className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                       style={{ width: `${weightBar.pct2}%` }}
                     />
                   </div>
+                )}
+                {(fightWeightB.lbs || 0) > (fightWeightA.lbs || 0) && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeB.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(fightWeightB.lbs || 0) - (fightWeightA.lbs || 0)} LBS)
+                  </span>
                 )}
               </div>
             </div>
 
             {/* WIN RATE COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateA > winRateB ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateA > winRateB ? themeA.text : 'text-white'}`}>
                   {winRateA}%
                 </span>
-                {winRateA > winRateB && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(winRateA - winRateB)}%)
-                  </span>
-                )}
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                   <div 
-                    className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                    className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                     style={{ width: `${winRateBar.pct1}%` }}
                   />
                 </div>
+                {winRateA > winRateB && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeA.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(winRateA - winRateB)}%)
+                  </span>
+                )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <TrendingUp className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   WIN RATE
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateB > winRateA ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateB > winRateA ? themeB.text : 'text-white'}`}>
                   {winRateB}%
                 </span>
-                {winRateB > winRateA && (
-                  <span className="text-[8px] sm:text-[9px] text-amber-500 font-mono block tracking-wider mt-0.5 font-bold uppercase leading-none">
-                    ADVANTAGE (+{(winRateB - winRateA)}%)
-                  </span>
-                )}
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                   <div 
-                    className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                    className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                     style={{ width: `${winRateBar.pct2}%` }}
                   />
                 </div>
+                {winRateB > winRateA && (
+                  <span className={`text-[10px] sm:text-[10px] ${themeB.text} font-mono block tracking-wider mt-1 font-bold uppercase leading-none`}>
+                    ADVANTAGE (+{(winRateB - winRateA)}%)
+                  </span>
+                )}
               </div>
             </div>
 
             {/* TOTAL WINS COMPARISON */}
-            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-center transition-colors hover:bg-white/[0.02]">
+            <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsA > winsB ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsA > winsB ? themeA.text : 'text-white'}`}>
                   {winsA} Wins
                 </span>
-                <span className="text-[8px] sm:text-[9px] text-white/40 font-mono block uppercase tracking-wider mt-0.5 leading-none">
+                <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
                   {recA.wins}W - {recA.losses}L{recA.draws > 0 ? ` - ${recA.draws}D` : ''}{recA.noContests > 0 ? ` - ${recA.noContests}NC` : ''}
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
                   <div 
-                    className="bg-gradient-to-l from-amber-500 to-amber-600 h-full rounded-full" 
+                    className={`bg-gradient-to-l ${themeA.gradientFrom} ${themeA.gradientTo} h-full rounded-full`} 
                     style={{ width: `${winsBar.pct1}%` }}
                   />
                 </div>
@@ -1419,22 +1590,22 @@ export default function FightDetail({
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <Trophy className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   RECORD
                 </span>
               </div>
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsB > winsA ? 'text-amber-500' : 'text-white'}`}>
+                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsB > winsA ? themeB.text : 'text-white'}`}>
                   {winsB} Wins
                 </span>
-                <span className="text-[8px] sm:text-[9px] text-white/40 font-mono block uppercase tracking-wider mt-0.5 leading-none">
+                <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
                   {recB.wins}W - {recB.losses}L{recB.draws > 0 ? ` - ${recB.draws}D` : ''}{recB.noContests > 0 ? ` - ${recB.noContests}NC` : ''}
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
                   <div 
-                    className="bg-gradient-to-r from-zinc-500 to-zinc-600 h-full rounded-full" 
+                    className={`bg-gradient-to-r ${themeB.gradientFrom} ${themeB.gradientTo} h-full rounded-full`} 
                     style={{ width: `${winsBar.pct2}%` }}
                   />
                 </div>
@@ -1461,14 +1632,14 @@ export default function FightDetail({
                     {item.res}
                   </a>
                 )) : (
-                  <span className="text-[9px] font-mono text-white/30 uppercase">None</span>
+                  <span className="text-[10px] font-mono text-white/60 uppercase">None</span>
                 )}
               </div>
               
               {/* Stat Mid label */}
               <div className="flex flex-col items-center text-center">
                 <TrendingUp className="w-3.5 h-3.5 text-amber-500 mb-1" />
-                <span className="text-[8px] sm:text-[10px] text-white/40 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
+                <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-wider sm:tracking-widest font-extrabold leading-none">
                   RECENT FORM
                 </span>
               </div>
@@ -1491,7 +1662,7 @@ export default function FightDetail({
                     {item.res}
                   </a>
                 )) : (
-                  <span className="text-[9px] font-mono text-white/30 uppercase">None</span>
+                  <span className="text-[10px] font-mono text-white/60 uppercase">None</span>
                 )}
               </div>
             </div>

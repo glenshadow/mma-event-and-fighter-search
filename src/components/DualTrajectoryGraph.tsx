@@ -3,12 +3,25 @@ import { FighterProfile } from '../types';
 import { TrendingUp, Calendar, ArrowRight, ChevronRight, Star, Target } from 'lucide-react';
 import { motion } from 'motion/react';
 
+interface ThemeConfig {
+  primaryClass: string;
+  textClass: string;
+  bgClass: string;
+  bg5Class: string;
+  bg500Class: string;
+  borderClass: string;
+  glowId: string;
+  hex: string;
+}
+
 interface DualTrajectoryGraphProps {
   fightsA: NonNullable<FighterProfile['fightsParticipated']>;
   fightsB: NonNullable<FighterProfile['fightsParticipated']>;
   nameA: string;
   nameB: string;
   onSelectEvent?: (id: number) => void;
+  colorThemeA?: ThemeConfig;
+  colorThemeB?: ThemeConfig;
 }
 
 interface TrajectoryPoint {
@@ -27,7 +40,37 @@ interface TrajectoryPoint {
   recordString: string;
 }
 
-export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, onSelectEvent }: DualTrajectoryGraphProps) {
+export default function DualTrajectoryGraph({ 
+  fightsA, 
+  fightsB, 
+  nameA, 
+  nameB, 
+  onSelectEvent,
+  colorThemeA,
+  colorThemeB
+}: DualTrajectoryGraphProps) {
+  const themeA = colorThemeA || {
+    primaryClass: 'fuchsia',
+    textClass: 'text-fuchsia-400',
+    bgClass: 'bg-fuchsia-500/10',
+    bg5Class: 'bg-fuchsia-500/5',
+    bg500Class: 'bg-fuchsia-500',
+    borderClass: 'border-fuchsia-500/20',
+    glowId: 'glowFuchsia',
+    hex: '#d946ef'
+  };
+
+  const themeB = colorThemeB || {
+    primaryClass: 'sky',
+    textClass: 'text-sky-400',
+    bgClass: 'bg-sky-500/10',
+    bg5Class: 'bg-sky-500/5',
+    bg500Class: 'bg-sky-500',
+    borderClass: 'border-sky-500/20',
+    glowId: 'glowSky',
+    hex: '#38bdf8'
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState({ width: 600, height: 260 });
@@ -327,8 +370,8 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
   return (
     <div className="bg-[#121212] border border-white/10 rounded-2xl p-4 sm:p-6 shadow-xl relative overflow-hidden flex flex-col gap-4">
       {/* Background radial glows */}
-      <div className="absolute top-0 left-0 w-44 h-44 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-44 h-44 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className={`absolute top-0 left-0 w-44 h-44 ${themeA.bg5Class} rounded-full blur-3xl pointer-events-none`} />
+      <div className={`absolute bottom-0 right-0 w-44 h-44 ${themeB.bg5Class} rounded-full blur-3xl pointer-events-none`} />
 
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/5 pb-3">
@@ -345,12 +388,12 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
         {/* Legend */}
         <div className="flex gap-4 self-start sm:self-auto text-[10px] font-mono uppercase tracking-wider">
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 bg-amber-500 rounded" />
-            <span className="text-amber-400 font-bold">{nameA.split(' ').slice(-1)[0]}</span>
+            <span className={`w-2.5 h-1 ${themeA.bg500Class} rounded`} />
+            <span className={`${themeA.textClass} font-bold`}>{nameA.split(' ').slice(-1)[0]}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 bg-teal-500 rounded" />
-            <span className="text-teal-400 font-bold">{nameB.split(' ').slice(-1)[0]}</span>
+            <span className={`w-2.5 h-1 ${themeB.bg500Class} rounded`} />
+            <span className={`${themeB.textClass} font-bold`}>{nameB.split(' ').slice(-1)[0]}</span>
           </div>
         </div>
       </div>
@@ -374,13 +417,13 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
           onTouchEnd={handleMouseLeave}
         >
           <defs>
-            <linearGradient id="glowAmber" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+            <linearGradient id={themeA.glowId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={themeA.hex} stopOpacity="0.15" />
+              <stop offset="100%" stopColor={themeA.hex} stopOpacity="0.0" />
             </linearGradient>
-            <linearGradient id="glowTeal" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.0" />
+            <linearGradient id={themeB.glowId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={themeB.hex} stopOpacity="0.15" />
+              <stop offset="100%" stopColor={themeB.hex} stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -415,32 +458,32 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
           })}
 
           {/* Glowing area under path */}
-          {areaA && <path d={areaA} fill="url(#glowAmber)" />}
-          {areaB && <path d={areaB} fill="url(#glowTeal)" />}
+          {areaA && <path d={areaA} fill={`url(#${themeA.glowId})`} />}
+          {areaB && <path d={areaB} fill={`url(#${themeB.glowId})`} />}
 
-          {/* Amber line (Fighter A) */}
+          {/* Dynamic line A (Fighter A) */}
           {pathDataA && (
             <path
               d={pathDataA}
               fill="none"
-              stroke="#f59e0b"
+              stroke={themeA.hex}
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="drop-shadow-[0_0_4px_rgba(245,158,11,0.2)]"
+              style={{ filter: `drop-shadow(0px 0px 4px ${themeA.hex}66)` }}
             />
           )}
 
-          {/* Teal line (Fighter B) */}
+          {/* Dynamic line B (Fighter B) */}
           {pathDataB && (
             <path
               d={pathDataB}
               fill="none"
-              stroke="#14b8a6"
+              stroke={themeB.hex}
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="drop-shadow-[0_0_4px_rgba(20,184,166,0.2)]"
+              style={{ filter: `drop-shadow(0px 0px 4px ${themeB.hex}66)` }}
             />
           )}
 
@@ -464,21 +507,21 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
                     cx={getCoords(activeData.a.point.time, activeData.a.point.score).x}
                     cy={getCoords(activeData.a.point.time, activeData.a.point.score).y}
                     r={6}
-                    fill="#f59e0b"
+                    fill={themeA.hex}
                     stroke="#121212"
                     strokeWidth={1.5}
                   />
                 </g>
               )}
 
-              {/* snap point B dot (Teal) */}
+              {/* snap point B dot (Blue) */}
               {activeData.b && (
                 <g>
                   <circle
                     cx={getCoords(activeData.b.point.time, activeData.b.point.score).x}
                     cy={getCoords(activeData.b.point.time, activeData.b.point.score).y}
                     r={6}
-                    fill="#14b8a6"
+                    fill={themeB.hex}
                     stroke="#121212"
                     strokeWidth={1.5}
                   />
@@ -510,7 +553,7 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
             {activeData.a && activeData.a.index > 0 ? (
               <div className="space-y-1 md:pr-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded border border-amber-500/20 font-bold">
+                  <span className={`font-mono text-[9px] uppercase ${themeA.bgClass} ${themeA.textClass} px-1.5 py-0.5 rounded border ${themeA.borderClass} font-bold`}>
                     {nameA} (Bout #{activeData.a.index})
                   </span>
                   <span className="text-white/30 text-[9px] font-mono">
@@ -543,7 +586,7 @@ export default function DualTrajectoryGraph({ fightsA, fightsB, nameA, nameB, on
             {activeData.b && activeData.b.index > 0 ? (
               <div className="space-y-1 pt-3 md:pt-0 md:pl-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase bg-teal-500/10 text-teal-400 px-1.5 py-0.5 rounded border border-teal-500/20 font-bold">
+                  <span className={`font-mono text-[9px] uppercase ${themeB.bgClass} ${themeB.textClass} px-1.5 py-0.5 rounded border ${themeB.borderClass} font-bold`}>
                     {nameB} (Bout #{activeData.b.index})
                   </span>
                   <span className="text-white/30 text-[9px] font-mono">

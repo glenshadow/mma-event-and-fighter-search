@@ -301,19 +301,19 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
       {/* Search and filter toolbar */}
       <div className="p-4 border-b border-white/10 bg-black/20 space-y-3 nav-controls">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/40" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/60" />
           <input 
             type="text" 
             placeholder="Search events..." 
             value={searchQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-red-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/40 outline-none font-mono transition-colors"
+            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/60 outline-none font-mono transition-colors"
             id="event-search-input"
           />
           {searchQuery && (
             <button
               onClick={() => handleQueryChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
               title="Clear search"
               aria-label="Clear search"
             >
@@ -327,7 +327,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
             <button 
               type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer ${showFilters ? 'bg-red-650/10 border-red-500/40 text-red-400 font-bold' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/25 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer ${showFilters ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/25 hover:text-white'}`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" /> 
               FILTERS
@@ -336,7 +336,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
             {(searchQuery || selectedStatus || selectedEra) && (
               <button 
                 onClick={handleClearFilters}
-                className="text-red-500 hover:text-red-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px]"
+                className="text-amber-500 hover:text-amber-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px]"
               >
                 <FilterX className="w-3.5 h-3.5" /> Reset
               </button>
@@ -344,13 +344,13 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
           </div>
 
           <div className="flex items-center gap-1.5 relative sm:self-auto self-start">
-            <span className="text-white/40 font-mono">Order:</span>
+            <span className="text-white/65 font-mono">Order:</span>
             <div className="flex items-center gap-1.5">
               <div className="relative">
                 <button 
                   type="button"
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[130px] text-left relative"
+                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-amber-500 transition-all font-bold min-w-[130px] text-left relative"
                 >
                   <span>
                     {(() => {
@@ -367,7 +367,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                       return found ? found.label : 'Default';
                     })()}
                   </span>
-                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/60 pointer-events-none" />
                 </button>
 
                 {isSortOpen && (
@@ -391,7 +391,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                             handleSelectChange(opt.value);
                             setIsSortOpen(false);
                           }}
-                          className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${getSelectValue() === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
+                          className={`w-full text-left px-3.5 py-2 hover:bg-amber-500/10 hover:text-amber-400 transition-colors cursor-pointer flex items-center justify-between ${getSelectValue() === opt.value ? 'bg-amber-500/5 text-amber-500 font-bold' : 'text-white/70'}`}
                         >
                           <span>{opt.label}</span>
                         </button>
@@ -404,14 +404,14 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
               <button
                 type="button"
                 onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-red-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
+                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-amber-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
                 title={sortDirection === 'asc' ? "Ascending Order" : "Descending Order"}
                 aria-label={sortDirection === 'asc' ? "Sort ascending" : "Sort descending"}
               >
                 {sortDirection === 'asc' ? (
-                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-amber-500" />
                 ) : (
-                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-amber-500" />
                 )}
               </button>
             </div>
@@ -427,7 +427,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
           >
             {/* Live/Final status toggle */}
             <div>
-              <span className="text-[9px] uppercase tracking-wider font-mono text-white/40 block mb-1.5 font-bold">Event Status</span>
+              <span className="text-[10px] uppercase tracking-wider font-mono text-white/65 block mb-1.5 font-bold">Event Status</span>
               <div className="flex gap-2">
                 <button
                   onClick={() => handleStatusToggle('Final')}
@@ -437,16 +437,16 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                 </button>
                 <button
                   onClick={() => handleStatusToggle('Upcoming')}
-                  className={`px-3 py-1 text-[10px] font-mono rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${selectedStatus === 'Upcoming' ? 'bg-red-600/10 border-red-500/40 text-red-550 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20 hover:text-red-420'}`}
+                  className={`px-3 py-1 text-[10px] font-mono rounded-lg border transition-colors cursor-pointer flex items-center gap-1 ${selectedStatus === 'Upcoming' ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20 hover:text-amber-400'}`}
                 >
-                  <Clock className="w-3 h-3 text-red-555 animate-pulse" /> Upcoming / Live
+                  <Clock className="w-3 h-3 text-amber-500 animate-pulse" /> Upcoming / Live
                 </button>
               </div>
             </div>
 
             {/* Eras list selector */}
             <div>
-              <span className="text-[9px] uppercase tracking-wider font-mono text-white/40 block mb-1.5 font-bold">Historical Era Arcs</span>
+              <span className="text-[10px] uppercase tracking-wider font-mono text-white/65 block mb-1.5 font-bold">Historical Era Arcs</span>
               <div className="grid grid-cols-1 gap-1.5">
                 {ERAS.map((era) => {
                   const active = selectedEra?.startYear === era.startYear && selectedEra?.endYear === era.endYear;
@@ -454,7 +454,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                     <button
                       key={era.name}
                       onClick={() => handleEraToggle(active ? null : era)}
-                      className={`text-left px-3 py-1.5 text-[10px] font-mono rounded-lg border transition-colors truncate cursor-pointer ${active ? 'bg-red-650/20 border-red-500/40 text-red-400 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'}`}
+                      className={`text-left px-3 py-1.5 text-[10px] font-mono rounded-lg border transition-colors truncate cursor-pointer ${active ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'}`}
                     >
                       {era.name}
                     </button>
@@ -469,7 +469,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
       {/* Events list context */}
       <div className="flex-1 bg-black/10 overflow-x-auto">
         {visibleEvents.length === 0 ? (
-          <div className="text-center py-10 text-white/40 font-mono text-xs uppercase tracking-widest">
+          <div className="text-center py-10 text-white/65 font-mono text-xs uppercase tracking-widest">
             No matching events found.
           </div>
         ) : (
@@ -478,7 +478,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/40 uppercase tracking-widest select-none">
+                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none">
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('name')}>
                       Event Card Name {sortBy === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
@@ -512,9 +512,9 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                       <tr 
                         key={e.id}
                         onClick={() => onSelectEvent(e.id)}
-                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-red-650/10' : ''}`}
+                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-amber-500/10' : ''}`}
                       >
-                        <td className="py-3.5 px-4 font-semibold text-white text-[13px] hover:text-red-400 transition-colors">
+                        <td className="py-3.5 px-4 font-semibold text-white text-[13px] hover:text-amber-400 transition-colors">
                           {e.name}
                         </td>
                         <td className="py-3.5 px-4 font-mono text-white/80">
@@ -524,14 +524,14 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                           {venueName && venueName !== 'Venue TBA' && venueName !== 'N/A' ? (
                             venueName
                           ) : (
-                            <span className="text-white/30 italic">Venue TBA</span>
+                            <span className="text-white/60 italic">Venue TBA</span>
                           )}
                         </td>
                         <td className="py-3.5 px-4 text-white/60">
                           {e.location || 'N/A'}
                         </td>
                         <td className="py-3.5 px-4">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${e.status.trim().toLowerCase() === 'final' ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400 animate-pulse'}`}>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider ${e.status.trim().toLowerCase() === 'final' ? 'bg-white/5 border border-white/10 text-white/60' : 'bg-amber-500/10 border border-amber-500/20 text-amber-500 animate-pulse'}`}>
                             {e.status}
                           </span>
                         </td>
@@ -562,22 +562,22 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                   <div 
                     key={e.id}
                     onClick={() => onSelectEvent(e.id)}
-                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-red-650/10 border-l-4 border-red-550' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
+                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
                   >
                     <div className="min-w-0 pr-3">
                       <div className={`font-semibold text-[14px] truncate ${active ? 'text-white font-black italic text-[15px]' : 'text-white/80 hover:text-white'}`}>
                         {e.name}
                       </div>
                       
-                      <div className="flex flex-col gap-1 mt-1.5 text-[11px] font-mono text-white/40 uppercase tracking-tight">
+                      <div className="flex flex-col gap-1 mt-1.5 text-[11px] font-mono text-white/65 uppercase tracking-tight">
                         <div className="flex items-center gap-2">
                           <span>{formattedDate}</span>
                           <span>•</span>
-                          <span className="text-red-400 font-bold truncate max-w-[150px]">
+                          <span className="text-amber-400 font-bold truncate max-w-[150px]">
                             {venueName && venueName !== 'Venue TBA' && venueName !== 'N/A' ? venueName : 'Venue TBA'}
                           </span>
                         </div>
-                        <span className="truncate text-[10px] text-white/30 lowercase first-letter:uppercase">{e.location || 'N/A'}</span>
+                        <span className="truncate text-[10px] text-white/60 lowercase first-letter:uppercase">{e.location || 'N/A'}</span>
                       </div>
                     </div>
 
@@ -602,7 +602,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
             >
               Load More Cards (+45)
             </button>
-            <div className="text-[9px] text-white/40 font-mono mt-2">
+            <div className="text-[10px] text-white/65 font-mono mt-2">
               Viewing {visibleCount} of {filteredEvents.length} matched event cards
             </div>
           </div>
@@ -610,7 +610,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
       </div>
 
       {/* Metadata status bar of the specific list view */}
-      <div className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-white/40 font-mono uppercase tracking-widest">
+      <div className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-white/65 font-mono uppercase tracking-widest">
         <span>Filtered: {filteredEvents.length} / {events.length} EVENTS</span>
       </div>
     </div>

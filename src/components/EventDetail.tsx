@@ -150,8 +150,8 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
     >
       {/* Event Header Information */}
       <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden min-h-[140px] flex flex-col justify-center">
-        <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
-        <span className={`px-2.5 py-1 text-[9px] font-mono font-bold tracking-widest rounded uppercase inline-block mb-3 relative z-10 self-start ${eventSummary.status.toLowerCase() === 'final' ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-red-500 text-white animate-pulse'}`}>
+        <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <span className={`px-2.5 py-1 text-[9px] font-mono font-bold tracking-widest rounded uppercase inline-block mb-3 relative z-10 self-start ${eventSummary.status.toLowerCase() === 'final' ? 'bg-white/5 text-white/55 border border-white/10' : 'bg-amber-500 text-zinc-950 animate-pulse'}`}>
           {eventSummary.status.toUpperCase()} EVENT INDEX
         </span>
 
@@ -162,7 +162,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-white/60 relative z-10 font-mono">
           <div className="flex flex-col gap-0.5 col-span-1 justify-center">
             <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-red-500 shrink-0" />
+              <Calendar className="w-4 h-4 text-amber-500 shrink-0" />
               <span className="uppercase tracking-tight font-bold text-white/80">
                 DATE & TIME
               </span>
@@ -198,13 +198,13 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
       {/* Fights display section */}
       <div className="flex-1 p-3 sm:p-6 space-y-4 sm:space-y-6 bg-black/10">
         {errorStr ? (
-          <div className="flex flex-col items-center justify-center py-12 text-red-500 font-mono text-center gap-3">
-            <HelpCircle className="w-8 h-8 text-red-500" />
+          <div className="flex flex-col items-center justify-center py-12 text-amber-500 font-mono text-center gap-3">
+            <HelpCircle className="w-8 h-8 text-amber-500" />
             <div className="text-xs uppercase tracking-widest">{errorStr}</div>
           </div>
         ) : !detailed ? (
           <div className="flex flex-col items-center justify-center py-12 text-white/40 font-mono text-center gap-3">
-            <div className="w-8 h-8 rounded-full border-t-2 border-red-500 animate-spin" />
+            <div className="w-8 h-8 rounded-full border-t-2 border-amber-500 animate-spin" />
             <div className="text-xs uppercase tracking-widest">Loading detailed card results...</div>
           </div>
         ) : (
@@ -213,7 +213,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
             {/* Show segments grouped cleanly */}
             {groupedFights && (Object.entries(groupedFights) as [string, WorkerFight[]][]).map(([segment, fights]) => (
               <div key={segment} className="space-y-3.5">
-                <h3 className="text-sm font-black italic tracking-wider text-red-500 uppercase flex items-center gap-2 border-b border-white/10 pb-1.5">
+                <h3 className="text-sm font-black italic tracking-wider text-amber-500 uppercase flex items-center gap-2 border-b border-white/10 pb-1.5">
                   <Award className="w-3.5 h-3.5" /> {segment} Card Matches
                 </h3>
 
@@ -261,7 +261,7 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                             Fight #{fight.fightOrder} • {fight.weightClass}
                           </span>
                           <div className="flex items-center gap-2">
-                            <span className="text-[9px] text-red-400 font-bold uppercase tracking-wider bg-red-950/20 px-1.5 py-0.5 rounded border border-red-500/10">
+                            <span className="text-[9px] text-amber-400 font-bold uppercase tracking-wider bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
                               Compare Stats
                             </span>
                             <span className="text-[10px] text-white/50 uppercase tracking-widest px-2 py-0.5 bg-black/40 border border-white/10 rounded-md font-bold">
@@ -356,9 +356,9 @@ export default function EventDetail({ eventSummary, onSelectFighter }: EventDeta
                         {fight.result && fight.result.method !== 'N/A' && (
                           <div className="bg-black/25 border border-white/10 p-3.5 rounded-xl text-xs space-y-1">
                             <div className="flex items-center gap-1.5 font-sans font-bold text-white uppercase italic tracking-tight">
-                              <Scale className="w-3.5 h-3.5 text-red-500" />
+                              <Scale className="w-3.5 h-3.5 text-amber-500" />
                               <span>Finishing Result:</span>
-                              <span className="text-red-550 font-black">{fight.result.method}</span>
+                              <span className="text-amber-500 font-black">{fight.result.method}</span>
                             </div>
                             
                             {fight.result.endingRound && (

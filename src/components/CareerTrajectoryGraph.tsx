@@ -50,7 +50,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
 
   if (!fights || fights.length === 0) {
     return (
-      <div className="bg-[#121212] border border-white/10 rounded-2xl p-6 text-center text-white/40 font-mono text-xs uppercase tracking-widest">
+      <div className="bg-[#121212] border border-white/10 rounded-2xl p-6 text-center text-white/65 font-mono text-xs uppercase tracking-widest">
         No matches recorded to calculate career trajectory.
       </div>
     );
@@ -256,17 +256,17 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
   return (
     <div className="bg-[#121212] border border-white/10 rounded-2xl p-3 sm:p-6 shadow-xl relative overflow-hidden flex flex-col gap-3 sm:gap-5">
       {/* Background accents */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header Panel */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/5 pb-4">
         <div>
           <h3 className="text-sm font-black italic text-white uppercase tracking-wider flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-red-500" />
+            <TrendingUp className="w-4 h-4 text-amber-500" />
             Performance Trajectory Over Time
           </h3>
-          <p className="text-[11px] text-white/40 font-mono uppercase tracking-tight mt-0.5">
+          <p className="text-[11px] text-white/65 font-mono uppercase tracking-tight mt-0.5">
             Cumulative career score (Wins +1, Losses -1) of {fighterName}
           </p>
         </div>
@@ -278,11 +278,11 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
               <Crown className="w-3.5 h-3.5 text-amber-500" />
             </div>
             <div>
-              <span className="text-[8px] text-amber-400 font-mono block font-extrabold uppercase tracking-wider">Career Peak</span>
+              <span className="text-[10px] text-amber-400 font-mono block font-extrabold uppercase tracking-wider">Career Peak</span>
               <span className="text-[11px] font-black italic text-white uppercase flex items-center gap-1">
                 {formatScore(peakPoint.score)} Diff
-                <span className="text-white/20 font-mono not-italic text-[9px]">•</span>
-                <span className="text-white/60 font-mono not-italic text-[9px]">{peakPoint.recordString}</span>
+                <span className="text-white/40 font-mono not-italic text-[10px]">•</span>
+                <span className="text-white/85 font-mono not-italic text-[10px]">{peakPoint.recordString}</span>
               </span>
             </div>
           </div>
@@ -309,8 +309,8 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
         >
           <defs>
             <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ef4444" stopOpacity="0.22" />
-              <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
+              <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -367,7 +367,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
           <path
             d={pathData}
             fill="none"
-            stroke="#ef4444"
+            stroke="#3b82f6"
             strokeWidth={isMobileSize ? 2.5 : 3.5}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -411,7 +411,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
                 cx={getCoords(activeIndex, activePoint.score).x}
                 cy={getCoords(activeIndex, activePoint.score).y}
                 r={isMobileSize ? 3 : 3.5}
-                fill={activePoint.score >= 0 ? "#22c55e" : "#ef4444"}
+                fill={activePoint.score >= 0 ? "#10b981" : "#ef4444"}
               />
             </g>
           )}
@@ -436,13 +436,13 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
               <div className="font-extrabold text-white truncate max-w-[130px] uppercase">
                 {activeIndex === 0 ? "Career Start" : activePoint.opponentName}
               </div>
-              <div className="text-[10px] text-white/50 mb-1 flex items-center justify-between gap-4">
+              <div className="text-[10px] text-white/70 mb-1 flex items-center justify-between gap-4">
                 <span>Bout #{activeIndex}</span>
                 <span className={activePoint.score >= 0 ? "text-win-color font-bold" : "text-loss-color font-bold"}>
                   {formatScore(activePoint.score)}
                 </span>
               </div>
-              <div className="border-t border-white/5 pt-1 space-y-0.5 text-[9px] text-white/40">
+              <div className="border-t border-white/5 pt-1 space-y-0.5 text-[10px] text-white/65">
                 <div className="truncate max-w-[130px] uppercase">{activePoint.eventName}</div>
                 <div>Record: {activePoint.recordString}</div>
               </div>
@@ -452,7 +452,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
       </div>
 
       {/* Axis Labels (Adjusted with responsive spacing, hides center label to prevent squeezing) */}
-      <div className="flex items-center justify-between font-mono text-[9px] text-white/30 uppercase tracking-widest mt-[-6px] px-1">
+      <div className="flex items-center justify-between font-mono text-[10px] text-white/60 uppercase tracking-widest mt-[-6px] px-1">
         <span>Debut ({points[0]?.eventDate ? new Date(points[0].eventDate).getFullYear() : 'N/A'})</span>
         <span className="hidden sm:flex items-center gap-1">
           Career Timeline
@@ -475,7 +475,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5 scroll-smooth shrink">
           <button 
             onClick={() => { setSelectedIndex(1); setHoveredIndex(null); }}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 ${activeIndex === 1 ? 'bg-red-500/10 text-white border-red-500/30 font-bold' : 'bg-white/[0.01] text-white/40 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
+            className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 ${activeIndex === 1 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 font-bold' : 'bg-white/[0.01] text-white/70 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
           >
             Debut
           </button>
@@ -483,7 +483,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
           {peakIndex > 1 && peakIndex < points.length - 1 && (
             <button 
               onClick={() => { setSelectedIndex(peakIndex); setHoveredIndex(null); }}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 flex items-center gap-1 ${activeIndex === peakIndex ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 font-bold' : 'bg-white/[0.01] text-white/40 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 flex items-center gap-1 ${activeIndex === peakIndex ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 font-bold' : 'bg-white/[0.01] text-white/70 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
             >
               <Star className="w-2.5 h-2.5 text-amber-500 fill-amber-500" /> Peak
             </button>
@@ -491,7 +491,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
 
           <button 
             onClick={() => { setSelectedIndex(points.length - 1); setHoveredIndex(null); }}
-            className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 ${activeIndex === points.length - 1 ? 'bg-red-500/10 text-white border-red-500/30 font-bold' : 'bg-white/[0.01] text-white/40 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
+            className={`px-2.5 py-1 rounded-lg text-[10px] font-mono uppercase tracking-wider transition-all border shrink-0 ${activeIndex === points.length - 1 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 font-bold' : 'bg-white/[0.01] text-white/70 border-white/5 hover:text-white hover:bg-white/[0.04]'}`}
           >
             Latest
           </button>
@@ -512,21 +512,21 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
           <div className="space-y-1.5 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               {activeIndex === peakIndex ? (
-                <span className="font-mono text-[9px] uppercase bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded border border-amber-500/25 font-black flex items-center gap-1 shrink-0 animate-pulse">
+                <span className="font-mono text-[10px] uppercase bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded border border-amber-500/25 font-black flex items-center gap-1 shrink-0 animate-pulse">
                   <Crown className="w-2.5 h-2.5 fill-amber-500/30" /> Prime Career Peak
                 </span>
               ) : activeIndex === 1 ? (
-                <span className="font-mono text-[9px] uppercase bg-red-500/15 text-red-400 px-2 py-0.5 rounded border border-red-500/25 font-bold shrink-0">
+                <span className="font-mono text-[10px] uppercase bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded border border-amber-500/25 font-bold shrink-0">
                   Octagon Debut
                 </span>
               ) : (
-                <span className="font-mono text-[9px] uppercase bg-white/5 text-white/50 px-2 py-0.5 rounded border border-white/10 font-bold shrink-0">
+                <span className="font-mono text-[10px] uppercase bg-white/5 text-white/70 px-2 py-0.5 rounded border border-white/10 font-bold shrink-0">
                   Bout #{activeIndex} Milestone
                 </span>
               )}
               {activePoint.eventDate && (
-                <span className="text-white/30 font-mono text-[10px] flex items-center gap-1">
-                  <Calendar className="w-3 h-3 text-white/30" />
+                <span className="text-white/60 font-mono text-[10px] flex items-center gap-1">
+                  <Calendar className="w-3 h-3 text-white/60" />
                   {new Date(activePoint.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                 </span>
               )}
@@ -538,43 +538,43 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
               </span>
             </div>
 
-            <div className="text-white/60 font-mono text-[10px] uppercase tracking-tight flex flex-wrap items-center gap-1.5 leading-relaxed">
+            <div className="text-white/75 font-mono text-[10px] uppercase tracking-tight flex flex-wrap items-center gap-1.5 leading-relaxed">
               <span>Outcome:</span>
-              <span className={`font-black italic px-1.5 py-0.5 rounded text-[9px] ${
+              <span className={`font-black italic px-1.5 py-0.5 rounded text-[10px] ${
                 activePoint.outcome.toLowerCase() === 'win' 
                   ? 'bg-win-color/10 text-win-color border border-win-color/20' 
                   : activePoint.outcome.toLowerCase() === 'loss' 
                   ? 'bg-loss-color/10 text-loss-color border border-loss-color/20' 
-                  : 'bg-white/5 text-white/60 border border-white/10'
+                  : 'bg-white/5 text-white/70 border border-white/10'
               }`}>
                 {activePoint.outcome}
               </span>
               {activePoint.method !== 'N/A' && (
                 <>
-                  <span className="text-white/20">•</span>
-                  <span className="text-white/70">{activePoint.method}</span>
+                  <span className="text-white/40">•</span>
+                  <span className="text-white/80">{activePoint.method}</span>
                 </>
               )}
               {activePoint.endingRound && (
                 <>
-                  <span className="text-white/20">•</span>
-                  <span className="text-white/50">Round {activePoint.endingRound} {activePoint.endingTime && `(${activePoint.endingTime})`}</span>
+                  <span className="text-white/40">•</span>
+                  <span className="text-white/70">Round {activePoint.endingRound} {activePoint.endingTime && `(${activePoint.endingTime})`}</span>
                 </>
               )}
             </div>
 
-            <div className="text-[10px] font-mono text-white/35 uppercase truncate pt-0.5">
+            <div className="text-[11px] font-mono text-white/60 uppercase truncate pt-0.5">
               Event: {activePoint.eventName}
             </div>
           </div>
         ) : peakPoint ? (
           <div className="space-y-1.5 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-[9px] uppercase bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded border border-amber-500/25 font-black flex items-center gap-1 shrink-0">
+              <span className="font-mono text-[10px] uppercase bg-amber-500/15 text-amber-400 px-2 py-0.5 rounded border border-amber-500/25 font-black flex items-center gap-1 shrink-0">
                 <Trophy className="w-2.5 h-2.5" /> Career Peak Landmark
               </span>
               {peakPoint.eventDate && (
-                <span className="text-white/30 font-mono text-[10px]">
+                <span className="text-white/60 font-mono text-[10px]">
                   ({new Date(peakPoint.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })})
                 </span>
               )}
@@ -584,8 +584,8 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
                 Peak Reached at Bout #{peakIndex}
               </span>
             </div>
-            <div className="text-white/50 text-[10px] font-mono uppercase">
-              Reached against <span className="font-bold text-white/70">{peakPoint.opponentName}</span> via {peakPoint.method}
+            <div className="text-white/70 text-[10px] font-mono uppercase">
+              Reached against <span className="font-bold text-white/80">{peakPoint.opponentName}</span> via {peakPoint.method}
             </div>
           </div>
         ) : null}
@@ -594,14 +594,14 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
         <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-4 pt-3 md:pt-0 border-t md:border-t-0 md:border-l border-white/5 md:pl-5 shrink-0">
           <div className="flex items-center gap-4 font-mono">
             <div className="text-left md:text-right">
-              <span className="text-[8px] text-white/40 block uppercase tracking-wider">Score Value</span>
+              <span className="text-[10px] text-white/65 block uppercase tracking-wider">Score Value</span>
               <span className={`text-sm font-black italic ${activePoint ? (activePoint.score > 0 ? 'text-win-color' : activePoint.score < 0 ? 'text-loss-color' : 'text-white') : 'text-amber-400'}`}>
                 {formatScore(activePoint ? activePoint.score : peakPoint.score)}
               </span>
             </div>
             <div className="text-left md:text-right border-l border-white/10 pl-4">
-              <span className="text-[8px] text-white/40 block uppercase tracking-wider">Record Then</span>
-              <span className="text-xs font-bold text-white/80">
+              <span className="text-[10px] text-white/65 block uppercase tracking-wider">Record Then</span>
+              <span className="text-xs font-bold text-white/85">
                 {activePoint ? activePoint.recordString : peakPoint.recordString}
               </span>
             </div>
@@ -611,7 +611,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
           {onSelectEvent && activePoint && activePoint.eventId > 0 && (
             <button
               onClick={() => onSelectEvent(activePoint.eventId)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-550 active:bg-red-700 text-white font-mono text-[9px] font-black uppercase tracking-wider transition-all shrink-0 cursor-pointer shadow-lg hover:shadow-red-900/10"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-450 active:bg-amber-650 text-zinc-950 font-mono text-[11px] font-black uppercase tracking-wider transition-all shrink-0 cursor-pointer shadow-lg hover:shadow-amber-500/10"
             >
               Go to Event
               <ArrowRight className="w-3 h-3" />

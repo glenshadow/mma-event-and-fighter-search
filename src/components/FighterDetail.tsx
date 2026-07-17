@@ -170,8 +170,8 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
     >
       {/* Top Header Card */}
       <div className="bg-black/30 p-4 sm:p-6 border-b border-white/10 relative overflow-hidden min-h-[160px] md:min-h-[180px]">
-        {/* Ambient red glow */}
-        <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-red-650/5 rounded-full blur-2xl pointer-events-none"></div>
+        {/* Ambient amber glow */}
+        <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
 
         {/* Full-body fighter profile standing tall on the right */}
         {bodyShotUrl && (
@@ -212,14 +212,14 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
               {currentFighter.fullName}
             </h2>
             {currentFighter.nickName && (
-              <span className="text-red-500 italic block font-mono text-xs font-bold uppercase tracking-widest mb-2.5">
+              <span className="text-amber-500 italic block font-mono text-xs font-bold uppercase tracking-widest mb-2.5">
                 &ldquo;{currentFighter.nickName}&rdquo;
               </span>
             )}
             
             {/* Scoreboard Record */}
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-bold bg-black/40 text-red-550 px-3 py-1.5 rounded-xl border border-white/10 tracking-widest">
+              <span className="font-mono text-xs font-bold bg-black/40 text-amber-500 px-3 py-1.5 rounded-xl border border-white/10 tracking-widest">
                 {currentFighter.record.wins}W - {currentFighter.record.losses}L - {currentFighter.record.draws}D
                 {currentFighter.record.noContests > 0 && ` (${currentFighter.record.noContests} NC)`}
               </span>
@@ -236,34 +236,34 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
         
         {/* Physical Stats Grid */}
         <div className="bg-black/20 rounded-2xl border border-white/10 p-3 sm:p-5">
-          <h3 className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-4 flex items-center gap-1.5 font-bold">
-            <Activity className="w-3.5 h-3.5 text-red-505" /> Professional athlete specifications
+          <h3 className="text-[10px] font-mono text-white/65 uppercase tracking-widest mb-4 flex items-center gap-1.5 font-bold">
+            <Activity className="w-3.5 h-3.5 text-amber-500" /> Professional athlete specifications
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             
             <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-              <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">STANCE stance</span>
+              <span className="text-white/65 text-[10px] uppercase font-mono tracking-widest block font-bold">STANCE stance</span>
               <span className="text-[13px] font-black italic text-white uppercase mt-1 block">
                 {currentFighter.stance || 'Orthodox'}
               </span>
             </div>
 
             <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-              <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold font-mono">SPEC HEIGHT</span>
+              <span className="text-white/65 text-[10px] uppercase font-mono tracking-widest block font-bold font-mono">SPEC HEIGHT</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {formatHeight(currentFighter.height)}
               </span>
             </div>
 
             <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-              <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">SPEC REACH</span>
+              <span className="text-white/65 text-[10px] uppercase font-mono tracking-widest block font-bold">SPEC REACH</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {currentFighter.reach ? `${currentFighter.reach}.0" (${Math.round(currentFighter.reach * 2.54)} CM)` : 'Unknown'}
               </span>
             </div>
 
             <div className="bg-white/5 p-2.5 sm:p-3.5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-              <span className="text-white/40 text-[9px] uppercase font-mono tracking-widest block font-bold">COMBATIVE WEIGHT</span>
+              <span className="text-white/65 text-[10px] uppercase font-mono tracking-widest block font-bold">COMBATIVE WEIGHT</span>
               <span className="text-[13px] font-black italic text-white mt-1 block uppercase">
                 {currentFighter.weight ? `${currentFighter.weight} LBS (${Math.round(currentFighter.weight * 0.453)} KG)` : 'Unknown'}
               </span>
@@ -273,10 +273,10 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
 
           {/* Reach Advantage Metric */}
           {getApeIndex(currentFighter.height, currentFighter.reach) && (
-            <div className="mt-4 border-t border-white/5 pt-3.5 flex items-center gap-1.5 text-xs text-white/50 font-mono uppercase tracking-widest">
-              <Ruler className="w-3.5 h-3.5 text-red-500" />
+            <div className="mt-4 border-t border-white/5 pt-3.5 flex items-center gap-1.5 text-xs text-white/70 font-mono uppercase tracking-widest">
+              <Ruler className="w-3.5 h-3.5 text-amber-500" />
               <span>APE INDEX advantage:</span>
-              <span className="font-extrabold italic text-red-550">{getApeIndex(currentFighter.height, currentFighter.reach)}</span>
+              <span className="font-extrabold italic text-amber-500">{getApeIndex(currentFighter.height, currentFighter.reach)}</span>
             </div>
           )}
         </div>
@@ -285,15 +285,15 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Birth & Residence */}
           <div className="bg-white/5 border border-white/10 p-3.5 sm:p-5 rounded-2xl space-y-3.5">
-            <h4 className="text-[10px] text-white/40 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
-              <Globe className="w-3.5 h-3.5 text-red-500" /> GEOGRAPHIC ROOTS
+            <h4 className="text-[10px] text-white/65 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
+              <Globe className="w-3.5 h-3.5 text-amber-500" /> GEOGRAPHIC ROOTS
             </h4>
             
             <div className="space-y-3">
               <div className="flex gap-2">
-                <MapPin className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-white/60 shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-[9px] text-white/40 font-mono block font-bold uppercase">PLACE OF BIRTH</span>
+                  <span className="text-[10px] text-white/65 font-mono block font-bold uppercase">PLACE OF BIRTH</span>
                   <span className="text-xs font-bold text-white/80 uppercase">
                     {currentFighter.born?.city ? `${currentFighter.born.city}, ` : ''}
                     {currentFighter.born?.state ? `${currentFighter.born.state}, ` : ''}
@@ -303,9 +303,9 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
               </div>
 
               <div className="flex gap-2">
-                <MapPin className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-white/60 shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-[9px] text-white/40 font-mono block font-bold uppercase">FIGHTING OUT OF</span>
+                  <span className="text-[10px] text-white/65 font-mono block font-bold uppercase">FIGHTING OUT OF</span>
                   <span className="text-xs font-bold text-white/80 uppercase">
                     {currentFighter.fightingOutOf?.city ? `${currentFighter.fightingOutOf.city}, ` : ''}
                     {currentFighter.fightingOutOf?.state ? `${currentFighter.fightingOutOf.state}, ` : ''}
@@ -318,20 +318,20 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
 
           {/* Age and DOB */}
           <div className="bg-white/5 border border-white/10 p-3.5 sm:p-5 rounded-2xl space-y-3.5">
-            <h4 className="text-[10px] text-white/40 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
-              <Calendar className="w-3.5 h-3.5 text-red-500" /> ATHLETE CHRONICLE
+            <h4 className="text-[10px] text-white/65 uppercase tracking-widest font-mono flex items-center gap-1.5 font-bold">
+              <Calendar className="w-3.5 h-3.5 text-amber-500" /> ATHLETE CHRONICLE
             </h4>
             
             <div className="space-y-3.5">
               <div>
-                <span className="text-[9px] text-white/40 font-mono block font-bold uppercase font-mono">SPECIFIED AGE</span>
+                <span className="text-[10px] text-white/65 font-mono block font-bold uppercase font-mono">SPECIFIED AGE</span>
                 <span className="text-sm font-black italic text-white uppercase">
                   {currentFighter.age ? `${currentFighter.age} YEARS OLD` : 'MMA Record'}
                 </span>
               </div>
               <div>
-                <span className="text-[9px] text-white/40 font-mono block font-bold uppercase">DATE OF BIRTH</span>
-                <span className="text-xs font-bold text-white/60">
+                <span className="text-[10px] text-white/65 font-mono block font-bold uppercase">DATE OF BIRTH</span>
+                <span className="text-xs font-bold text-white/80">
                   {currentFighter.dob ? new Date(currentFighter.dob).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'}
                 </span>
               </div>
@@ -352,22 +352,22 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-2">
             <h3 className="font-black italic text-white uppercase tracking-tight flex items-center gap-2 text-base">
-              <Layers className="w-4 h-4 text-red-500" /> Career Combat Timeline 
-              <span className="text-xs text-white/40 font-mono not-italic lowercase">({currentFighter.fightsCount ?? currentFighter.fightsParticipated?.length ?? 0} bouts)</span>
+              <Layers className="w-4 h-4 text-amber-500" /> Career Combat Timeline 
+              <span className="text-xs text-white/65 font-mono not-italic lowercase">({currentFighter.fightsCount ?? currentFighter.fightsParticipated?.length ?? 0} bouts)</span>
             </h3>
           </div>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-3 text-white/40 font-mono text-xs uppercase tracking-widest">
+            <div className="flex flex-col items-center justify-center py-12 gap-3 text-white/65 font-mono text-xs uppercase tracking-widest">
               <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, ease: 'linear', duration: 1.5 }}
-                className="w-6 h-6 rounded-full border-2 border-white/5 border-t-red-500"
+                className="w-6 h-6 rounded-full border-2 border-white/5 border-t-amber-500"
               />
               <span>Loading fighter timeline...</span>
             </div>
           ) : !currentFighter.fightsParticipated || currentFighter.fightsParticipated.length === 0 ? (
-            <div className="text-center py-8 text-white/40 font-mono text-xs uppercase tracking-widest">
+            <div className="text-center py-8 text-white/65 font-mono text-xs uppercase tracking-widest">
               No historical matches indexed for this fighter.
             </div>
           ) : (
@@ -403,7 +403,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                         window.location.hash = `fights/${currentFighter.id}/${fight.opponentId}/${fight.fightId}/${fightSlug}`;
                       }
                     }}
-                    className="bg-[#121212] border border-white/10 hover:border-red-500/40 hover:bg-white/5 transition-all p-4 pl-6 sm:pl-7 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden cursor-pointer group/timeline-card"
+                    className="bg-[#121212] border border-white/10 hover:border-amber-500/40 hover:bg-white/5 transition-all p-4 pl-6 sm:pl-7 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden cursor-pointer group/timeline-card"
                   >
                     {/* Left vertical accent indicator */}
                     <div 
@@ -434,13 +434,13 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                       {/* Fighter & Matchup Detail */}
                       <div className="space-y-0.5 min-w-0 flex-1">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="text-[9px] text-white/40 font-mono uppercase tracking-widest font-semibold">Opponent</span>
+                          <span className="text-[10px] text-white/65 font-mono uppercase tracking-widest font-semibold">Opponent</span>
                           <span className="text-white/20 font-mono">•</span>
-                          <span className="text-white/50 font-mono text-[9px] font-bold uppercase tracking-wider">{fight.weightClass || 'MMA Bout'}</span>
+                          <span className="text-white/70 font-mono text-[10px] font-bold uppercase tracking-wider">{fight.weightClass || 'MMA Bout'}</span>
                           {fight.accolades && fight.accolades.some(acc => acc.Type === 'Belt') && (
                             <>
                               <span className="text-amber-500 font-mono">•</span>
-                              <span className="inline-flex items-center gap-1 text-amber-400 font-mono text-[9px] font-extrabold uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">
+                              <span className="inline-flex items-center gap-1 text-amber-400 font-mono text-[10px] font-extrabold uppercase tracking-widest bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded">
                                 <Crown className="w-3 h-3 text-amber-500 animate-pulse" />
                                 {fight.accolades.find(acc => acc.Type === 'Belt')?.Name || "Title Fight"}
                               </span>
@@ -455,7 +455,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                                 e.stopPropagation();
                                 fight.opponentId && onSelectFighter(fight.opponentId);
                               }}
-                              className="font-black italic text-white group-hover/timeline-card:text-red-450 hover:!text-red-300 text-sm md:text-base tracking-tight transition-colors cursor-pointer text-left uppercase truncate max-w-full"
+                              className="font-black italic text-white group-hover/timeline-card:text-amber-500 hover:!text-amber-300 text-sm md:text-base tracking-tight transition-colors cursor-pointer text-left uppercase truncate max-w-full"
                             >
                               {fight.opponentName}
                             </button>
@@ -470,20 +470,20 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                               e.stopPropagation();
                               onSelectEvent(fight.eventId);
                             }}
-                            className="group/event-link text-[11px] text-white/50 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-all duration-200 cursor-pointer font-mono inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-left uppercase tracking-wider truncate max-w-full mt-1.5"
+                            className="group/event-link text-[11px] text-white/70 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-all duration-200 cursor-pointer font-mono inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-left uppercase tracking-wider truncate max-w-full mt-1.5"
                           >
-                            <span className="truncate text-white/70 group-hover/event-link:text-white">
+                            <span className="truncate text-white/85 group-hover/event-link:text-white">
                               {fight.eventName}
                             </span>
                             {fight.eventDate && (
-                              <span className="text-white/40 font-mono shrink-0 text-[10px]">
+                              <span className="text-white/65 font-mono shrink-0 text-[10px]">
                                 ({new Date(fight.eventDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short' })})
                               </span>
                             )}
-                            <ArrowRight className="w-3 h-3 shrink-0 text-red-500/70 transition-transform duration-200 group-hover/event-link:translate-x-0.5 group-hover/event-link:text-red-400" />
+                            <ArrowRight className="w-3 h-3 shrink-0 text-amber-500/70 transition-transform duration-200 group-hover/event-link:translate-x-0.5 group-hover/event-link:text-amber-400" />
                           </button>
                         ) : (
-                          <div className="text-[11px] text-white/30 font-mono uppercase">
+                          <div className="text-[11px] text-white/60 font-mono uppercase">
                             Unknown Card
                           </div>
                         )}
@@ -492,7 +492,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
 
                     {/* Right: Method & Endings */}
                     <div className="flex flex-col items-start sm:items-end justify-center shrink-0 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0 gap-1 text-left sm:text-right">
-                      <div className="font-black italic text-red-500 group-hover/timeline-card:text-red-400 text-xs md:text-sm tracking-tight uppercase transition-colors">
+                      <div className="font-black italic text-amber-500 group-hover/timeline-card:text-amber-400 text-xs md:text-sm tracking-tight uppercase transition-colors">
                         {fight.method || 'Result Pending'}
                       </div>
                       {fight.endingRound && (

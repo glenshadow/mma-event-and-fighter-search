@@ -31,7 +31,7 @@ function DashboardFighterHeadshot({ fighter, className = "w-10 h-10" }: { fighte
 
   if (evenFallbackFails) {
     return (
-      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-red-600 to-red-900 border border-white/10 text-white font-mono text-[10px] font-bold shadow-inner shrink-0`}>
+      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-900 border border-white/10 text-white font-mono text-[10px] font-bold shadow-inner shrink-0`}>
         {initials}
       </div>
     );
@@ -292,12 +292,12 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full bg-gradient-to-b from-zinc-900/80 to-black/95 border border-white/10 rounded-2xl p-6 md:p-8 overflow-hidden relative shadow-2xl shadow-red-950/10"
+        className="w-full bg-gradient-to-b from-zinc-900/80 to-black/95 border border-white/10 rounded-2xl p-6 md:p-8 overflow-hidden relative shadow-2xl shadow-amber-950/10"
         id="analytics-hero-banner"
       >
         {/* Subtle tech background grids/accents */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-40"></div>
-        <div className="absolute -left-16 -top-16 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -left-16 -top-16 w-48 h-48 bg-amber-600/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -right-16 -bottom-16 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
@@ -305,7 +305,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           <div className="lg:col-span-7 space-y-5 text-left">
             <div className="space-y-2">
               <h2 className="text-3xl md:text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
-                High-Precision <span className="text-red-500">Combat Sports</span> Analytics
+                High-Precision <span className="text-amber-500">Combat Sports</span> Analytics
               </h2>
               <p className="text-sm font-mono text-white/50 uppercase tracking-widest font-bold">
                 StandardMMA Fighter Trajectory & Division Mapping System
@@ -320,10 +320,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
             <div className="grid grid-cols-3 gap-4 pt-2 border-t border-white/5 max-w-lg">
               <button
                 onClick={() => { window.location.hash = 'fighters'; }}
-                className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-red-500/50 group cursor-pointer"
+                className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-amber-500/50 group cursor-pointer"
               >
-                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-red-400 transition-colors">TRACKED FIGHTERS</span>
-                <span className="text-lg font-black italic text-red-500 group-hover:scale-105 inline-block transition-transform">{(stats.totalFighters || 0).toLocaleString()}</span>
+                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-amber-400 transition-colors">TRACKED FIGHTERS</span>
+                <span className="text-lg font-black italic text-amber-500 group-hover:scale-105 inline-block transition-transform">{(stats.totalFighters || 0).toLocaleString()}</span>
               </button>
               <button
                 onClick={() => { window.location.hash = 'events'; }}
@@ -498,10 +498,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         >
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-red-500 animate-pulse" />
+              <Calendar className="w-5 h-5 text-amber-500 animate-pulse" />
               <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Upcoming Events</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">LIVE FIGHT SCHEDULER</span>
+            <span className="text-[10px] tracking-widest text-amber-500 font-bold uppercase font-mono">LIVE FIGHT SCHEDULER</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -522,18 +522,18 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 <motion.div
                   key={event.id}
                   onClick={() => onSelectEvent(event.id)}
-                  className="bg-white/5 border border-white/10 hover:border-red-500/30 hover:bg-white/[0.08] rounded-2xl p-5 shadow-xl cursor-pointer backdrop-blur-md transition-all duration-300 relative overflow-hidden group flex flex-col justify-between min-h-[140px]"
+                  className="bg-white/5 border border-white/10 hover:border-amber-500/30 hover:bg-white/[0.08] rounded-2xl p-5 shadow-xl cursor-pointer backdrop-blur-md transition-all duration-300 relative overflow-hidden group flex flex-col justify-between min-h-[140px]"
                 >
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-red-650/5 rounded-full blur-xl pointer-events-none transition-all duration-300 group-hover:bg-red-650/10"></div>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/5 rounded-full blur-xl pointer-events-none transition-all duration-300 group-hover:bg-amber-500/10"></div>
                   
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[9px] font-mono text-red-500 uppercase tracking-widest font-black bg-red-500/10 border border-red-500/20 px-2.5 py-0.5 rounded-md">
+                      <span className="text-[9px] font-mono text-amber-400 uppercase tracking-widest font-black bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-md">
                         {event.fightsCount} Fights
                       </span>
                     </div>
 
-                    <h4 className="font-black italic tracking-tighter text-white text-base leading-tight uppercase group-hover:text-red-400 transition-colors">
+                    <h4 className="font-black italic tracking-tighter text-white text-base leading-tight uppercase group-hover:text-amber-400 transition-colors">
                       {event.name}
                     </h4>
                   </div>
@@ -558,7 +558,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
             <div className="flex justify-center pt-2">
               <button
                 onClick={() => setVisibleUpcomingCount(prev => prev + 4)}
-                className="flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 hover:border-red-500/30 border border-white/10 rounded-xl text-xs text-red-400 hover:text-red-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shadow-lg hover:shadow-red-500/5 active:scale-95 focus:outline-none"
+                className="flex items-center gap-2 px-6 py-2.5 bg-white/5 hover:bg-white/10 hover:border-amber-500/30 border border-white/10 rounded-xl text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shadow-lg hover:shadow-amber-500/5 active:scale-95 focus:outline-none"
               >
                 Load More Events ({upcomingEvents.length - visibleUpcomingCount} Remaining)
               </button>
@@ -574,19 +574,19 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           onClick={() => { window.location.hash = 'fighters'; }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors cursor-pointer"
           id="stat-fighters-card"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-650/5 rounded-full blur-xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
           <div>
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block font-bold">Total Athletes Indexed</span>
-            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-red-500 transition-colors">
+            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-amber-500 transition-colors">
               {stats.totalFighters.toLocaleString()}
             </span>
             <span className="text-[10px] text-white/30 font-mono">MMA PARTICIPANTS</span>
           </div>
-          <div className="bg-red-600/10 p-3 rounded-xl border border-red-500/20">
-            <Users className="w-6 h-6 text-red-500" />
+          <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+            <Users className="w-6 h-6 text-amber-500" />
           </div>
         </motion.div>
 
@@ -595,19 +595,19 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.05 }}
           onClick={() => { window.location.hash = 'events?e_sort=date&e_dir=asc'; }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors cursor-pointer"
           id="stat-events-card"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-650/5 rounded-full blur-xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
           <div>
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block font-bold">Recorded Events</span>
-            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-red-500 transition-colors">
+            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-amber-500 transition-colors">
               {stats.totalEvents.toLocaleString()}
             </span>
             <span className="text-[10px] text-white/30 font-mono">EVENT 1 TO PRESENT CARD ARCS</span>
           </div>
-          <div className="bg-red-600/10 p-3 rounded-xl border border-red-500/20">
-            <Calendar className="w-6 h-6 text-red-500" />
+          <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+            <Calendar className="w-6 h-6 text-amber-500" />
           </div>
         </motion.div>
 
@@ -616,19 +616,19 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.08 }}
           onClick={() => { window.location.hash = 'events?e_sort=date&e_dir=asc'; }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors cursor-pointer"
           id="stat-fights-card"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-650/5 rounded-full blur-xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
           <div>
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block font-bold">Total Fights Logged</span>
-            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-red-500 transition-colors">
+            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-amber-500 transition-colors">
               {stats.totalFights.toLocaleString()}
             </span>
             <span className="text-[10px] text-white/30 font-mono">ALL-TIME BOUTS ANALYZED</span>
           </div>
-          <div className="bg-red-600/10 p-3 rounded-xl border border-red-500/20">
-            <Trophy className="w-6 h-6 text-red-500" />
+          <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+            <Trophy className="w-6 h-6 text-amber-500" />
           </div>
         </motion.div>
 
@@ -637,19 +637,19 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.12 }}
           onClick={() => { window.location.hash = 'events?e_sort=date&e_dir=asc'; }}
-          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-red-500/30 transition-colors cursor-pointer"
+          className="bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center justify-between shadow-xl backdrop-blur-sm relative overflow-hidden group hover:border-amber-500/30 transition-colors cursor-pointer"
           id="stat-era-card"
         >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-650/5 rounded-full blur-xl pointer-events-none"></div>
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl pointer-events-none"></div>
           <div>
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block font-bold font-mono">Operational Era</span>
-            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-red-500 transition-colors">
+            <span className="text-4xl font-black italic tracking-tighter mt-1 block text-white group-hover:text-amber-500 transition-colors">
               33+ YEARS
             </span>
             <span className="text-[10px] text-white/30 font-mono">1993 - 2026 EVENT LOGS</span>
           </div>
-          <div className="bg-red-600/10 p-3 rounded-xl border border-red-500/20">
-            <TrendingUp className="w-6 h-6 text-red-500" />
+          <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+            <TrendingUp className="w-6 h-6 text-amber-500" />
           </div>
         </motion.div>
       </div>
@@ -667,10 +667,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <ListCollapse className="w-5 h-5 text-red-500" />
+              <ListCollapse className="w-5 h-5 text-amber-500" />
               <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Indexed Fights</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">EXPERIENCE DEPTH</span>
+            <span className="text-[10px] tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md font-bold uppercase font-mono">EXPERIENCE DEPTH</span>
           </div>
           <div className="space-y-4">
             {stats.mostExperienced.map((fighter, i) => (
@@ -680,12 +680,12 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 className="flex items-center justify-between gap-3 group cursor-pointer bg-white/5 border border-white/5 rounded-xl p-3 sm:p-3.5 hover:bg-white/10 hover:border-white/15 transition-all text-sm font-medium min-w-0"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="font-mono text-xs text-red-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
+                  <div className="font-mono text-xs text-amber-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
                     {i + 1}
                   </div>
                   <DashboardFighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <div className="font-black italic text-white group-hover:text-red-550 transition-colors tracking-tight text-sm sm:text-base truncate">
+                    <div className="font-black italic text-white group-hover:text-amber-400 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
                     </div>
                     <div className="text-[10px] text-white/40 font-mono flex items-center gap-1.5 capitalize truncate">
@@ -716,10 +716,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-red-500" />
+              <Award className="w-5 h-5 text-amber-500" />
               <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Fight Finishing Methods</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">FINISH RATIOS</span>
+            <span className="text-[10px] tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md font-bold uppercase font-mono">FINISH RATIOS</span>
           </div>
           <div className="space-y-4">
             {stats.finishList.map((m) => (
@@ -733,7 +733,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                     initial={{ width: 0 }}
                     animate={{ width: `${m.percentage}%` }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="h-full bg-gradient-to-r from-red-600 via-red-500 to-red-405 rounded-full" 
+                    className="h-full bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400 rounded-full" 
                   />
                 </div>
               </div>
@@ -751,10 +751,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-red-500" />
+              <Sparkles className="w-5 h-5 text-amber-500" />
               <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Combat Stance Distribution</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-white/40 font-mono">OFFENSIVE ANGLE</span>
+            <span className="text-[10px] tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md font-bold uppercase font-mono">OFFENSIVE ANGLE</span>
           </div>
           <div className="space-y-4">
             {stats.stanceList.map((st) => (
@@ -764,7 +764,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                   <div className="text-[9px] text-white/40 uppercase tracking-widest font-mono">COMBAT FOOTWORK PROFILE</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-mono text-base font-black italic text-red-500">
+                  <div className="font-mono text-base font-black italic text-amber-500">
                      {st.percentage}%
                   </div>
                   <div className="text-[10px] text-white/40 font-mono">
@@ -786,10 +786,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-3">
             <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-red-500" />
+              <Trophy className="w-5 h-5 text-amber-500" />
               <h3 className="font-black text-lg tracking-tighter italic uppercase text-white">Most Career Wins</h3>
             </div>
-            <span className="text-[10px] tracking-widest text-red-500 font-bold uppercase font-mono">HALL OF FAME</span>
+            <span className="text-[10px] tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md font-bold uppercase font-mono">HALL OF FAME</span>
           </div>
           <div className="space-y-4">
             {stats.topWins.map((fighter, i) => (
@@ -799,12 +799,12 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                 className="flex items-center justify-between gap-3 group cursor-pointer bg-white/5 border border-white/5 rounded-xl p-3 sm:p-3.5 hover:bg-white/10 hover:border-white/15 transition-all text-sm font-medium min-w-0"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                  <div className="font-mono text-xs text-red-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
+                  <div className="font-mono text-xs text-amber-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
                     {i + 1}
                   </div>
                   <DashboardFighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <div className="font-black italic text-white group-hover:text-red-550 transition-colors tracking-tight text-sm sm:text-base truncate">
+                    <div className="font-black italic text-white group-hover:text-amber-400 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
                     </div>
                     <div className="text-[10px] text-white/45 font-mono uppercase tracking-wide truncate">
@@ -827,10 +827,10 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
       </div>
 
       {/* Dynamic Search Tips banner */}
-      <div className="bg-gradient-to-r from-red-950/40 via-[#0a0a0a] to-red-950/20 border border-white/10 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-5">
+      <div className="bg-gradient-to-r from-amber-950/20 via-[#0a0a0a] to-amber-950/5 border border-white/10 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div>
           <h4 className="font-black text-white flex items-center gap-2 text-sm uppercase tracking-widest font-sans italic">
-            <ShieldAlert className="w-4 h-4 text-red-500" /> StandardMMA DATA STREAM ARCHIVE
+            <Sparkles className="w-4 h-4 text-amber-500" /> StandardMMA DATA STREAM ARCHIVE
           </h4>
           <p className="text-xs text-white/60 mt-1.5 max-w-xl leading-relaxed">
             This specialized intelligence system indexes historical combat cards spanning several legendary decades. Select any athlete or event from the directories to dive into dynamic fight metrics instantly.
@@ -839,13 +839,13 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         <div className="flex flex-wrap gap-2 md:justify-end">
           {randomShortcuts && (
             <>
-              <span className="bg-white/5 border border-white/10 hover:border-red-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectFighter(randomShortcuts.f1.id)}>
+              <span className="bg-white/5 border border-white/10 hover:border-amber-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectFighter(randomShortcuts.f1.id)}>
                 {randomShortcuts.f1.fullName}
               </span>
-              <span className="bg-white/5 border border-white/10 hover:border-red-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectEvent(randomShortcuts.ev.id)}>
+              <span className="bg-white/5 border border-white/10 hover:border-amber-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectEvent(randomShortcuts.ev.id)}>
                 {randomShortcuts.ev.name}
               </span>
-              <span className="bg-white/5 border border-white/10 hover:border-red-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectFighter(randomShortcuts.f2.id)}>
+              <span className="bg-white/5 border border-white/10 hover:border-amber-500/40 hover:bg-white/10 text-white text-[10px] tracking-wider uppercase font-mono font-bold px-3.5 py-2 rounded-full cursor-pointer transition-all shadow-sm" onClick={() => onSelectFighter(randomShortcuts.f2.id)}>
                 {randomShortcuts.f2.fullName}
               </span>
             </>

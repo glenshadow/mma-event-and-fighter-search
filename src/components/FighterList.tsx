@@ -348,19 +348,19 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
       {/* Search Header */}
       <div className="p-4 border-b border-white/10 bg-black/20 space-y-3">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/40" />
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/60" />
           <input 
             type="text" 
             placeholder="Search fighters..." 
             value={searchQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-red-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/40 outline-none transition-all font-mono"
+            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/60 outline-none transition-all font-mono"
             id="fighter-search-input"
           />
           {searchQuery && (
             <button
               onClick={() => handleQueryChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/40 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
               title="Clear search"
               aria-label="Clear search"
             >
@@ -375,7 +375,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             <button 
               type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer ${showFilters ? 'bg-red-600/10 border-red-500/40 text-red-400' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/25 hover:text-white'}`}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer ${showFilters ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/25 hover:text-white'}`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" /> 
               FILTERS
@@ -384,7 +384,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             {(searchQuery || selectedStance || selectedWeight) && (
               <button 
                 onClick={handleClearFilters}
-                className="text-red-500 hover:text-red-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px]"
+                className="text-amber-500 hover:text-amber-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px]"
               >
                 <Trash2 className="w-3.5 h-3.5" /> reset
               </button>
@@ -392,13 +392,13 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
           </div>
 
           <div className="flex items-center gap-1.5 relative sm:self-auto self-start">
-            <span className="text-white/40 font-mono">Sort:</span>
+            <span className="text-white/65 font-mono">Sort:</span>
             <div className="flex items-center gap-1.5">
               <div className="relative">
                 <button 
                   type="button"
                   onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-red-500 transition-all font-bold min-w-[125px] text-left relative"
+                  className="flex items-center justify-between gap-1.5 bg-black/40 border border-white/10 hover:border-white/20 hover:text-white text-white/80 font-mono rounded-lg pl-3 pr-8 py-1.5 outline-none text-xs cursor-pointer focus:border-amber-500 transition-all font-bold min-w-[125px] text-left relative"
                 >
                   <span>
                     {(() => {
@@ -418,7 +418,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                       return found ? found.label : 'Default';
                     })()}
                   </span>
-                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40 pointer-events-none" />
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/60 pointer-events-none" />
                 </button>
 
                 {isSortOpen && (
@@ -450,7 +450,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                             }
                             setIsSortOpen(false);
                           }}
-                          className={`w-full text-left px-3.5 py-2 hover:bg-red-500/10 hover:text-red-400 transition-colors cursor-pointer flex items-center justify-between ${sortBy === opt.value ? 'bg-red-500/5 text-red-500 font-bold' : 'text-white/70'}`}
+                          className={`w-full text-left px-3.5 py-2 hover:bg-amber-500/10 hover:text-amber-400 transition-colors cursor-pointer flex items-center justify-between ${sortBy === opt.value ? 'bg-amber-500/5 text-amber-500 font-bold' : 'text-white/70'}`}
                         >
                           <span>{opt.label}</span>
                         </button>
@@ -469,14 +469,14 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                   }
                   setSortDirection(nextDir);
                 }}
-                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-red-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
+                className="p-1.5 bg-black/40 border border-white/10 hover:border-white/20 text-white/80 hover:text-white rounded-lg cursor-pointer focus:outline-none focus:border-amber-500 transition-all flex items-center justify-center h-[28px] w-[28px] sm:h-[30px] sm:w-[30px]"
                 title={sortDirection === 'asc' ? "Ascending Order" : "Descending Order"}
                 aria-label={sortDirection === 'asc' ? "Sort ascending" : "Sort descending"}
               >
                 {sortDirection === 'asc' ? (
-                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                  <ArrowUpNarrowWide className="w-3.5 h-3.5 text-amber-500" />
                 ) : (
-                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-red-500" />
+                  <ArrowDownNarrowWide className="w-3.5 h-3.5 text-amber-500" />
                 )}
               </button>
             </div>
@@ -492,13 +492,13 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
           >
             {/* Stances */}
             <div>
-              <span className="text-[9px] uppercase tracking-wider font-mono text-white/40 block mb-1.5 font-bold">Combat Footwork Stance</span>
+              <span className="text-[10px] uppercase tracking-wider font-mono text-white/65 block mb-1.5 font-bold">Combat Footwork Stance</span>
               <div className="flex flex-wrap gap-1.5">
                 {STANCES.map((stance) => (
                   <button
                     key={stance}
                     onClick={() => handleStanceToggle(stance)}
-                    className={`px-2.5 py-1 text-[10px] font-mono rounded-lg border transition-colors cursor-pointer ${selectedStance === stance ? 'bg-red-600/10 border-red-500/40 text-red-550' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20 hover:text-white'}`}
+                    className={`px-2.5 py-1 text-[10px] font-mono rounded-lg border transition-colors cursor-pointer ${selectedStance === stance ? 'bg-amber-500/10 border-amber-500/20 text-amber-500 font-bold' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20 hover:text-white'}`}
                   >
                     {stance}
                   </button>
@@ -508,7 +508,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
 
             {/* Weight Classes */}
             <div>
-              <span className="text-[9px] uppercase tracking-wider font-mono text-white/40 block mb-1.5 font-bold">Weight Class Division</span>
+              <span className="text-[10px] uppercase tracking-wider font-mono text-white/65 block mb-1.5 font-bold">Weight Class Division</span>
               <div className="grid grid-cols-2 gap-1.5">
                 {WEIGHT_DIVISIONS.map((w) => {
                   const active = selectedWeight?.min === w.min && selectedWeight?.max === w.max;
@@ -516,7 +516,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                     <button
                       key={w.name}
                       onClick={() => handleWeightToggle(active ? null : w)}
-                      className={`text-left px-2 py-1.5 text-[10px] font-mono rounded-lg border truncate transition-all cursor-pointer ${active ? 'bg-red-600/20 border-red-500/40 text-red-400 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'}`}
+                      className={`text-left px-2 py-1.5 text-[10px] font-mono rounded-lg border truncate transition-all cursor-pointer ${active ? 'bg-amber-500/10 border-amber-500/30 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/50 hover:border-white/20'}`}
                     >
                       {w.name}
                     </button>
@@ -531,7 +531,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
       {/* Fighter list view */}
       <div className="flex-1 bg-black/10 overflow-x-auto">
         {visibleFighters.length === 0 ? (
-          <div className="text-center py-10 text-white/40 font-mono text-xs">
+          <div className="text-center py-10 text-white/65 font-mono text-xs">
             No matching athletes found.
           </div>
         ) : (
@@ -540,7 +540,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/40 uppercase tracking-widest select-none">
+                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none">
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('name')}>
                       Athlete Name {sortBy === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
@@ -582,14 +582,14 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                       <tr 
                         key={fighter.id}
                         onClick={() => onSelectFighter(fighter.id)}
-                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-red-650/10' : ''}`}
+                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-amber-500/10' : ''}`}
                       >
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
                             <FighterHeadshot fighter={fighter} className="w-9 h-9" />
                             <div>
-                              <div className="text-white font-sans text-sm font-semibold hover:text-red-400 transition-colors">{fighter.fullName}</div>
-                              {fighter.nickName && <div className="text-white/40 italic font-sans text-xs">"{fighter.nickName}"</div>}
+                              <div className="text-white font-sans text-sm font-semibold hover:text-amber-400 transition-colors">{fighter.fullName}</div>
+                              {fighter.nickName && <div className="text-white/65 italic font-sans text-xs">"{fighter.nickName}"</div>}
                             </div>
                           </div>
                         </td>
@@ -599,14 +599,14 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         <td className="py-3 px-4 font-mono font-semibold text-loss-color">
                           {fighter.record.losses}
                         </td>
-                        <td className="py-3 px-4 font-mono text-white/50">
+                        <td className="py-3 px-4 font-mono text-white/70">
                           {fighter.record.draws}
                         </td>
                         <td className="py-3 px-4 font-mono text-white/80">
                           {winrate}%
                         </td>
                         <td className="py-3 px-4">
-                          <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-red-400 font-bold uppercase tracking-wider italic">
+                          <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider italic">
                             {fighter.stance || 'Orthodox'}
                           </span>
                         </td>
@@ -619,7 +619,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         <td className="py-3 px-4 font-mono text-white/60">
                           {fighter.height ? `${fighter.height} IN` : 'N/A'}
                         </td>
-                        <td className="py-3 px-4 font-mono text-red-550 font-bold text-right">
+                        <td className="py-3 px-4 font-mono text-amber-500 font-bold text-right">
                           {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} bouts
                         </td>
                       </tr>
@@ -637,7 +637,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                   <div 
                     key={fighter.id}
                     onClick={() => onSelectFighter(fighter.id)}
-                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-red-650/10 border-l-4 border-red-550' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
+                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
                   >
                     <div className="flex items-center gap-3 min-w-0 pr-3">
                       <FighterHeadshot fighter={fighter} className="w-9 h-9" />
@@ -646,8 +646,8 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                           {fighter.fullName}
                         </div>
                         
-                        <div className="flex items-center gap-2 mt-1 text-[11px] font-mono text-white/40">
-                          <span className="text-red-550 font-bold uppercase tracking-wider italic text-[10px]">{fighter.stance || 'Orthodox'}</span>
+                        <div className="flex items-center gap-2 mt-1 text-[11px] font-mono text-white/65">
+                          <span className="text-amber-500 font-bold uppercase tracking-wider italic text-[10px]">{fighter.stance || 'Orthodox'}</span>
                           <span>•</span>
                           <span>{fighter.weight ? `${fighter.weight} LBS` : 'Welterweight'}</span>
                         </div>
@@ -658,7 +658,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                       <div className="text-xs font-black font-mono text-white tracking-widest">
                         {fighter.record.wins} - {fighter.record.losses} - {fighter.record.draws}
                       </div>
-                      <div className="text-[10px] text-white/40 font-mono mt-0.5 uppercase tracking-tighter">
+                      <div className="text-[10px] text-white/65 font-mono mt-0.5 uppercase tracking-tighter">
                         {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} bouts
                       </div>
                     </div>
@@ -678,7 +678,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             >
               Load More Fighters (+40)
             </button>
-            <div className="text-[9px] text-white/40 font-mono mt-2">
+            <div className="text-[10px] text-white/65 font-mono mt-2">
               Viewing {visibleCount} of {filteredFighters.length} matched athletes
             </div>
           </div>
@@ -686,7 +686,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
       </div>
 
       {/* Metadata status bar of the specific list view */}
-      <div className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-white/40 font-mono uppercase tracking-widest">
+      <div className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-white/65 font-mono uppercase tracking-widest">
         <span>Filtered: {filteredFighters.length} / {fighters.length} ATHLETES</span>
       </div>
     </div>
