@@ -17,7 +17,8 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 - **Advanced Filtering**: Instantly search and filter fighters by name, weight class, stance, or status.
 - **Physical Profiles**: View exact measurements for reach, height, age, and weight.
 - **Fight Histograms & Metrics**: Deep breakdown of a fighter's career, including detailed win/loss histories, visual streaks, and physical advantages.
-- **Adaptive Visualizations**: Comparative stat cards that highlight matchup discrepancies.
+- **Adaptive Visualizations**: Comparative stat cards that highlight matchup discrepancies with pristine text legibility.
+- **Interactive Matchup Previews**: Profile headshots within fight predictive simulations are fully interactive, enabling seamless deep-linking navigation straight to fighter profiles.
 
 ### 📅 3. Comprehensive Event & Card Logs
 - **Dynamic Card Discovery**: Look up events by city, venue, or card name with a streamlined search system.
@@ -25,7 +26,13 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 - **Round-by-Round Breakdown**: Explore striking metrics, takedown statistics, and method details for individual bouts.
 
 ### 🔗 4. Persistent URL Routing & Deeplinking
-- **State-Synchronized Routing**: Built on a solid URL-hash navigation engine (`#dashboard`, `#fighters/:id`, `#events/:id`, `#fights/:id`) for native back/forward button behavior and easy link sharing.
+- **State-Synchronized Routing**: Built on a solid URL-hash navigation engine (`#dashboard`, `#fighters/:id`, `#events/:id`, `#fights/:id`, `#about`) for native back/forward button behavior and easy link sharing.
+- **Top-Scroll Restoration**: Clicking the active navigation tab smoothly scroll-restores the viewport to the top of the current page.
+- **Header-Mounted About Portal**: Responsive header triggers on mobile, tablet, and desktop viewports route users directly to system specifications.
+
+### 🎨 5. Cohesive System Aesthetics & Information Page
+- **Violet Accent Palette**: A beautifully integrated Violet color scheme replaces flashy colors to deliver a highly integrated, eye-safe combat intelligence vibe.
+- **Technical Blueprint Screen**: A dedicated custom information sub-screen (`AboutPage`) fully details the system tech stack, compiler latency, database cache numbers, and visual stages of the pipeline.
 
 ---
 
@@ -54,7 +61,8 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 │   │   ├── FighterDetail.tsx      # Comprehensive physical, historical, and stats detail views
 │   │   ├── EventList.tsx          # Card/Event listing, filtering, and venue index
 │   │   ├── EventDetail.tsx        # Card-specific details, match card grids, and match statuses
-│   │   └── FightDetail.tsx        # Round-by-round analytics and strike telemetry
+│   │   ├── FightDetail.tsx        # Round-by-round analytics and strike telemetry
+│   │   └── AboutPage.tsx          # Technical specifications, stack details, and pipeline blueprint
 │   │
 │   ├── data/                   # Dynamic sports datasets (JSON)
 │   │   ├── raw/                # Extracted individual raw bout and fighter cards (excluded from VCS)
@@ -96,6 +104,7 @@ graph TD
         H[URL Hash Router] -->|#dashboard| D[DashboardInsights Component]
         H -->|#fighters| FL[FighterList Component]
         H -->|#events| EL[EventList Component]
+        H -->|#about| AB[AboutPage Component]
 
         FL -->|Fighter Selected| FD[FighterDetail Panel]
         EL -->|Event Selected| ED[EventDetail Card]
@@ -104,6 +113,7 @@ graph TD
         App -->|Reactive Prop Distribution| D
         App -->|Reactive Prop Distribution| FL
         App -->|Reactive Prop Distribution| EL
+        App -->|Reactive Prop Distribution| AB
     end
 
     classDef default fill:#151d2a,stroke:#3b4252,stroke-width:1px,color:#e5e9f0;

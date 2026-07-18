@@ -660,21 +660,21 @@ export default function FightDetail({
     primaryClass: string;
   }
 
-  // Default theme settings (Fuchsia vs Sky)
+  // Default theme settings (Violet vs Sky)
   let themeA: FighterTheme = {
-    text: 'text-fuchsia-400',
-    textHover: 'hover:text-fuchsia-400',
-    bgGlow: 'bg-fuchsia-500/10',
-    bgGlowHalf: 'bg-fuchsia-500/5',
-    borderGlow: 'border-fuchsia-500/20',
-    borderGlowHover: 'hover:border-fuchsia-500/30 group-hover:border-fuchsia-500/30',
-    badgeText: 'text-fuchsia-400',
-    bg500: 'bg-fuchsia-500',
-    gradientFrom: 'from-fuchsia-500',
-    gradientTo: 'to-fuchsia-600',
-    gradientRFrom: 'from-fuchsia-600',
-    gradientRTo: 'to-fuchsia-500',
-    primaryClass: 'fuchsia'
+    text: 'text-violet-400',
+    textHover: 'hover:text-violet-400',
+    bgGlow: 'bg-violet-500/10',
+    bgGlowHalf: 'bg-violet-500/5',
+    borderGlow: 'border-violet-500/20',
+    borderGlowHover: 'hover:border-violet-500/30 group-hover:border-violet-500/30',
+    badgeText: 'text-violet-400',
+    bg500: 'bg-violet-500',
+    gradientFrom: 'from-violet-500',
+    gradientTo: 'to-violet-600',
+    gradientRFrom: 'from-violet-600',
+    gradientRTo: 'to-violet-500',
+    primaryClass: 'violet'
   };
 
   let themeB: FighterTheme = {
@@ -768,7 +768,7 @@ export default function FightDetail({
     bg500Class: themeA.bg500,
     borderClass: themeA.borderGlow,
     glowId: 'glowDynamicA',
-    hex: themeA.primaryClass === 'fuchsia' ? '#d946ef' : themeA.primaryClass === 'emerald' ? '#10b981' : '#ef4444'
+    hex: themeA.primaryClass === 'violet' ? '#8b5cf6' : themeA.primaryClass === 'emerald' ? '#10b981' : '#ef4444'
   };
 
   const graphThemeB = {
@@ -1125,20 +1125,25 @@ export default function FightDetail({
               <div className={`absolute top-0 right-0 w-24 h-24 ${themeA.bgGlowHalf} rounded-full blur-3xl pointer-events-none`} />
               
               {/* Headshot on the LEFT ("end-left") */}
-              <div className="shrink-0 relative z-10" id="prediction-headshot-fighter-a">
+              <button 
+                onClick={() => onSelectFighter(fighterA.id)}
+                className="shrink-0 relative z-10 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-full"
+                id="prediction-headshot-fighter-a"
+                title={`View ${fighterA.fullName} profile`}
+              >
                 {headshotA ? (
                   <ImageWithLoader 
                     src={headshotA} 
                     alt={fighterA.fullName} 
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 hover:border-amber-500/40 overflow-hidden bg-black/40 transition-colors"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeA.text} text-base sm:text-lg`}>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 hover:border-amber-500/40 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeA.text} text-base sm:text-lg transition-colors`}>
                     {fighterA.firstName?.[0]}{fighterA.lastName?.[0]}
                   </div>
                 )}
-              </div>
+              </button>
 
               {/* Text details on the RIGHT */}
               <div className="flex flex-col items-end text-right relative z-10 flex-1">
@@ -1172,20 +1177,25 @@ export default function FightDetail({
               </div>
 
               {/* Headshot on the RIGHT ("end-right") */}
-              <div className="shrink-0 relative z-10 order-2" id="prediction-headshot-fighter-b">
+              <button 
+                onClick={() => onSelectFighter(fighterB.id)}
+                className="shrink-0 relative z-10 order-2 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500/50 rounded-full"
+                id="prediction-headshot-fighter-b"
+                title={`View ${fighterB.fullName} profile`}
+              >
                 {headshotB ? (
                   <ImageWithLoader 
                     src={headshotB} 
                     alt={fighterB.fullName} 
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 hover:border-amber-500/40 overflow-hidden bg-black/40 transition-colors"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
-                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeB.text} text-base sm:text-lg`}>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-white/20 hover:border-amber-500/40 overflow-hidden bg-black/40 flex items-center justify-center font-mono font-black ${themeB.text} text-base sm:text-lg transition-colors`}>
                     {fighterB.firstName?.[0]}{fighterB.lastName?.[0]}
                   </div>
                 )}
-              </div>
+              </button>
             </div>
           </div>
 
@@ -1316,7 +1326,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageA < ageB ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {ageA > 0 ? `${ageA} YRS` : 'Unknown'}
                 </span>
                 {ageA > 0 && ageB > 0 && (
@@ -1344,7 +1354,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${ageA > 0 && ageB > 0 && ageB < ageA ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {ageB > 0 ? `${ageB} YRS` : 'Unknown'}
                 </span>
                 {ageA > 0 && ageB > 0 && (
@@ -1367,7 +1377,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valA > valB ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {displayHeight(fighterA.height)}
                 </span>
                 {valA > 0 && valB > 0 && (
@@ -1395,7 +1405,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${valB > valA ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {displayHeight(fighterB.height)}
                 </span>
                 {valA > 0 && valB > 0 && (
@@ -1418,7 +1428,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachA > reachB ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {reachA > 0 ? `${reachA}.0"` : 'Unknown'}
                 </span>
                 {reachA > 0 && reachB > 0 && (
@@ -1446,7 +1456,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${reachB > reachA ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {reachB > 0 ? `${reachB}.0"` : 'Unknown'}
                 </span>
                 {reachA > 0 && reachB > 0 && (
@@ -1469,7 +1479,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightA.lbs || 0) > (fightWeightB.lbs || 0) ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {fightWeightA.lbs ? `${fightWeightA.lbs} LBS` : 'N/A'}
                 </span>
                 <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
@@ -1500,7 +1510,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${(fightWeightB.lbs || 0) > (fightWeightA.lbs || 0) ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {fightWeightB.lbs ? `${fightWeightB.lbs} LBS` : 'N/A'}
                 </span>
                 <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
@@ -1526,7 +1536,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateA > winRateB ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {winRateA}%
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden flex justify-end ml-auto">
@@ -1552,7 +1562,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winRateB > winRateA ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {winRateB}%
                 </span>
                 <div className="w-20 sm:w-32 h-1 bg-white/5 rounded-full mt-1.5 overflow-hidden mr-auto">
@@ -1573,7 +1583,7 @@ export default function FightDetail({
             <div className="p-4 grid grid-cols-[1fr_90px_1fr] sm:grid-cols-[1fr_140px_1fr] gap-2 sm:gap-4 items-start transition-colors hover:bg-white/[0.02]">
               {/* Fighter A Spec */}
               <div className="text-right flex flex-col items-end">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsA > winsB ? themeA.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {winsA} Wins
                 </span>
                 <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">
@@ -1597,7 +1607,7 @@ export default function FightDetail({
 
               {/* Fighter B Spec */}
               <div className="text-left flex flex-col items-start">
-                <span className={`text-sm sm:text-base font-black italic font-mono uppercase ${winsB > winsA ? themeB.text : 'text-white'}`}>
+                <span className="text-sm sm:text-base font-black italic font-mono uppercase text-white">
                   {winsB} Wins
                 </span>
                 <span className="text-[10px] sm:text-[10px] text-white/65 font-mono block uppercase tracking-wider mt-0.5 leading-none">

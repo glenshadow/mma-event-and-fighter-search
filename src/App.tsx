@@ -6,6 +6,7 @@ import FighterDetail from './components/FighterDetail';
 import EventList from './components/EventList';
 import EventDetail from './components/EventDetail';
 import FightDetail from './components/FightDetail';
+import AboutPage from './components/AboutPage';
 import { Trophy, CalendarDays, Users, HandFist, Info, AlertTriangle, Menu, X, ArrowLeft, ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -13,6 +14,10 @@ function parseHash(hash: string) {
   const cleanHash = hash.replace(/^#\/?/, ''); // remove leading # and / if any
   if (!cleanHash || cleanHash === 'dashboard') {
     return { tab: 'dashboard' as const, id: null };
+  }
+
+  if (cleanHash === 'about') {
+    return { tab: 'about' as const, id: null };
   }
   
   if (cleanHash.startsWith('fighters')) {
@@ -84,7 +89,7 @@ export default function App() {
   const [champions, setChampions] = useState<any[] | null>(null);
 
   // Orchestrating navigation states
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'fighters' | 'events' | 'fights'>(() => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'fighters' | 'events' | 'fights' | 'about'>(() => {
     return parseHash(window.location.hash).tab;
   });
   const [selectedFighterId, setSelectedFighterId] = useState<number | null>(() => {
@@ -151,6 +156,42 @@ export default function App() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavClick = (tab: 'dashboard' | 'fighters' | 'events' | 'about') => {
+    const currentHash = window.location.hash;
+    
+    if (tab === 'dashboard') {
+      if (!currentHash || currentHash === '#' || currentHash === '#dashboard') {
+        scrollToTop();
+      } else {
+        window.location.hash = '';
+      }
+    } else if (tab === 'fighters') {
+      if (currentHash === '#fighters') {
+        scrollToTop();
+      } else {
+        if (currentHash.startsWith('#fighters/')) {
+          scrollPositionsRef.current['#fighters'] = 0;
+        }
+        window.location.hash = 'fighters';
+      }
+    } else if (tab === 'events') {
+      if (currentHash === '#events') {
+        scrollToTop();
+      } else {
+        if (currentHash.startsWith('#events/')) {
+          scrollPositionsRef.current['#events'] = 0;
+        }
+        window.location.hash = 'events';
+      }
+    } else if (tab === 'about') {
+      if (currentHash === '#about') {
+        scrollToTop();
+      } else {
+        window.location.hash = 'about';
+      }
+    }
   };
 
   // Bulk loading on bootstrap
@@ -410,66 +451,101 @@ export default function App() {
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
           
-          {/* Logo & title */}
-          <div 
-            onClick={() => { window.location.hash = ''; }}
-            className="flex items-center gap-3 cursor-pointer hover:opacity-90 select-none transition-all"
-            title="Go to Dashboard"
-          >
-            <div className="relative flex items-center justify-center shrink-0">
-              {/* Perfectly centered ambient amber glow */}
-              <div className="absolute w-6 h-6 bg-amber-500/30 rounded-full blur-md animate-pulse pointer-events-none"></div>
-              <div className="relative w-9 h-9 bg-black/60 border border-white/15 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0">
-                <HandFist className="w-5 h-5 text-white animate-pulse" />
+          {/* Logo, title, and Mobile About trigger */}
+          <div className="flex items-center justify-between w-full md:w-auto">
+            <div 
+              onClick={() => handleNavClick('dashboard')}
+              className="flex items-center gap-3 cursor-pointer hover:opacity-90 select-none transition-all"
+              title="Go to Dashboard"
+            >
+              <div className="relative flex items-center justify-center shrink-0">
+                {/* Perfectly centered ambient amber glow */}
+                <div className="absolute w-6 h-6 bg-amber-500/30 rounded-full blur-md animate-pulse pointer-events-none"></div>
+                <div className="relative w-9 h-9 bg-black/60 border border-white/15 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0">
+                  <HandFist className="w-5 h-5 text-white animate-pulse" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-xl font-black tracking-tighter italic text-white flex items-center gap-1">
+                  StandardMMA <span className="not-italic text-[10px] font-mono font-bold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded ml-2">DATA</span>
+                </h1>
+                <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase">
+                  COMBAT SPORTS INTEL SYSTEM
+                </p>
               </div>
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tighter italic text-white flex items-center gap-1">
-                StandardMMA <span className="not-italic text-[10px] font-mono font-bold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded ml-2">DATA</span>
-              </h1>
-              <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase">
-                COMBAT SPORTS INTEL SYSTEM
-              </p>
-            </div>
+
+            {/* Mobile About Link in the Header */}
+            <button
+              onClick={() => handleNavClick('about')}
+              className={`md:hidden flex items-center gap-1 px-2.5 py-1.5 border rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
+              title="About Site"
+            >
+              <Info className="w-3.5 h-3.5 shrink-0" />
+              <span>ABOUT</span>
+            </button>
           </div>
 
           {/* Desktop Tab Selector and Indicators */}
           <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-            <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl w-full md:w-auto justify-between md:justify-start">
-              <button
-                onClick={() => { window.location.hash = ''; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-              >
-                <Trophy className="w-3.5 h-3.5" /> Dashboard
-              </button>
-              <button
-                onClick={() => { window.location.hash = 'fighters'; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-              >
-                <Users className="w-3.5 h-3.5" /> Fighters
-              </button>
-              <button
-                onClick={() => { window.location.hash = 'events'; }}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-              >
-                <CalendarDays className="w-3.5 h-3.5" /> Events
-              </button>
-            </nav>
+            <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-start">
+              <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl flex-1 md:flex-initial justify-between md:justify-start">
+                <button
+                  onClick={() => handleNavClick('dashboard')}
+                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                >
+                  <Trophy className="w-3.5 h-3.5" /> Dashboard
+                </button>
+                <button
+                  onClick={() => handleNavClick('fighters')}
+                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                >
+                  <Users className="w-3.5 h-3.5" /> Fighters
+                </button>
+                <button
+                  onClick={() => handleNavClick('events')}
+                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                >
+                  <CalendarDays className="w-3.5 h-3.5" /> Events
+                </button>
+              </nav>
 
+              {/* Tablet/Medium About link (visible on md to lg viewports, hidden on small and large viewports) */}
+              <button
+                onClick={() => handleNavClick('about')}
+                className={`hidden md:flex lg:hidden items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+                title="About Site"
+              >
+                <Info className="w-4 h-4 shrink-0" />
+                <span>About</span>
+              </button>
+            </div>
 
-
-            {/* Live Feed indicator */}
-            <div 
-              onClick={() => { window.location.hash = 'events'; }}
-              className="hidden lg:flex items-center gap-3 cursor-pointer hover:opacity-85 transition-all select-none"
-              title="Go to Events"
-            >
-              <div className="flex flex-col items-end">
-                <span className="text-[11px] text-white/60 font-mono">1,319 Cards</span>
+            {/* Desktop Live Feed & About controls */}
+            <div className="flex items-center gap-4">
+              {/* Live Feed indicator */}
+              <div 
+                onClick={() => handleNavClick('events')}
+                className="hidden lg:flex items-center gap-3 cursor-pointer hover:opacity-85 transition-all select-none"
+                title="Go to Events"
+              >
+                <div className="flex flex-col items-end">
+                  <span className="text-[11px] text-white/60 font-mono">1,319 Cards</span>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                  <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></div>
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></div>
-              </div>
+
+              {/* Desktop About Button */}
+              <button
+                onClick={() => handleNavClick('about')}
+                className={`hidden lg:flex items-center gap-1.5 px-4 py-2 border rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black shadow-[0_0_15px_rgba(245,158,11,0.05)]' : 'border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/20'}`}
+                title="About this Platform"
+              >
+                <Info className="w-3.5 h-3.5 shrink-0" />
+                <span>ABOUT SITE</span>
+              </button>
             </div>
           </div>
 
@@ -625,6 +701,19 @@ export default function App() {
               />
             </motion.div>
           )}
+
+          {activeTab === 'about' && (
+            <motion.div 
+              key="about"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="w-full"
+            >
+              <AboutPage />
+            </motion.div>
+          )}
         </AnimatePresence>
       </main>
 
@@ -638,7 +727,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-[10px] text-white/60 tracking-wider font-mono text-center md:text-right">
-            StandardMMA DATA FEEDS • v3.6.2
+            StandardMMA DATA FEEDS • v3.7.1
           </div>
         </div>
       </footer>

@@ -50,14 +50,14 @@ export default function DualTrajectoryGraph({
   colorThemeB
 }: DualTrajectoryGraphProps) {
   const themeA = colorThemeA || {
-    primaryClass: 'fuchsia',
-    textClass: 'text-fuchsia-400',
-    bgClass: 'bg-fuchsia-500/10',
-    bg5Class: 'bg-fuchsia-500/5',
-    bg500Class: 'bg-fuchsia-500',
-    borderClass: 'border-fuchsia-500/20',
-    glowId: 'glowFuchsia',
-    hex: '#d946ef'
+    primaryClass: 'violet',
+    textClass: 'text-violet-400',
+    bgClass: 'bg-violet-500/10',
+    bg5Class: 'bg-violet-500/5',
+    bg500Class: 'bg-violet-500',
+    borderClass: 'border-violet-500/20',
+    glowId: 'glowViolet',
+    hex: '#8b5cf6'
   };
 
   const themeB = colorThemeB || {
