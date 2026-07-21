@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FighterProfile } from '../types';
+import { FighterProfile } from '../../types';
 import { TrendingUp, Calendar, ArrowRight, ChevronRight, Star, Target } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -40,6 +40,11 @@ interface TrajectoryPoint {
   recordString: string;
 }
 
+/**
+ * DualTrajectoryGraph renders a fully responsive, custom-plotted SVG timeline graph.
+ * Renders the relative career score trajectory of two athletes over historical timelines.
+ * Uses a cumulative scoring model: Wins grant +1 point, Losses grant -1 point, draws/no contests preserve current trajectory state.
+ */
 export default function DualTrajectoryGraph({ 
   fightsA, 
   fightsB, 
@@ -77,7 +82,7 @@ export default function DualTrajectoryGraph({
   const [hoveredX, setHoveredX] = useState<number | null>(null);
   const [selectedX, setSelectedX] = useState<number | null>(null);
 
-  // Responsive sizing
+  // Responsive sizing listener using ResizeObserver to ensure robust fluid dimensions.
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -93,6 +98,14 @@ export default function DualTrajectoryGraph({
     return () => resizeObserver.disconnect();
   }, []);
 
+  /**
+   * Processes a list of fights into chronologically structured trajectory points.
+   * Prepends a custom prep/debut stage 45 days prior to first bout.
+   * Iterates through chronological fight list to accumulate a relative performance index score.
+   * 
+   * @param {any[]} fights - Array of fight objects participated by the athlete.
+   * @returns {TrajectoryPoint[]} Chronological array of performance milestones.
+   */
   const processFights = (fights: any[]): TrajectoryPoint[] => {
     const sorted = [...fights]
       .map((fight, idx) => ({ fight, originalIdx: idx }))
@@ -435,6 +448,7 @@ export default function DualTrajectoryGraph({
             return (
               <g key={`dual-grid-${val}`}>
                 <line
+                  className={isBaseline ? "stroke-baseline" : "stroke-grid"}
                   x1={paddingLeft}
                   y1={tempCoords.y}
                   x2={dimensions.width - paddingRight}
@@ -444,6 +458,7 @@ export default function DualTrajectoryGraph({
                   strokeWidth={isBaseline ? 1.2 : 0.8}
                 />
                 <text
+                  className="fill-grid-text"
                   x={paddingLeft - 8}
                   y={tempCoords.y + 3}
                   fill={isBaseline ? "rgba(255,255,255,0.5)" : "rgba(255, 255, 255, 0.25)"}
@@ -491,6 +506,7 @@ export default function DualTrajectoryGraph({
           {activeX !== null && activeData && (
             <g>
               <line
+                className="stroke-active-line"
                 x1={activeX}
                 y1={paddingTop}
                 x2={activeX}
@@ -504,6 +520,7 @@ export default function DualTrajectoryGraph({
               {activeData.a && (
                 <g>
                   <circle
+                    className="stroke-active-circle-dot"
                     cx={getCoords(activeData.a.point.time, activeData.a.point.score).x}
                     cy={getCoords(activeData.a.point.time, activeData.a.point.score).y}
                     r={6}
@@ -513,11 +530,12 @@ export default function DualTrajectoryGraph({
                   />
                 </g>
               )}
-
+ 
               {/* snap point B dot (Blue) */}
               {activeData.b && (
                 <g>
                   <circle
+                    className="stroke-active-circle-dot"
                     cx={getCoords(activeData.b.point.time, activeData.b.point.score).x}
                     cy={getCoords(activeData.b.point.time, activeData.b.point.score).y}
                     r={6}

@@ -69,6 +69,14 @@ export default function AboutPage() {
       desc: 'Instant profile deep-linking, automatic back-track history state cache, and smart layout scroll-restoration to guarantee responsive explorer navigation.'
     },
     {
+      title: 'Adaptive Multi-Device Viewports',
+      desc: 'Context-aware layout orchestration seamlessly reconfigures hero schematics, telemetry grids, and header controls between desktop, tablet, and mobile views.'
+    },
+    {
+      title: 'Dual Theme Engine (Dark & Light)',
+      desc: 'High-contrast combat intel aesthetic featuring instant theme switching with tailored amber accents optimized for eye-safe telemetry viewing.'
+    },
+    {
       title: 'Predictive Matchup Simulator',
       desc: 'Custom-built client-side probability modeling engine. Real-time factor weights assess physical specifications, cage-age at bout, and style matchup dynamics.'
     },
@@ -131,7 +139,7 @@ export default function AboutPage() {
           <div className="relative z-10 space-y-8">
             
             {/* Visual Graph Architecture Nodes */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
               
               {/* Node 1 */}
               <div className="bg-zinc-950 border border-white/5 p-5 rounded-xl flex flex-col justify-between relative hover:border-white/10 transition-colors">
@@ -216,16 +224,16 @@ export default function AboutPage() {
             </div>
 
             {/* Connecting Visual Flow Details */}
-            <div className="hidden md:block relative h-1.5 bg-zinc-900/80 rounded-full border border-white/5 overflow-hidden">
+            <div className="hidden lg:block relative h-[3px] bg-zinc-900/80 rounded-full border border-white/5 overflow-hidden connecting-flow-bar">
               <motion.div 
                 animate={{ x: ['-100%', '100%'] }}
                 transition={{ repeat: Infinity, duration: 4, ease: 'linear' }}
-                className="absolute top-0 bottom-0 w-36 bg-gradient-to-r from-transparent via-amber-500/60 to-transparent blur-sm"
+                className="absolute top-0 bottom-0 w-36 bg-gradient-to-r from-transparent via-amber-500/60 to-transparent blur-sm flow-glow-orange"
               />
               <motion.div 
                 animate={{ x: ['-100%', '100%'] }}
                 transition={{ repeat: Infinity, duration: 3.2, ease: 'linear', delay: 1.5 }}
-                className="absolute top-0 bottom-0 w-24 bg-gradient-to-r from-transparent via-violet-500/40 to-transparent blur-xs"
+                className="absolute top-0 bottom-0 w-24 bg-gradient-to-r from-transparent via-violet-500/40 to-transparent blur-xs flow-glow-purple"
               />
             </div>
 
@@ -305,16 +313,21 @@ export default function AboutPage() {
             COMPILER ARCHIVE DETAILS
           </h3>
           <div className="bg-[#0b0c10]/80 border border-white/10 p-6 rounded-2xl space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-zinc-950/60 p-4 rounded-xl border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">ATHLETE HISTORIES</span>
-                <span className="text-2xl font-black italic tracking-tight font-mono text-white mt-1 block">4,330</span>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Pre-linked bios</span>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">ATHLETES</span>
+                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">4,330</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Bios</span>
               </div>
-              <div className="bg-zinc-950/60 p-4 rounded-xl border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">EVENT CARDS</span>
-                <span className="text-2xl font-black italic tracking-tight font-mono text-white mt-1 block">1,319</span>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Official MMA list</span>
+              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">BOUTS</span>
+                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-white mt-1 block">11,701</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Logs</span>
+              </div>
+              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">EVENTS</span>
+                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">1,319</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Cards</span>
               </div>
             </div>
 

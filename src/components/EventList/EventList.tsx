@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { EventSummary, EventDetailed } from '../types';
+import { EventSummary, EventDetailed } from '../../types';
 import { Search, SlidersHorizontal, CalendarDays, FilterX, Clock, ChevronDown, X, ArrowUpNarrowWide, ArrowDownNarrowWide } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -478,7 +478,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none">
+                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none whitespace-nowrap">
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('name')}>
                       Event Card Name {sortBy === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
@@ -537,7 +537,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                         </td>
                         <td className="py-3.5 px-4 font-mono font-bold text-white text-right">
                           <span className="bg-white/5 border border-white/10 px-2.5 py-1 rounded">
-                            {e.fightsCount} BOUTS
+                            {e.fightsCount}
                           </span>
                         </td>
                       </tr>
@@ -583,7 +583,7 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
 
                     <div className="text-right shrink-0">
                       <span className="font-mono text-xs font-bold bg-white/10 text-white border border-white/15 px-2.5 py-1 rounded-md">
-                        {e.fightsCount} BOUTS
+                        {e.fightsCount}
                       </span>
                     </div>
                   </div>

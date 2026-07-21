@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FighterProfile } from '../types';
+import { FighterProfile } from '../../types';
 import { Award, Calendar, Globe, Layers, MapPin, Ruler, User, ExternalLink, ArrowRight, Activity, Crown, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import fighterImages from '../data/fighter-images.json';
-import CareerTrajectoryGraph from './CareerTrajectoryGraph';
-import ImageWithLoader from './ImageWithLoader';
-import { getFighterHeadshotUrl, getFighterBodyShotUrl, isLegitimateFighterImage } from '../utils/image-validator';
+import fighterImages from '../../data/fighter-images.json';
+import CareerTrajectoryGraph from '../CareerTrajectoryGraph';
+import ImageWithLoader from '../ImageWithLoader';
+import { getFighterHeadshotUrl, getFighterBodyShotUrl, isLegitimateFighterImage } from '../../utils/image-validator';
 
 function OpponentHeadshot({ fighterId, name, className = "w-10 h-10" }: { fighterId: number; name: string; className?: string }) {
   const [error, setError] = useState(false);
@@ -137,13 +137,13 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
     return `${ft}'${inch}" (${inches} cm)`;
   };
 
-  // Ape Index metric (Reach - Height) is highly watched in combat sports
-  const getApeIndex = (height: number | null, reach: number | null) => {
+  // Wingspan Index metric (Reach - Height) is highly watched in combat sports
+  const getWingspanIndex = (height: number | null, reach: number | null) => {
     if (!height || !reach) return null;
     const diff = reach - height;
     if (diff > 0) return `+${diff}" reach advantage`;
     if (diff < 0) return `${diff}" reach deficit`;
-    return 'Neutral ape index';
+    return 'Neutral wingspan index';
   };
 
   const getOutcomeClass = (outcome: string) => {
@@ -272,11 +272,11 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
           </div>
 
           {/* Reach Advantage Metric */}
-          {getApeIndex(currentFighter.height, currentFighter.reach) && (
+          {getWingspanIndex(currentFighter.height, currentFighter.reach) && (
             <div className="mt-4 border-t border-white/5 pt-3.5 flex items-center gap-1.5 text-xs text-white/70 font-mono uppercase tracking-widest">
               <Ruler className="w-3.5 h-3.5 text-amber-500" />
-              <span>APE INDEX advantage:</span>
-              <span className="font-extrabold italic text-amber-500">{getApeIndex(currentFighter.height, currentFighter.reach)}</span>
+              <span>WINGSPAN INDEX:</span>
+              <span className="font-extrabold italic text-amber-500">{getWingspanIndex(currentFighter.height, currentFighter.reach)}</span>
             </div>
           )}
         </div>
@@ -360,7 +360,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3 text-white/65 font-mono text-xs uppercase tracking-widest">
               <motion.div 
-                animate={{ rotate: 360 }}
+                animate={{ rotate: [0, 360] }}
                 transition={{ repeat: Infinity, ease: 'linear', duration: 1.5 }}
                 className="w-6 h-6 rounded-full border-2 border-white/5 border-t-amber-500"
               />
@@ -470,7 +470,7 @@ export default function FighterDetail({ fighter, onSelectFighter, onSelectEvent 
                               e.stopPropagation();
                               onSelectEvent(fight.eventId);
                             }}
-                            className="group/event-link text-[11px] text-white/70 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-all duration-200 cursor-pointer font-mono inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-left uppercase tracking-wider truncate max-w-full mt-1.5"
+                            className="group/event-link text-[11px] text-white/70 hover:text-white bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 hover:border-white/10 transition-all duration-200 cursor-pointer font-mono inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-left uppercase tracking-wider truncate max-w-full mt-1.5 w-fit fighter-timeline-event-link"
                           >
                             <span className="truncate text-white/85 group-hover/event-link:text-white">
                               {fight.eventName}

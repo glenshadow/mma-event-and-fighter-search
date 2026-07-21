@@ -9,7 +9,8 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 ## 🌟 Key Features
 
 ### 📊 1. Interactive Combat Sports Dashboard
-- **Executive Insights**: Access a global birds-eye-view of fight datasets, including active champions, total events tracked, and general fight trends.
+- **Executive Insights**: Access a global birds-eye-view of fight datasets (4,330 fighters, 11,701 bouts, and 1,319 events), including active champions, total events tracked, and general fight trends.
+- **Adaptive Multi-Viewport Hero**: Features a high-density split layout on desktop screens and a stacked full-width combat schematic on tablet/mobile views for maximum readability.
 - **Dynamic Demographics**: Visual breakdowns of weight classes, stance distributions (Orthodox, Southpaw, Switch), and win-method distributions.
 - **Champions Showcase**: Interactive display of reigning division champions across weight brackets.
 
@@ -28,19 +29,20 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 ### 🔗 4. Persistent URL Routing & Deeplinking
 - **State-Synchronized Routing**: Built on a solid URL-hash navigation engine (`#dashboard`, `#fighters/:id`, `#events/:id`, `#fights/:id`, `#about`) for native back/forward button behavior and easy link sharing.
 - **Top-Scroll Restoration**: Clicking the active navigation tab smoothly scroll-restores the viewport to the top of the current page.
-- **Header-Mounted About Portal**: Responsive header triggers on mobile, tablet, and desktop viewports route users directly to system specifications.
+- **Responsive Header Controls**: Clean navigation bar with responsive theme toggle (`Dark Mode` / `Light Mode` text on desktop, compact icon button on tablet) and header-mounted About portal.
 
-### 🎨 5. Cohesive System Aesthetics & Information Page
-- **Violet Accent Palette**: A beautifully integrated Violet color scheme replaces flashy colors to deliver a highly integrated, eye-safe combat intelligence vibe.
-- **Technical Blueprint Screen**: A dedicated custom information sub-screen (`AboutPage`) fully details the system tech stack, compiler latency, database cache numbers, and visual stages of the pipeline.
+### 🎨 5. Adaptive Aesthetics, Theme Switcher & System Information
+- **High-Contrast Combat Theme**: Premium dark canvas with high-visibility amber accents, accompanied by an instant Light/Dark mode switcher.
+- **Responsive Architecture Diagram**: A 4-stage system architecture and data pipeline diagram that gracefully adapts across mobile, tablet (`sm:grid-cols-2`), and desktop (`lg:grid-cols-4`) viewports.
+- **Technical Blueprint Screen**: A dedicated custom information sub-screen (`AboutPage`) detailing system tech stack, compiler latency (< 15ms), dataset cache totals, and data pipeline stages.
 
 ---
 
 ## 🛠️ Technology Stack
 
 - **Framework**: [React 18](https://react.dev/) + [Vite](https://vite.dev/) for sub-millisecond hot development reload.
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) using a custom premium **slate dark theme** with high-contrast red accents.
-- **Animations**: [Framer Motion](https://www.framer.com/motion/) for fluid page transitions, layout-aware modal animations, and interactive drawer slides.
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with custom dark/light combat intelligence aesthetic and high-contrast amber accents.
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) for fluid page transitions, layout-aware modal animations, and interactive flow glow bars.
 - **Icons**: [Lucide React](https://lucide.dev/) for a consistent, crisp vector design icon language.
 - **Typography**: Space Grotesk/Inter and JetBrains Mono for data-dense telemetry.
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { EventSummary, EventDetailed, WorkerFight } from '../types';
+import { EventSummary, EventDetailed, WorkerFight } from '../../types';
 import { Calendar, MapPin, Award, Scale, HelpCircle, User, ArrowRight, Crown } from 'lucide-react';
 import { motion } from 'motion/react';
-import fighterImages from '../data/fighter-images.json';
-import ImageWithLoader from './ImageWithLoader';
-import { isLegitimateFighterImage } from '../utils/image-validator';
+import fighterImages from '../../data/fighter-images.json';
+import ImageWithLoader from '../ImageWithLoader';
+import { isLegitimateFighterImage } from '../../utils/image-validator';
 
 interface EventDetailProps {
   eventSummary: EventSummary;

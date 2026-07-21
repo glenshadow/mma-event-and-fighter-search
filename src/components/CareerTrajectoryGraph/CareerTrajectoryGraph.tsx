@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FighterProfile } from '../types';
+import { FighterProfile } from '../../types';
 import { Crown, TrendingUp, Trophy, ChevronRight, ChevronLeft, Calendar, ArrowRight, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -322,6 +322,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
             return (
               <g key={`grid-${val}`}>
                 <line
+                  className={isBaseline ? "stroke-baseline" : "stroke-grid"}
                   x1={paddingLeft}
                   y1={tempCoords.y}
                   x2={dimensions.width - paddingRight}
@@ -331,6 +332,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
                   strokeWidth={isBaseline ? 1.2 : 0.8}
                 />
                 <text
+                  className="fill-grid-text"
                   x={paddingLeft - 6}
                   y={tempCoords.y + 3}
                   fill={isBaseline ? "rgba(255,255,255,0.5)" : "rgba(255, 255, 255, 0.25)"}
@@ -391,6 +393,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
           {activeIndex !== null && activePoint && (
             <g>
               <line
+                className="stroke-active-line"
                 x1={getCoords(activeIndex, activePoint.score).x}
                 y1={paddingTop}
                 x2={getCoords(activeIndex, activePoint.score).x}
@@ -400,6 +403,7 @@ export default function CareerTrajectoryGraph({ fights, fighterName, onSelectEve
                 strokeWidth={1}
               />
               <circle
+                className="stroke-active-circle"
                 cx={getCoords(activeIndex, activePoint.score).x}
                 cy={getCoords(activeIndex, activePoint.score).y}
                 r={isMobileSize ? 6 : 7}

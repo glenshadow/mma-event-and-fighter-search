@@ -1,10 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
-import { FighterProfile } from '../types';
+import { FighterProfile } from '../../types';
 import { Search, SlidersHorizontal, Trophy, Award, Trash2, ChevronDown, X, ArrowUpNarrowWide, ArrowDownNarrowWide } from 'lucide-react';
 import { motion } from 'motion/react';
-import fighterImages from '../data/fighter-images.json';
-import ImageWithLoader from './ImageWithLoader';
-import { getFighterHeadshotUrl } from '../utils/image-validator';
+import FighterHeadshot from '../FighterHeadshot';
 
 interface FighterListProps {
   fighters: FighterProfile[];
@@ -27,42 +25,7 @@ const WEIGHT_DIVISIONS = [
   { name: 'Heavyweight (>205)', min: 206, max: 999 }
 ];
 
-function FighterHeadshot({ fighter, className = "w-9 h-9" }: { fighter: FighterProfile; className?: string }) {
-  const [error, setError] = useState(false);
-  const [evenFallbackFails, setEvenFallbackFails] = useState(false);
-  const initials = `${fighter.firstName?.[0] || ""}${fighter.lastName?.[0] || ""}`.toUpperCase();
 
-  // Official silhouette headshot as fallback
-  const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
-  
-  // Resolve from both fighter object and the master fighter-images list for ultimate robustness, validating to filter out mismatches
-  const validatedHeadshot = getFighterHeadshotUrl(fighter);
-  const headshotUrl = validatedHeadshot || defaultHeadshot;
-
-  if (evenFallbackFails) {
-    return (
-      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-slate-200 to-slate-300 border border-slate-300/30 text-slate-700 font-mono text-[10px] font-bold shadow-inner shrink-0`}>
-        {initials}
-      </div>
-    );
-  }
-
-  return (
-    <ImageWithLoader
-      src={error ? defaultHeadshot : headshotUrl}
-      alt={fighter.fullName}
-      className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
-      onError={() => {
-        if (!error) {
-          setError(true);
-        } else {
-          setEvenFallbackFails(true);
-        }
-      }}
-      referrerPolicy="no-referrer"
-    />
-  );
-}
 
 export default function FighterList({ fighters, selectedId, onSelectFighter }: FighterListProps) {
   const [searchQuery, setSearchQuery] = useState(() => {
@@ -540,7 +503,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             <div className="hidden md:block">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none">
+                  <tr className="border-b border-white/10 bg-black/40 text-[10px] font-mono text-white/65 uppercase tracking-widest select-none whitespace-nowrap">
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('name')}>
                       Athlete Name {sortBy === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
@@ -550,14 +513,8 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('losses')}>
                       Losses {sortBy === 'losses' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
-                    <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('draws')}>
-                      Draws {sortBy === 'draws' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
-                    </th>
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('winrate')}>
                       Win Rate {sortBy === 'winrate' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
-                    </th>
-                    <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('stance')}>
-                      Stance {sortBy === 'stance' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
                     </th>
                     <th className="py-3 px-4 font-bold cursor-pointer hover:text-white transition-colors" onClick={() => handleHeaderClick('age')}>
                       Age {sortBy === 'age' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
@@ -599,16 +556,8 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         <td className="py-3 px-4 font-mono font-semibold text-loss-color">
                           {fighter.record.losses}
                         </td>
-                        <td className="py-3 px-4 font-mono text-white/70">
-                          {fighter.record.draws}
-                        </td>
                         <td className="py-3 px-4 font-mono text-white/80">
                           {winrate}%
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider italic">
-                            {fighter.stance || 'Orthodox'}
-                          </span>
                         </td>
                         <td className="py-3 px-4 font-mono text-white/60">
                           {fighter.age ?? 'N/A'}
@@ -620,7 +569,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                           {fighter.height ? `${fighter.height} IN` : 'N/A'}
                         </td>
                         <td className="py-3 px-4 font-mono text-amber-500 font-bold text-right">
-                          {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} bouts
+                          {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0}
                         </td>
                       </tr>
                     );
@@ -659,7 +608,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         {fighter.record.wins} - {fighter.record.losses} - {fighter.record.draws}
                       </div>
                       <div className="text-[10px] text-white/65 font-mono mt-0.5 uppercase tracking-tighter">
-                        {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0} bouts
+                        {fighter.fightsCount ?? fighter.fightsParticipated?.length ?? 0}
                       </div>
                     </div>
                   </div>

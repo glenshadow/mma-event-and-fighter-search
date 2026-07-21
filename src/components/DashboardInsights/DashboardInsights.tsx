@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
-import { FighterProfile, EventSummary, StatsSummary } from '../types';
-import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight, Target, Activity, Info } from 'lucide-react';
+import { FighterProfile, EventSummary, StatsSummary } from '../../types';
+import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight, Activity, Info } from 'lucide-react';
 import { motion } from 'motion/react';
-import fighterImages from '../data/fighter-images.json';
-import ImageWithLoader from './ImageWithLoader';
-import { getFighterHeadshotUrl } from '../utils/image-validator';
+import ImageWithLoader from '../ImageWithLoader';
+import FighterHeadshot from '../FighterHeadshot';
 // @ts-ignore
-import heroBannerImage from '../assets/images/mma_blueprint_hero_1784042998091.jpg';
+import heroBannerImage from '../../assets/images/mma_blueprint_hero_1784042998091.jpg';
 
 interface DashboardProps {
   fighters: FighterProfile[];
@@ -17,42 +16,7 @@ interface DashboardProps {
   onSelectEvent: (id: number) => void;
 }
 
-function DashboardFighterHeadshot({ fighter, className = "w-10 h-10" }: { fighter: FighterProfile; className?: string }) {
-  const [error, setError] = useState(false);
-  const [evenFallbackFails, setEvenFallbackFails] = useState(false);
-  const initials = `${fighter.firstName?.[0] || ""}${fighter.lastName?.[0] || ""}`.toUpperCase();
 
-  // Official silhouette headshot as fallback
-  const defaultHeadshot = "https://ufc.com/images/styles/event_results_athlete_headshot/s3/2019-04/SILHOUETTE.png?itok=YsYQ-PdM";
-  
-  // Resolve from both fighter object and the master fighter-images list for ultimate robustness, validating to filter out mismatches
-  const validatedHeadshot = getFighterHeadshotUrl(fighter);
-  const headshotUrl = validatedHeadshot || defaultHeadshot;
-
-  if (evenFallbackFails) {
-    return (
-      <div className={`${className} rounded-full flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-900 border border-white/10 text-white font-mono text-[10px] font-bold shadow-inner shrink-0`}>
-        {initials}
-      </div>
-    );
-  }
-
-  return (
-    <ImageWithLoader
-      src={error ? defaultHeadshot : headshotUrl}
-      alt={fighter.fullName}
-      className={`${className} rounded-full object-cover border border-white/10 bg-black/40 shrink-0`}
-      onError={() => {
-        if (!error) {
-          setError(true);
-        } else {
-          setEvenFallbackFails(true);
-        }
-      }}
-      referrerPolicy="no-referrer"
-    />
-  );
-}
 
 const CHAMPIONS_DATA = [
   {
@@ -292,7 +256,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full bg-gradient-to-b from-zinc-900/80 to-black/95 border border-white/10 rounded-2xl p-6 md:p-8 overflow-hidden relative shadow-2xl shadow-amber-950/10"
+        className="w-full bg-gradient-to-b from-zinc-900/80 to-black/95 border-y border-r border-white/10 border-l-4 border-l-amber-500 rounded-2xl p-6 md:p-8 overflow-hidden relative shadow-2xl shadow-amber-950/10"
         id="analytics-hero-banner"
       >
         {/* Subtle tech background grids/accents */}
@@ -300,95 +264,106 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
         <div className="absolute -left-16 -top-16 w-48 h-48 bg-amber-600/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute -right-16 -bottom-16 w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center z-10">
-          {/* Hero Explanatory Text */}
-          <div className="lg:col-span-7 space-y-5 text-left">
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center z-10">
+          {/* Hero Explanatory Text & Header */}
+          <div className="lg:col-span-7 space-y-4 lg:space-y-5 text-left">
             <div className="space-y-2">
-              <h2 className="text-3xl md:text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
+              <h2 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-black italic tracking-tighter text-white uppercase leading-none">
                 High-Precision <span className="text-amber-500">Combat Sports</span> Analytics
               </h2>
-              <p className="text-sm font-mono text-white/50 uppercase tracking-widest font-bold">
+              <p className="text-xs sm:text-sm font-mono text-white/50 uppercase tracking-widest font-bold">
                 StandardMMA Fighter Trajectory & Division Mapping System
               </p>
             </div>
 
-            <p className="text-sm leading-relaxed text-zinc-300 max-w-xl">
+            <p className="text-xs sm:text-sm leading-relaxed text-zinc-300 w-full lg:max-w-xl">
               StandardMMA offers a comprehensive, data-driven window into fighter careers and match-ups. Utilizing advanced career trajectory mapping, active division standings, and multi-era timeline filters, this platform reconstructs historical fighter performance to isolate true athletic peaks, win-streak ratios, and championship-tier metrics.
             </p>
 
             {/* Career Analytics Stats Row */}
-            <div className="grid grid-cols-3 gap-4 pt-2 border-t border-white/5 max-w-lg">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 lg:pt-4 border-t border-white/10 w-full lg:max-w-lg" id="hero-stats-container">
               <button
                 onClick={() => { window.location.hash = 'fighters'; }}
-                className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-amber-500/50 group cursor-pointer"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
               >
-                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-amber-400 transition-colors">TRACKED FIGHTERS</span>
-                <span className="text-lg font-black italic text-amber-500 group-hover:scale-105 inline-block transition-transform">{(stats.totalFighters || 0).toLocaleString()}</span>
+                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                </div>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">FIGHTERS</span>
+                <span className="text-lg md:text-xl font-black italic text-amber-500 block transition-transform group-hover:translate-x-1">{(stats.totalFighters || 0).toLocaleString()}</span>
               </button>
+              
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-white/20 group cursor-pointer"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
               >
-                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-white/80 transition-colors">RECORDED BOUTS</span>
-                <span className="text-lg font-black italic text-white group-hover:scale-105 inline-block transition-transform">{(stats.totalFights || 0).toLocaleString()}</span>
+                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                </div>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">BOUTS</span>
+                <span className="text-lg md:text-xl font-black italic text-white block transition-transform group-hover:translate-x-1">{(stats.totalFights || 0).toLocaleString()}</span>
               </button>
+
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className="text-left space-y-1 hover:bg-white/5 p-2 -m-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-amber-500/50 group cursor-pointer"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
               >
-                <span className="text-[10px] text-white/40 font-mono block uppercase group-hover:text-amber-400 transition-colors">MAPPED EVENTS</span>
-                <span className="text-lg font-black italic text-amber-500 group-hover:scale-105 inline-block transition-transform">{(stats.totalEvents || 0).toLocaleString()}</span>
+                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                </div>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">EVENTS</span>
+                <span className="text-lg md:text-xl font-black italic text-amber-500 block transition-transform group-hover:translate-x-1">{(stats.totalEvents || 0).toLocaleString()}</span>
               </button>
             </div>
           </div>
 
-          {/* Hero Stylized Image and Overlay Section */}
-          <div className="lg:col-span-5 relative flex items-center justify-center">
-            <div className="relative w-full max-w-md aspect-[16/9] lg:aspect-square bg-zinc-950/90 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
-              {/* Background blueprint graphic */}
-              <ImageWithLoader
-                src={heroBannerImage}
-                alt="MMA Blueprint Combat Schematic"
-                className="w-full h-full object-cover opacity-75 pointer-events-none filter saturate-75 brightness-95"
-                referrerPolicy="no-referrer"
-              />
+          {/* Hero Stylized Schematic Banner Image */}
+          <div className="lg:col-span-5 relative flex items-center justify-center w-full">
+            <div className="relative w-full h-48 sm:h-64 lg:h-auto lg:aspect-square bg-zinc-950/90 border border-white/10 rounded-xl overflow-hidden shadow-2xl">
+            {/* Background blueprint graphic */}
+            <ImageWithLoader
+              src={heroBannerImage}
+              alt="MMA Blueprint Combat Schematic"
+              className="w-full h-full object-cover opacity-80 pointer-events-none filter saturate-75 brightness-95"
+              referrerPolicy="no-referrer"
+            />
 
-              {/* Statistical Overlay 1: Real-time data model tracking */}
-              <div className="absolute top-4 left-4 bg-black/75 border border-white/10 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg">
-                <div className="flex items-center gap-1.5 text-amber-400 font-bold">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                  <span>FIGHTER A</span>
-                </div>
-                <div className="text-white/60 font-medium">STANCE: SOUTHPAW</div>
-                <div className="text-white/60 font-medium">RECORD: 18-3-0</div>
+            {/* Statistical Overlay 1: Real-time data model tracking */}
+            <div className="absolute top-4 left-4 bg-black/75 border border-white/10 p-2 sm:p-2.5 rounded-lg text-[9px] sm:text-[10px] font-mono space-y-0.5 pointer-events-none shadow-lg backdrop-blur-xs">
+              <div className="flex items-center gap-1.5 text-amber-400 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>FIGHTER A</span>
               </div>
-
-              {/* Statistical Overlay 2: Dynamic division metadata */}
-              <div className="absolute bottom-4 right-4 bg-black/75 border border-white/10 p-2 rounded text-[9px] font-mono space-y-0.5 pointer-events-none shadow-lg text-right">
-                <div className="flex items-center justify-end gap-1.5 text-amber-400 font-bold">
-                  <span>FIGHTER B</span>
-                  <Target className="w-2.5 h-2.5 text-amber-500" />
-                </div>
-                <div className="text-white/60 font-medium">STANCE: ORTHODOX</div>
-                <div className="text-white/60 font-medium">RECORD: 22-5-0</div>
-              </div>
-
-              {/* Statistical Overlay 3: Strike Trajectory Arc label */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 rounded-full border-2 border-white/10 border-dashed animate-spin flex items-center justify-center">
-                    <div className="w-6 h-6 rounded-full border border-amber-500/30"></div>
-                  </div>
-                  <span className="text-[8px] font-mono text-white/50 mt-1 uppercase tracking-wider bg-black/50 px-1 rounded">PEAK_REF_X</span>
-                </div>
-              </div>
-
-              {/* Subtle grid HUD scanning line */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent h-1/3 w-full animate-[pulse_3s_infinite] pointer-events-none"></div>
+              <div className="text-white/60 font-medium">STANCE: SOUTHPAW</div>
+              <div className="text-white/60 font-medium">RECORD: 18-3-0</div>
             </div>
+
+            {/* Statistical Overlay 2: Dynamic division metadata */}
+            <div className="absolute bottom-4 right-4 bg-black/75 border border-white/10 p-2 sm:p-2.5 rounded-lg text-[9px] sm:text-[10px] font-mono space-y-0.5 pointer-events-none shadow-lg text-right backdrop-blur-xs">
+              <div className="flex items-center justify-end gap-1.5 text-amber-400 font-bold">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                <span>FIGHTER B</span>
+              </div>
+              <div className="text-white/60 font-medium">STANCE: ORTHODOX</div>
+              <div className="text-white/60 font-medium">RECORD: 22-5-0</div>
+            </div>
+
+            {/* Statistical Overlay 3: Strike Trajectory Arc label */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+              <div className="flex flex-col items-center">
+                <div className="w-10 h-10 rounded-full border-2 border-white/10 border-dashed animate-spin flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full border border-amber-500/30"></div>
+                </div>
+                <span className="text-[8px] font-mono text-white/50 mt-1 uppercase tracking-wider bg-black/50 px-1 rounded">PEAK_REF_X</span>
+              </div>
+            </div>
+
+            {/* Subtle grid HUD scanning line */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-amber-500/5 to-transparent h-1/3 w-full animate-[pulse_3s_infinite] pointer-events-none"></div>
           </div>
         </div>
-      </motion.div>
+      </div>
+    </motion.div>
 
       {/* Current Divisional Champions Section */}
       <motion.div
@@ -413,18 +388,18 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
               <motion.div
                 key={champ.id}
                 onClick={() => onSelectFighter(champ.id)}
-                className={`relative w-full h-44 rounded-2xl bg-gradient-to-b ${champ.theme} p-5 overflow-hidden shadow-xl cursor-pointer backdrop-blur-md transition-all flex flex-col justify-between hover:scale-[1.02] hover:border-amber-500/30 duration-300`}
+                className={`relative w-full h-44 rounded-2xl bg-gradient-to-b ${champ.theme} p-5 overflow-hidden shadow-xl cursor-pointer backdrop-blur-md transition-all flex flex-col justify-between hover:scale-[1.02] hover:border-amber-500/30 duration-300 champion-card`}
               >
                 {/* Gold ambient background glow */}
                 <div className="absolute -right-12 -bottom-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
                 {/* Full Body Shot overlapping or positioned cleanly on the right */}
-                <div className="absolute right-1 bottom-0 h-40 w-32 flex items-end justify-center pointer-events-none overflow-hidden select-none">
+                <div className="absolute right-1 bottom-0 h-40 w-44 flex items-end justify-center pointer-events-none overflow-visible select-none">
                   {champ.bodyShot ? (
                     <ImageWithLoader
                       src={champ.bodyShot}
                       alt={champ.fullName}
-                      className="object-contain max-h-full w-full transform drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]"
+                      className="object-contain max-h-full w-full transform champion-body-shot-image"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
@@ -683,7 +658,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                   <div className="font-mono text-xs text-amber-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
                     {i + 1}
                   </div>
-                  <DashboardFighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
+                  <FighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
                   <div className="min-w-0 flex-1">
                     <div className="font-black italic text-white group-hover:text-amber-400 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
@@ -802,7 +777,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
                   <div className="font-mono text-xs text-amber-500 w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center font-black italic shrink-0">
                     {i + 1}
                   </div>
-                  <DashboardFighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
+                  <FighterHeadshot fighter={fighter} className="w-10 h-10 shrink-0" />
                   <div className="min-w-0 flex-1">
                     <div className="font-black italic text-white group-hover:text-amber-400 transition-colors tracking-tight text-sm sm:text-base truncate">
                       {fighter.fullName}
@@ -827,7 +802,7 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
       </div>
 
       {/* Dynamic Search Tips banner */}
-      <div className="bg-gradient-to-r from-amber-950/20 via-[#0a0a0a] to-amber-950/5 border border-white/10 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-5">
+      <div id="data-stream-archive-banner" className="bg-gradient-to-r from-amber-950/20 via-[#0a0a0a] to-amber-950/5 border border-white/10 p-6 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div>
           <h4 className="font-black text-white flex items-center gap-2 text-sm uppercase tracking-widest font-sans italic">
             <Sparkles className="w-4 h-4 text-amber-500" /> StandardMMA DATA STREAM ARCHIVE

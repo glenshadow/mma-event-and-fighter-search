@@ -7,7 +7,7 @@ import EventList from './components/EventList';
 import EventDetail from './components/EventDetail';
 import FightDetail from './components/FightDetail';
 import AboutPage from './components/AboutPage';
-import { Trophy, CalendarDays, Users, HandFist, Info, AlertTriangle, Menu, X, ArrowLeft, ArrowUp } from 'lucide-react';
+import { Trophy, CalendarDays, Users, HandFist, Info, AlertTriangle, Menu, X, ArrowLeft, ArrowUp, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 function parseHash(hash: string) {
@@ -74,13 +74,22 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorStr, setErrorStr] = useState<string | null>(null);
 
-  // Force dark mode on startup and clean up any theme preferences
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('mma-theme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.remove('light');
-    localStorage.removeItem('mma-theme');
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    }
+    localStorage.setItem('mma-theme', theme);
+  }, [theme]);
 
   // Core compiled collections state loaded from static public json
   const [events, setEvents] = useState<EventSummary[]>([]);
@@ -418,7 +427,7 @@ export default function App() {
     return (
       <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white font-mono p-6 gap-4" id="applet-loading">
         <motion.div 
-          animate={{ rotate: 360 }}
+          animate={{ rotate: [0, 360] }}
           transition={{ repeat: Infinity, ease: 'linear', duration: 1.5 }}
           className="w-12 h-12 rounded-full border-4 border-slate-800 border-t-amber-500"
         />
@@ -449,7 +458,7 @@ export default function App() {
 
       {/* Top Banner Header */}
       <header className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Logo, title, and Mobile About trigger */}
           <div className="flex items-center justify-between w-full md:w-auto">
@@ -475,76 +484,89 @@ export default function App() {
               </div>
             </div>
 
-            {/* Mobile About Link in the Header */}
-            <button
-              onClick={() => handleNavClick('about')}
-              className={`md:hidden flex items-center gap-1 px-2.5 py-1.5 border rounded-lg text-[10px] font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
-              title="About Site"
-            >
-              <Info className="w-3.5 h-3.5 shrink-0" />
-              <span>ABOUT</span>
-            </button>
+            {/* Mobile About Link & Theme Toggle in the Header */}
+            <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                className="flex items-center justify-center p-2 border border-white/10 bg-white/5 text-white/60 hover:text-white rounded-lg transition-all cursor-pointer"
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                id="theme-toggle-mobile"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-4 h-4 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 text-slate-700" />
+                )}
+              </button>
+
+              <button
+                onClick={() => handleNavClick('about')}
+                className={`flex items-center justify-center p-2 border rounded-lg cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
+                title="About Site"
+                id="mobile-about-button"
+              >
+                <Info className="w-4 h-4 shrink-0" />
+              </button>
+            </div>
           </div>
 
           {/* Desktop Tab Selector and Indicators */}
-          <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
-            <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-start">
-              <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl flex-1 md:flex-initial justify-between md:justify-start">
-                <button
-                  onClick={() => handleNavClick('dashboard')}
-                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-                >
-                  <Trophy className="w-3.5 h-3.5" /> Dashboard
-                </button>
-                <button
-                  onClick={() => handleNavClick('fighters')}
-                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-                >
-                  <Users className="w-3.5 h-3.5" /> Fighters
-                </button>
-                <button
-                  onClick={() => handleNavClick('events')}
-                  className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-                >
-                  <CalendarDays className="w-3.5 h-3.5" /> Events
-                </button>
-              </nav>
+          <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto justify-between md:justify-start">
+            <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl flex-1 md:flex-initial justify-between md:justify-start">
+              <button
+                onClick={() => handleNavClick('dashboard')}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <Trophy className="w-3.5 h-3.5" /> Dashboard
+              </button>
+              <button
+                onClick={() => handleNavClick('fighters')}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <Users className="w-3.5 h-3.5" /> Fighters
+              </button>
+              <button
+                onClick={() => handleNavClick('events')}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                <CalendarDays className="w-3.5 h-3.5" /> Events
+              </button>
+            </nav>
 
-              {/* Tablet/Medium About link (visible on md to lg viewports, hidden on small and large viewports) */}
+            {/* Desktop Live Feed, Theme toggle & About controls */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              {/* Theme Toggle Button for desktop/tablet */}
+              <button
+                onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
+                className="hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2 lg:px-3 border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer text-xs font-mono font-bold"
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                id="theme-toggle-desktop"
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span className="hidden lg:inline uppercase tracking-wider">Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                    <span className="hidden lg:inline uppercase tracking-wider">Dark Mode</span>
+                  </>
+                )}
+              </button>
+
+              {/* About Button (icon-only on tablet, full label on desktop, right-most) */}
               <button
                 onClick={() => handleNavClick('about')}
-                className={`hidden md:flex lg:hidden items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+                className={`hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2.5 lg:px-4 border rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${
+                  activeTab === 'about'
+                    ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black shadow-[0_0_15px_rgba(245,158,11,0.05)]'
+                    : 'border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/20'
+                }`}
                 title="About Site"
               >
-                <Info className="w-4 h-4 shrink-0" />
-                <span>About</span>
-              </button>
-            </div>
-
-            {/* Desktop Live Feed & About controls */}
-            <div className="flex items-center gap-4">
-              {/* Live Feed indicator */}
-              <div 
-                onClick={() => handleNavClick('events')}
-                className="hidden lg:flex items-center gap-3 cursor-pointer hover:opacity-85 transition-all select-none"
-                title="Go to Events"
-              >
-                <div className="flex flex-col items-end">
-                  <span className="text-[11px] text-white/60 font-mono">1,319 Cards</span>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                  <div className="w-2.5 h-2.5 bg-amber-500 rounded-full animate-pulse"></div>
-                </div>
-              </div>
-
-              {/* Desktop About Button */}
-              <button
-                onClick={() => handleNavClick('about')}
-                className={`hidden lg:flex items-center gap-1.5 px-4 py-2 border rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black shadow-[0_0_15px_rgba(245,158,11,0.05)]' : 'border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/20'}`}
-                title="About this Platform"
-              >
-                <Info className="w-3.5 h-3.5 shrink-0" />
-                <span>ABOUT SITE</span>
+                <Info className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0" />
+                <span className="hidden lg:inline uppercase tracking-wider">About</span>
               </button>
             </div>
           </div>
@@ -553,7 +575,7 @@ export default function App() {
       </header>
 
       {/* Main Viewport Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 md:px-8 py-4 md:py-6 z-10 relative">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-4 md:py-6 z-10 relative">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <motion.div 
@@ -719,7 +741,7 @@ export default function App() {
 
       {/* Immersive Footer status bar info */}
       <footer className="bg-black/80 backdrop-blur-md border-t border-white/10 z-10 text-white/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex gap-6 flex-wrap justify-center md:justify-start">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></div>
@@ -727,7 +749,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-[10px] text-white/60 tracking-wider font-mono text-center md:text-right">
-            StandardMMA DATA FEEDS • v3.7.1
+            StandardMMA DATA FEEDS • v4.0.2
           </div>
         </div>
       </footer>

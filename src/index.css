@@ -97,3 +97,672 @@ input:focus:-ms-input-placeholder {
   overflow: hidden !important;
   white-space: nowrap !important;
 }
+
+/* ==========================================================================
+   LIGHT MODE SPECIFIC OVERRIDES & THEME STYLING
+   ========================================================================== */
+
+html.light,
+html.light body,
+html.light #standard-mma-application {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Core Dark Background Overrides */
+html.light .bg-\[\#050505\],
+html.light .bg-slate-950,
+html.light .bg-zinc-950,
+html.light #applet-loading,
+html.light #applet-error {
+  background-color: #f8fafc !important;
+}
+
+/* Card panels, comparative layouts, listing containers and list rows */
+html.light .bg-zinc-950\/40,
+html.light .bg-zinc-950\/60,
+html.light .bg-\[\#090a0f\],
+html.light .bg-\[\#0b0c10\]\/80,
+html.light .bg-\[\#0c0d12\],
+html.light .bg-\[\#121212\],
+html.light .bg-white\/5:not(.h-1):not(.h-2):not(.h-px):not(.h-\[1px\]),
+html.light .bg-white\/\[0\.02\],
+html.light .bg-black\/10,
+html.light .bg-black\/20 {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Horizontal slider tracks and progress bars in light theme */
+html.light .bg-white\/5.h-1,
+html.light .bg-white\/5.h-2,
+html.light .bg-white\/5.h-px,
+html.light .bg-white\/5.h-\[1px\],
+html.light .bg-white\/10.h-1,
+html.light .bg-white\/10.h-2,
+html.light .bg-white\/10.h-px,
+html.light .bg-white\/10.h-\[1px\] {
+  background-color: #f1f5f9 !important;
+  border-color: rgba(15, 23, 42, 0.06) !important;
+  box-shadow: none !important;
+}
+
+/* Navigation button, standard buttons, filters panel active controls */
+html.light nav {
+  background-color: rgba(15, 23, 42, 0.03) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light nav button:not(.bg-amber-500),
+html.light button.bg-white\/5:not(.bg-amber-500) {
+  background-color: transparent !important;
+  color: #475569 !important;
+}
+
+html.light nav button:not(.bg-amber-500):hover,
+html.light button.bg-white\/5:not(.bg-amber-500):hover {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+  color: #0f172a !important;
+}
+
+html.light .hover\:bg-white\/\[0\.04\]:hover,
+html.light .hover\:bg-white\/5:hover,
+html.light .hover\:bg-white\/10:hover {
+  background-color: rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Standard Header & Footer backing plates */
+html.light header {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light footer {
+  background-color: #f1f5f9 !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Logo specific dark background override */
+html.light .bg-black\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Semi-transparent overrides */
+html.light .bg-black\/40 {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+html.light .bg-black\/80 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Border overlays */
+html.light .border-white\/5,
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20,
+html.light .border-white\/30,
+html.light .border-white\/15 {
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+/* Generic divider overlays in light mode */
+html.light .divide-white\/5 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(15, 23, 42, 0.15) !important; /* Clearly visible mid-contrast divider lines */
+}
+html.light .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(15, 23, 42, 0.2) !important; /* Strongly visible divider lines */
+}
+
+/* Main Gradients in about card or hero blocks */
+html.light .from-\[\#0c0d12\] {
+  --tw-gradient-from: #f8fafc !important;
+  --tw-gradient-to: #e2e8f0 !important;
+}
+html.light .via-zinc-950 {
+  --tw-gradient-via: #f1f5f9 !important;
+}
+html.light .to-\[\#07080a\] {
+  --tw-gradient-to: #f8fafc !important;
+}
+
+/* Typography elements */
+html.light .text-white,
+html.light h1.text-white,
+html.light h2.text-white,
+html.light h3.text-white,
+html.light h4.text-white,
+html.light span.text-white,
+html.light div.text-white,
+html.light p.text-white,
+html.light p.text-zinc-400,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #0f172a !important;
+}
+
+html.light .text-white\/90,
+html.light .text-white\/85,
+html.light .text-white\/80,
+html.light .text-zinc-100,
+html.light .hover\:text-amber-400:hover {
+  color: #1e293b !important;
+}
+
+html.light .text-white\/75,
+html.light .text-white\/70,
+html.light .text-white\/65,
+html.light .text-white\/60,
+html.light .text-white\/55,
+html.light .text-zinc-400,
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-white\/50,
+html.light .text-white\/45,
+html.light .text-white\/30,
+html.light .text-zinc-500,
+html.light .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.light .text-white\/40,
+html.light .text-zinc-600 {
+  color: #94a3b8 !important;
+}
+
+/* Custom classes for outcome colors and badges under Light Theme */
+html.light .text-loss-color {
+  color: #dc2626 !important; /* red-600 */
+}
+
+html.light .bg-loss-badge {
+  background-color: rgba(220, 38, 38, 0.08) !important;
+  border-color: rgba(220, 38, 38, 0.15) !important;
+}
+
+html.light .border-loss-badge {
+  border-color: rgba(220, 38, 38, 0.15) !important;
+}
+
+html.light .text-win-color {
+  color: #059669 !important; /* emerald-600 */
+}
+
+html.light .text-other-color {
+  color: #475569 !important;
+}
+
+html.light .bg-other-badge {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html.light .text-other-badge {
+  color: #475569 !important;
+}
+
+/* Table layout adjustments */
+html.light table thead tr {
+  background-color: #f1f5f9 !important;
+}
+
+html.light table tbody tr {
+  border-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+html.light table tbody tr:hover {
+  background-color: rgba(15, 23, 42, 0.02) !important;
+}
+
+/* Input Fields overrides */
+html.light input {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+html.light input::placeholder {
+  color: #64748b !important;
+}
+
+/* Scrollbar styling overrides */
+html.light ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Scroll to top button in light mode */
+html.light #scroll-to-top-button {
+  background-color: #ffffff !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+html.light #scroll-to-top-button:hover {
+  background-color: #f59e0b !important;
+}
+
+/* Additional high-contrast variables and custom overrides */
+html.light .text-zinc-300,
+html.light .text-zinc-200,
+html.light .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .via-amber-950\/5 {
+  --tw-gradient-via: rgba(245, 158, 11, 0.03) !important;
+}
+
+/* ==========================================================================
+   HERO BANNER & DIAGRAMS CONTRAST FIXES (LIGHT MODE)
+   ========================================================================== */
+
+/* Base transitions for hero stats card buttons in dark/light modes */
+.hero-stat-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.hero-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(245, 158, 11, 0.15) !important;
+}
+
+html.light #analytics-hero-banner {
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  border-left-color: #d97706 !important; /* Elegant high-contrast amber-600 left strip */
+  border-left-width: 5px !important;
+  box-shadow: 0 20px 40px -4px rgba(245, 158, 11, 0.06), 0 10px 20px -8px rgba(0, 0, 0, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* Override hero stats card buttons under light theme */
+html.light .hero-stat-card {
+  background-color: #f8fafc !important; /* solid clean slate-50 background inside white banner */
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light .hero-stat-card:hover {
+  background-color: rgba(245, 158, 11, 0.05) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  box-shadow: 0 8px 16px -4px rgba(245, 158, 11, 0.1) !important;
+}
+
+html.light .hero-stat-card span.text-white\/50 {
+  color: #475569 !important; /* Dark slate text for headings */
+}
+
+html.light .hero-stat-card span.text-white {
+  color: #0f172a !important; /* Dark solid text for count values */
+}
+
+html.light .hero-stat-card span.text-amber-500 {
+  color: #b45309 !important; /* Solid warm amber-700 text */
+}
+
+/* Turn dark blueprint grids to a clean subtle dark-grey grid */
+html.light #analytics-hero-banner .pointer-events-none {
+  background-image: linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px) !important;
+}
+
+/* Blueprint graphic container and image inversion */
+html.light #analytics-hero-banner .lg\:col-span-5 > div {
+  background-color: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #analytics-hero-banner .lg\:col-span-5 img {
+  filter: invert(0.92) contrast(1.15) brightness(1.05) !important;
+  opacity: 0.85 !important;
+}
+
+/* Stats/Data HUD overlay cards in blueprint */
+html.light #analytics-hero-banner .bg-black\/75 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light #analytics-hero-banner .text-white\/60 {
+  color: #475569 !important;
+}
+
+html.light #analytics-hero-banner .bg-black\/50 {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+html.light #analytics-hero-banner .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+html.light #analytics-hero-banner .text-amber-400 {
+  color: #b45309 !important; /* High contrast amber-700 */
+}
+
+html.light #analytics-hero-banner .bg-amber-500 {
+  background-color: #d97706 !important;
+}
+
+/* Interactive SVG Chart / Grid lines override */
+html.light .stroke-baseline {
+  stroke: rgba(15, 23, 42, 0.25) !important;
+}
+
+html.light .stroke-grid {
+  stroke: rgba(15, 23, 42, 0.08) !important;
+}
+
+html.light .fill-grid-text {
+  fill: rgba(15, 23, 42, 0.5) !important;
+}
+
+html.light .stroke-active-line {
+  stroke: rgba(15, 23, 42, 0.3) !important;
+}
+
+html.light .stroke-active-circle {
+  stroke: #0f172a !important;
+}
+
+html.light .stroke-active-circle-dot {
+  stroke: #ffffff !important;
+}
+
+/* Floating interactive chart tooltips & detail cards */
+html.light .absolute.bg-black\/90,
+html.light .absolute.bg-black\/90 div,
+html.light .absolute.bg-black\/90 span,
+html.light .absolute.bg-black\/75,
+html.light .absolute.bg-black\/75 div,
+html.light .absolute.bg-black\/75 span {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+}
+
+html.light .absolute.bg-black\/90 {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Styling for the Data Stream Archive Banner under Light Theme */
+html.light #data-stream-archive-banner {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, #ffffff 50%, rgba(245, 158, 11, 0.03) 100%) !important;
+  border-color: rgba(245, 158, 11, 0.25) !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light #data-stream-archive-banner h4 {
+  color: #b45309 !important; /* amber-700 for solid warm high-contrast heading */
+}
+
+html.light #data-stream-archive-banner p {
+  color: #334155 !important; /* slate-700 for high readability */
+}
+
+/* The shortcut buttons inside the archive banner */
+html.light #data-stream-archive-banner span {
+  background-color: #0f172a !important; /* dark slate background */
+  border-color: #0f172a !important;
+  color: #ffffff !important; /* white text */
+}
+
+html.light #data-stream-archive-banner span:hover {
+  background-color: #d97706 !important; /* amber-600 on hover */
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+}
+
+/* Event List table status column badges overrides in light mode */
+html.light td span.bg-white\/5 {
+  background-color: #f1f5f9 !important; /* slate-100 */
+  border-color: #cbd5e1 !important; /* slate-300 */
+  color: #334155 !important; /* slate-700 */
+}
+
+html.light td span.bg-amber-500\/10.text-amber-500 {
+  background-color: #fef3c7 !important; /* amber-100 */
+  border-color: #fcd34d !important; /* amber-300 */
+  color: #92400e !important; /* amber-800 */
+}
+
+/* Let's make active table rows high contrast in light mode */
+html.light tr.bg-amber-500\/10,
+html.light div.bg-amber-500\/10 {
+  background-color: rgba(245, 158, 11, 0.08) !important; /* warmer amber highlight */
+}
+
+/* Global contrast improvements for amber text/links in light mode */
+html.light .text-amber-500 {
+  color: #b45309 !important; /* amber-700 */
+}
+
+html.light .text-amber-400 {
+  color: #d97706 !important; /* amber-600 */
+}
+
+/* About Page Stage Badge & Status Color Overrides under Light Theme */
+html.light .absolute.-top-3.bg-zinc-900 {
+  background-color: #0f172a !important; /* dark slate background */
+  border-color: #0f172a !important;
+  color: #ffffff !important; /* maximum high-contrast white text */
+}
+
+html.light .text-red-400 {
+  color: #b91c1c !important; /* red-700 for solid contrast */
+}
+
+html.light .text-violet-400 {
+  color: #6d28d9 !important; /* violet-700 for solid contrast */
+}
+
+html.light .text-emerald-400 {
+  color: #047857 !important; /* emerald-700 for solid contrast */
+}
+
+/* Light mode table header readability and hover fixes */
+html.light table thead th {
+  color: #334155 !important; /* Slate-700 for clear high-contrast table headers */
+}
+
+html.light table thead th:hover {
+  color: #0f172a !important; /* Dark slate-900 on hover */
+  background-color: #e2e8f0 !important; /* Light slate-200 background on hover to show clickability */
+}
+
+/* Light Mode Versus Hero & Tail-Of-The-Tape Contrast Fixes */
+html.light #fight-detail-versus-hero {
+  background-image: linear-gradient(to bottom, #ffffff, #f1f5f9) !important;
+  background-color: #ffffff !important;
+  border-bottom-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+html.light #fight-detail-versus-hero .text-white\/5 {
+  color: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Style for full body shots of fighters to prevent boxy silhouettes */
+.fighter-body-shot-image {
+  filter: brightness(1.05) !important; /* No drop-shadow to avoid boxy borders */
+}
+
+/* Ensure the inner img inside the loader also renders naturally */
+.fighter-body-shot-image img {
+  border: none !important;
+}
+
+/* Light mode overrides for high-contrast, clean-studio aesthetic */
+html.light .fighter-body-shot-image {
+  filter: brightness(1.02) !important;
+}
+
+/* Hide raw color-glow blobs in light mode to keep the studio background clean */
+html.light #fight-detail-versus-hero .blur-3xl {
+  display: none !important;
+}
+
+/* Override dark transparent boxes in light mode to pristine slate backgrounds */
+html.light .bg-black\/25,
+html.light .bg-black\/30,
+html.light .bg-black\/45 {
+  background-color: #f8fafc !important; /* Premium light-grey slate background */
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light #fight-detail-specs-table {
+  border-color: #94a3b8 !important; /* Solid Slate-400 border for robust light mode contrast */
+}
+
+html.light #fight-detail-specs-table.divide-white\/5 > :not([hidden]) ~ :not([hidden]),
+html.light #fight-detail-specs-table > :not([hidden]) ~ :not([hidden]) {
+  border-top: 1px solid #94a3b8 !important; /* Solid, clearly visible Slate-400 divider lines */
+}
+
+html.light #fight-detail-specs-table .hover\:bg-white\/\[0\.02\]:hover {
+  background-color: rgba(15, 23, 42, 0.02) !important;
+}
+
+html.light span.bg-amber-500\/10 {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+}
+
+/* Ensure progress bar tracks are perfectly visible and have high contrast in light mode */
+html.light .h-1.bg-white\/5,
+html.light .h-2.bg-white\/5 {
+  background-color: #cbd5e1 !important; /* Rich cool slate-300 track background */
+}
+
+/* Light mode pristine, elegant styling for Divisional Champions cards */
+html.light .champion-card {
+  background-image: linear-gradient(to bottom, #ffffff, #f8fafc) !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02) !important;
+}
+
+html.light .champion-card h4 {
+  color: #0f172a !important; /* Slate-900 for high-readability champion name */
+}
+
+html.light .champion-card .text-white\/45 {
+  color: #475569 !important; /* Slate-600 for legible nickname */
+}
+
+html.light .champion-card .text-white\/40 {
+  color: #64748b !important; /* Slate-500 for legible "RECORD" label */
+}
+
+html.light .champion-card .bg-white\/10 {
+  background-color: #f1f5f9 !important; /* Soft slate-100 background for record badge */
+  color: #0f172a !important; /* Crisp dark-grey record text */
+}
+
+html.light .champion-card .border-white\/5 {
+  border-color: rgba(15, 23, 42, 0.12) !important; /* Visible borders for record badge */
+}
+
+html.light .champion-card span.text-amber-500\/80 {
+  color: #b45309 !important; /* Amber-700 high-contrast view profile link */
+}
+
+html.light .champion-card span.text-amber-500 {
+  color: #b45309 !important; /* Amber-700 high-contrast weight class */
+}
+
+/* Style for champion cards' body shots to prevent boxy drop shadows and blend perfectly */
+.champion-body-shot-image {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4)) !important;
+}
+
+.champion-body-shot-image img {
+  border: none !important;
+}
+
+html.light .champion-body-shot-image {
+  filter: none !important; /* Remove drop shadow completely to avoid outlining the faint grey gradient background */
+  mix-blend-mode: multiply !important; /* Blend the ufc.com built-in faint grey radial gradient seamlessly into the white background */
+}
+
+html.light .champion-body-shot-image img {
+  filter: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* Style the connecting flow bar on About page to look extremely clean, thin, and premium */
+html.light .connecting-flow-bar {
+  background-color: #cbd5e1 !important; /* Soft slate track */
+  border: none !important;
+  height: 2px !important; /* Extremely thin, non-disruptive modern divider */
+}
+
+/* Tone down gradient glow highlights inside the thin line in light mode to avoid garishness */
+html.light .flow-glow-orange {
+  background-image: linear-gradient(to right, transparent, rgba(217, 119, 6, 0.35), transparent) !important;
+}
+
+html.light .flow-glow-purple {
+  background-image: linear-gradient(to right, transparent, rgba(124, 58, 237, 0.25), transparent) !important;
+}
+
+/* Ensure the event link on fighter timeline cards is perfectly readable and styled in light mode */
+html.light .fighter-timeline-event-link {
+  background-color: #f1f5f9 !important; /* Soft slate-100 background */
+  border-color: rgba(15, 23, 42, 0.08) !important; /* Crisp but soft border */
+  color: #334155 !important; /* Legible slate-700 */
+}
+
+html.light .fighter-timeline-event-link:hover {
+  background-color: #e2e8f0 !important; /* Slightly darker hover */
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important; /* Slate-900 */
+}
+
+/* Ensure child spans inside the event link also inherit high-contrast text color */
+html.light .fighter-timeline-event-link span {
+  color: inherit !important;
+}
+
+/* Let's keep the date in parentheses a bit more muted but still readable */
+html.light .fighter-timeline-event-link span.font-mono {
+  color: #64748b !important; /* Slate-500 */
+}
+
+/* Make sure the arrow stands out beautifully in light mode */
+html.light .fighter-timeline-event-link .text-amber-500\/70 {
+  color: #b45309 !important; /* Solid amber-700 */
+}
+
+html.light .fighter-timeline-event-link:hover .text-amber-400 {
+  color: #92400e !important; /* Deep amber-800 */
+}
+
+/* Factor Analysis Breakdown specific overrides for Light Mode */
+html.light #factor-analysis-breakdown {
+  background-color: #f1f5f9 !important; /* Soft slate-100 background for a premium contrast container card */
+  border-color: #94a3b8 !important; /* Solid Slate-400 border for robust light mode contrast */
+}
+
+/* Horizontal lines between the stats rows */
+html.light #factor-analysis-breakdown .divide-slate-300 > :not([hidden]) ~ :not([hidden]),
+html.light #factor-analysis-breakdown > :not([hidden]) ~ :not([hidden]) {
+  border-top: 1px solid #94a3b8 !important; /* Solid, highly visible Slate-400 horizontal divider lines */
+}
+
+/* Stat comparison horizontal connecting lines (the mid-label lines) */
+html.light #factor-analysis-breakdown .factor-mid-line {
+  background-color: #64748b !important; /* Elegant slate-500 line for pristine contrast */
+  height: 2px !important; /* Highly visible 2px thick line */
+}
+
+/* Dots on even or custom states when neutral */
+html.light #factor-analysis-breakdown .bg-slate-400 {
+  background-color: #475569 !important; /* Darker slate-600 dot for solid high contrast */
+}
+
+
+
+
+
