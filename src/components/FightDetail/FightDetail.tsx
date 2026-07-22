@@ -813,9 +813,10 @@ export default function FightDetail({
       <div className="bg-black/40 px-3 sm:px-6 py-3.5 border-b border-white/10 flex items-center justify-between gap-3 relative z-10">
         <button 
           onClick={onBack}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shrink-0"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] sm:text-xs text-amber-400 hover:text-amber-300 font-mono transition-all cursor-pointer font-bold uppercase tracking-wider shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+          aria-label={backLabel || 'Back to Profile'}
         >
-          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {backLabel || 'Back to Profile'}
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" /> {backLabel || 'Back to Profile'}
         </button>
         <span className="text-[10px] sm:text-[11px] text-white/65 font-mono uppercase tracking-widest font-bold text-right shrink-0">
           Stats Comparison
@@ -848,7 +849,8 @@ export default function FightDetail({
               {onSelectEvent && match.eventId ? (
                 <button 
                   onClick={() => onSelectEvent(match.eventId)}
-                  className="text-sm md:text-base font-black italic text-white uppercase tracking-tight hover:text-amber-500 cursor-pointer transition-colors focus:outline-none focus:text-amber-500 text-center max-w-full truncate px-1"
+                  className="text-sm md:text-base font-black italic text-white uppercase tracking-tight hover:text-amber-500 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded px-1 text-center max-w-full truncate"
+                  aria-label={`View event details for ${match.eventName}`}
                 >
                   {match.eventName}
                 </button>

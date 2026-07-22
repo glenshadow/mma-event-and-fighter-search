@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { FighterProfile, EventSummary, StatsSummary } from '../../types';
-import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight, Activity, Info } from 'lucide-react';
+import { Award, ShieldAlert, Sparkles, TrendingUp, Users, Calendar, Trophy, ListCollapse, Crown, ChevronRight, Activity, Info, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import ImageWithLoader from '../ImageWithLoader';
 import FighterHeadshot from '../FighterHeadshot';
@@ -284,35 +284,38 @@ export default function DashboardInsights({ fighters, events, statsSummary, cham
             <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3 lg:pt-4 border-t border-white/10 w-full lg:max-w-lg" id="hero-stats-container">
               <button
                 onClick={() => { window.location.hash = 'fighters'; }}
-                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all fighters"
               >
-                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
                 </div>
-                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">FIGHTERS</span>
-                <span className="text-lg md:text-xl font-black italic text-amber-500 block transition-transform group-hover:translate-x-1">{(stats.totalFighters || 0).toLocaleString()}</span>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider pr-3">FIGHTERS</span>
+                <span className="text-lg md:text-xl font-black italic text-amber-500 block">{(stats.totalFighters || 0).toLocaleString()}</span>
               </button>
               
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all events and bouts"
               >
-                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
                 </div>
-                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">BOUTS</span>
-                <span className="text-lg md:text-xl font-black italic text-white block transition-transform group-hover:translate-x-1">{(stats.totalFights || 0).toLocaleString()}</span>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider pr-3">BOUTS</span>
+                <span className="text-lg md:text-xl font-black italic text-white block">{(stats.totalFights || 0).toLocaleString()}</span>
               </button>
 
               <button
                 onClick={() => { window.location.hash = 'events'; }}
-                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden"
+                className="hero-stat-card text-left p-3 rounded-xl border border-white/10 bg-white/5 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer shadow-sm group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all events"
               >
-                <div className="absolute top-1.5 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <span className="text-[9px] text-amber-500 font-bold font-mono">GO ↗</span>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
                 </div>
-                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider">EVENTS</span>
-                <span className="text-lg md:text-xl font-black italic text-amber-500 block transition-transform group-hover:translate-x-1">{(stats.totalEvents || 0).toLocaleString()}</span>
+                <span className="text-[9px] text-white/50 font-mono block uppercase tracking-wider pr-3">EVENTS</span>
+                <span className="text-lg md:text-xl font-black italic text-amber-500 block">{(stats.totalEvents || 0).toLocaleString()}</span>
               </button>
             </div>
           </div>

@@ -15,8 +15,9 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 - **Champions Showcase**: Interactive display of reigning division champions across weight brackets.
 
 ### 👤 2. Fighter Profiles & Deep Stats
-- **Advanced Filtering**: Instantly search and filter fighters by name, weight class, stance, or status.
+- **High-Signal Filtering & Sorting**: Search fighters by name or nickname, filter by status and weight, and sort by high-impact statistics (Wins, Losses, Total Fights/Experience, Win Rate, Alphabetical, Age, Weight, Height).
 - **Physical Profiles**: View exact measurements for reach, height, age, and weight.
+- **Division Champions Tracking**: Chronological analysis of championship bouts to compile active divisional titleholders and historical records.
 - **Fight Histograms & Metrics**: Deep breakdown of a fighter's career, including detailed win/loss histories, visual streaks, and physical advantages.
 - **Adaptive Visualizations**: Comparative stat cards that highlight matchup discrepancies with pristine text legibility.
 - **Interactive Matchup Previews**: Profile headshots within fight predictive simulations are fully interactive, enabling seamless deep-linking navigation straight to fighter profiles.
@@ -26,12 +27,17 @@ StandardMMA is an interactive, professional-grade tracker and analytics platform
 - **Deep Fight Details**: Browse the complete fight order (Main Card, Prelims, Early Prelims) with live results, fight durations, and referee details.
 - **Round-by-Round Breakdown**: Explore striking metrics, takedown statistics, and method details for individual bouts.
 
-### 🔗 4. Persistent URL Routing & Deeplinking
+### ♿ 4. Accessibility (a11y) & Inclusivity
+- **Keyboard Navigation**: Native focus rings (`focus-visible:ring-2 focus-visible:ring-amber-500`) and keyboard triggers (Enter/Space) across all interactive cards, filters, tables, headshots, and back controls.
+- **ARIA Semantic Landmarks**: Rich ARIA labeling (`role="banner"`, `role="main"`, `role="meter"`, `role="log"`, `role="region"`, `aria-expanded`, `aria-live`, `sr-only` descriptions) for assistive screen reader technology.
+- **WCAG High Contrast**: Enhanced text contrast ratios across dark and light themes for seamless data readability.
+
+### 🔗 5. Persistent URL Routing & Deeplinking
 - **State-Synchronized Routing**: Built on a solid URL-hash navigation engine (`#dashboard`, `#fighters/:id`, `#events/:id`, `#fights/:id`, `#about`) for native back/forward button behavior and easy link sharing.
 - **Top-Scroll Restoration**: Clicking the active navigation tab smoothly scroll-restores the viewport to the top of the current page.
 - **Responsive Header Controls**: Clean navigation bar with responsive theme toggle (`Dark Mode` / `Light Mode` text on desktop, compact icon button on tablet) and header-mounted About portal.
 
-### 🎨 5. Adaptive Aesthetics, Theme Switcher & System Information
+### 🎨 6. Adaptive Aesthetics, Theme Switcher & System Information
 - **High-Contrast Combat Theme**: Premium dark canvas with high-visibility amber accents, accompanied by an instant Light/Dark mode switcher.
 - **Responsive Architecture Diagram**: A 4-stage system architecture and data pipeline diagram that gracefully adapts across mobile, tablet (`sm:grid-cols-2`), and desktop (`lg:grid-cols-4`) viewports.
 - **Technical Blueprint Screen**: A dedicated custom information sub-screen (`AboutPage`) detailing system tech stack, compiler latency (< 15ms), dataset cache totals, and data pipeline stages.

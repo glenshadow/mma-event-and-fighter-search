@@ -10,8 +10,8 @@ vi.mock('../data/fighter-images.json', () => {
   return {
     default: {
       100: {
-        headshot: 'https://example.com/cached_headshot_100.png',
-        bodyShot: 'https://example.com/cached_bodyshot_100.png',
+        headshot: 'https://example.com/georges_st_pierre_cached_headshot.png',
+        bodyShot: 'https://example.com/georges_st_pierre_cached_bodyshot.png',
       },
       200: {
         headshot: 'https://example.com/silhouette_placeholder.png',
@@ -33,10 +33,10 @@ describe('Image Validator Utility', () => {
       expect(isLegitimateFighterImage('https://example.com/jon_jones.png', 'Jon', 'Jones')).toBe(true);
     });
 
-    it('should allow generic silhouette placeholders', () => {
-      expect(isLegitimateFighterImage('https://example.com/silhouette.png', 'Jon', 'Jones')).toBe(true);
-      expect(isLegitimateFighterImage('https://example.com/comingsoon.png', 'Jon', 'Jones')).toBe(true);
-      expect(isLegitimateFighterImage('https://example.com/placeholder.png', 'Jon', 'Jones')).toBe(true);
+    it('should reject generic silhouette placeholders', () => {
+      expect(isLegitimateFighterImage('https://example.com/silhouette.png', 'Jon', 'Jones')).toBe(false);
+      expect(isLegitimateFighterImage('https://example.com/comingsoon.png', 'Jon', 'Jones')).toBe(false);
+      expect(isLegitimateFighterImage('https://example.com/placeholder.png', 'Jon', 'Jones')).toBe(false);
     });
   });
 
@@ -59,7 +59,7 @@ describe('Image Validator Utility', () => {
         lastName: 'St-Pierre',
         fullName: 'Georges St-Pierre',
       };
-      expect(getFighterHeadshotUrl(fighter)).toBe('https://example.com/cached_headshot_100.png');
+      expect(getFighterHeadshotUrl(fighter)).toBe('https://example.com/georges_st_pierre_cached_headshot.png');
     });
 
     it('should return null if no direct or cached headshot is found', () => {
@@ -92,7 +92,7 @@ describe('Image Validator Utility', () => {
         lastName: 'St-Pierre',
         fullName: 'Georges St-Pierre',
       };
-      expect(getFighterBodyShotUrl(fighter)).toBe('https://example.com/cached_bodyshot_100.png');
+      expect(getFighterBodyShotUrl(fighter)).toBe('https://example.com/georges_st_pierre_cached_bodyshot.png');
     });
 
     it('should return null if no direct or cached bodyShot is found', () => {

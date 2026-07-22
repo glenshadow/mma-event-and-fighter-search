@@ -21,8 +21,8 @@ describe('AboutPage Component', () => {
 
     expect(screen.getByText('Synchronous Hash Routing')).toBeInTheDocument();
     expect(screen.getByText('Predictive Matchup Simulator')).toBeInTheDocument();
-    expect(screen.getByText('Bi-directional Trajectory Modeling')).toBeInTheDocument();
-    expect(screen.getByText('Optimized Image Fallbacks')).toBeInTheDocument();
+    expect(screen.getByText('Flawless Accessibility (a11y) Compliance')).toBeInTheDocument();
+    expect(screen.getByText('Historical Title & Champion Analytics')).toBeInTheDocument();
   });
 
   it('renders correct database counters and archive statistics', () => {
@@ -31,6 +31,16 @@ describe('AboutPage Component', () => {
     // 4,330 athletes and 1,319 event cards are key static counters
     expect(screen.getByText('4,330')).toBeInTheDocument();
     expect(screen.getByText('1,319')).toBeInTheDocument();
-    expect(screen.getByText(/Pre-linked bios/i)).toBeInTheDocument();
+    expect(screen.getByText('Bios')).toBeInTheDocument();
+  });
+
+  it('triggers window location hash change when stat buttons are clicked', () => {
+    render(<AboutPage />);
+
+    const athletesBtn = screen.getByRole('button', { name: /view all fighters/i });
+    expect(athletesBtn).toBeInTheDocument();
+    
+    athletesBtn.click();
+    expect(window.location.hash).toBe('#fighters');
   });
 });

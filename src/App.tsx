@@ -457,28 +457,37 @@ export default function App() {
     <div className="min-h-screen bg-[#050505] text-white flex flex-col font-sans relative" id="standard-mma-application">
 
       {/* Top Banner Header */}
-      <header className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
+      <header role="banner" className="border-b border-white/10 bg-black/40 backdrop-blur-md shrink-0 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Logo, title, and Mobile About trigger */}
           <div className="flex items-center justify-between w-full md:w-auto">
             <div 
               onClick={() => handleNavClick('dashboard')}
-              className="flex items-center gap-3 cursor-pointer hover:opacity-90 select-none transition-all"
+              className="flex items-center gap-3 cursor-pointer hover:opacity-90 select-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded-lg p-1"
               title="Go to Dashboard"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleNavClick('dashboard');
+                }
+              }}
+              role="button"
+              aria-label="StandardMMA Data Home Dashboard"
             >
               <div className="relative flex items-center justify-center shrink-0">
                 {/* Perfectly centered ambient amber glow */}
-                <div className="absolute w-6 h-6 bg-amber-500/30 rounded-full blur-md animate-pulse pointer-events-none"></div>
+                <div className="absolute w-6 h-6 bg-amber-500/30 rounded-full blur-md animate-pulse pointer-events-none" aria-hidden="true"></div>
                 <div className="relative w-9 h-9 bg-black/60 border border-white/15 flex items-center justify-center rounded-md text-sm font-black text-white shrink-0">
-                  <HandFist className="w-5 h-5 text-white animate-pulse" />
+                  <HandFist className="w-5 h-5 text-white animate-pulse" aria-hidden="true" />
                 </div>
               </div>
               <div>
                 <h1 className="text-xl font-black tracking-tighter italic text-white flex items-center gap-1">
                   StandardMMA <span className="not-italic text-[10px] font-mono font-bold tracking-widest text-amber-500 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded ml-2">DATA</span>
                 </h1>
-                <p className="text-[9px] text-white/40 font-mono tracking-widest uppercase">
+                <p className="text-[9px] text-zinc-300 dark:text-white/40 font-mono tracking-widest uppercase">
                   COMBAT SPORTS INTEL SYSTEM
                 </p>
               </div>
@@ -488,48 +497,54 @@ export default function App() {
             <div className="md:hidden flex items-center gap-2">
               <button
                 onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-                className="flex items-center justify-center p-2 border border-white/10 bg-white/5 text-white/60 hover:text-white rounded-lg transition-all cursor-pointer"
+                className="flex items-center justify-center p-2 border border-white/10 bg-white/5 text-zinc-200 hover:text-white rounded-lg transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                 id="theme-toggle-mobile"
               >
                 {theme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-amber-400" />
+                  <Sun className="w-4 h-4 text-amber-400" aria-hidden="true" />
                 ) : (
-                  <Moon className="w-4 h-4 text-slate-700" />
+                  <Moon className="w-4 h-4 text-slate-700" aria-hidden="true" />
                 )}
               </button>
 
               <button
                 onClick={() => handleNavClick('about')}
-                className={`flex items-center justify-center p-2 border rounded-lg cursor-pointer transition-all ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'border-white/10 bg-white/5 text-white/60 hover:text-white'}`}
+                className={`flex items-center justify-center p-2 border rounded-lg cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${activeTab === 'about' ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black' : 'border-white/10 bg-white/5 text-zinc-200 hover:text-white'}`}
                 title="About Site"
+                aria-label="About system specifications"
+                aria-current={activeTab === 'about' ? 'page' : undefined}
                 id="mobile-about-button"
               >
-                <Info className="w-4 h-4 shrink-0" />
+                <Info className="w-4 h-4 shrink-0" aria-hidden="true" />
               </button>
             </div>
           </div>
 
           {/* Desktop Tab Selector and Indicators */}
           <div className="flex items-center gap-2 sm:gap-3 w-full md:w-auto justify-between md:justify-start">
-            <nav className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl flex-1 md:flex-initial justify-between md:justify-start">
+            <nav aria-label="Primary Navigation" className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl flex-1 md:flex-initial justify-between md:justify-start">
               <button
                 onClick={() => handleNavClick('dashboard')}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                aria-current={activeTab === 'dashboard' ? 'page' : undefined}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${activeTab === 'dashboard' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-zinc-200 hover:text-white hover:bg-white/5'}`}
               >
-                <Trophy className="w-3.5 h-3.5" /> Dashboard
+                <Trophy className="w-3.5 h-3.5" aria-hidden="true" /> Dashboard
               </button>
               <button
                 onClick={() => handleNavClick('fighters')}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                aria-current={(activeTab === 'fighters' || activeTab === 'fights') ? 'page' : undefined}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${(activeTab === 'fighters' || activeTab === 'fights') ? 'bg-amber-500 text-zinc-950 font-black' : 'text-zinc-200 hover:text-white hover:bg-white/5'}`}
               >
-                <Users className="w-3.5 h-3.5" /> Fighters
+                <Users className="w-3.5 h-3.5" aria-hidden="true" /> Fighters
               </button>
               <button
                 onClick={() => handleNavClick('events')}
-                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                aria-current={activeTab === 'events' ? 'page' : undefined}
+                className={`flex-1 md:flex-initial justify-center px-4 py-1.5 text-xs font-mono font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${activeTab === 'events' ? 'bg-amber-500 text-zinc-950 font-black' : 'text-zinc-200 hover:text-white hover:bg-white/5'}`}
               >
-                <CalendarDays className="w-3.5 h-3.5" /> Events
+                <CalendarDays className="w-3.5 h-3.5" aria-hidden="true" /> Events
               </button>
             </nav>
 
@@ -538,18 +553,19 @@ export default function App() {
               {/* Theme Toggle Button for desktop/tablet */}
               <button
                 onClick={() => setTheme(prev => prev === 'dark' ? 'light' : 'dark')}
-                className="hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2 lg:px-3 border border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer text-xs font-mono font-bold"
+                className="hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2 lg:px-3 border border-white/10 bg-white/5 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer text-xs font-mono font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                 title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
                 id="theme-toggle-desktop"
               >
                 {theme === 'dark' ? (
                   <>
-                    <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <Sun className="w-3.5 h-3.5 text-amber-400 shrink-0" aria-hidden="true" />
                     <span className="hidden lg:inline uppercase tracking-wider">Light Mode</span>
                   </>
                 ) : (
                   <>
-                    <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                    <Moon className="w-3.5 h-3.5 text-indigo-400 shrink-0" aria-hidden="true" />
                     <span className="hidden lg:inline uppercase tracking-wider">Dark Mode</span>
                   </>
                 )}
@@ -558,14 +574,16 @@ export default function App() {
               {/* About Button (icon-only on tablet, full label on desktop, right-most) */}
               <button
                 onClick={() => handleNavClick('about')}
-                className={`hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2.5 lg:px-4 border rounded-xl text-xs font-mono font-bold cursor-pointer transition-all ${
+                aria-current={activeTab === 'about' ? 'page' : undefined}
+                className={`hidden md:flex items-center justify-center gap-1.5 h-[34px] px-2.5 lg:px-4 border rounded-xl text-xs font-mono font-bold cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
                   activeTab === 'about'
                     ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 font-black shadow-[0_0_15px_rgba(245,158,11,0.05)]'
-                    : 'border-white/10 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 hover:border-white/20'
+                    : 'border-white/10 bg-white/5 text-zinc-200 hover:text-white hover:bg-white/10 hover:border-white/20'
                 }`}
                 title="About Site"
+                aria-label="About system specifications"
               >
-                <Info className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0" />
+                <Info className="w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0" aria-hidden="true" />
                 <span className="hidden lg:inline uppercase tracking-wider">About</span>
               </button>
             </div>
@@ -575,7 +593,7 @@ export default function App() {
       </header>
 
       {/* Main Viewport Grid */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-4 md:py-6 z-10 relative">
+      <main role="main" className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-3 md:px-4 lg:px-8 py-4 md:py-6 z-10 relative">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <motion.div 
@@ -749,7 +767,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-[10px] text-white/60 tracking-wider font-mono text-center md:text-right">
-            StandardMMA DATA FEEDS • v4.0.2
+            StandardMMA DATA FEEDS • v4.0.6
           </div>
         </div>
       </footer>

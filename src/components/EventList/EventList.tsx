@@ -301,23 +301,26 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
       {/* Search and filter toolbar */}
       <div className="p-4 border-b border-white/10 bg-black/20 space-y-3 nav-controls">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/60" />
+          <label htmlFor="event-search-input" className="sr-only">
+            Search UFC events by name, venue, or location
+          </label>
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-300 dark:text-white/60" aria-hidden="true" />
           <input 
             type="text" 
             placeholder="Search events..." 
             value={searchQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/60 outline-none font-mono transition-colors"
+            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-zinc-400 dark:placeholder-white/60 outline-none font-mono transition-colors"
             id="event-search-input"
           />
           {searchQuery && (
             <button
               onClick={() => handleQueryChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-300 dark:text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
               title="Clear search"
-              aria-label="Clear search"
+              aria-label="Clear event search query"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -512,7 +515,16 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                       <tr 
                         key={e.id}
                         onClick={() => onSelectEvent(e.id)}
-                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-amber-500/10' : ''}`}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`View event details for ${e.name}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onSelectEvent(e.id);
+                          }
+                        }}
+                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${active ? 'bg-amber-500/10' : ''}`}
                       >
                         <td className="py-3.5 px-4 font-semibold text-white text-[13px] hover:text-amber-400 transition-colors">
                           {e.name}
@@ -562,7 +574,16 @@ export default function EventList({ events, selectedId, onSelectEvent }: EventLi
                   <div 
                     key={e.id}
                     onClick={() => onSelectEvent(e.id)}
-                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`View event details for ${e.name}`}
+                    onKeyDown={(evt) => {
+                      if (evt.key === 'Enter' || evt.key === ' ') {
+                        evt.preventDefault();
+                        onSelectEvent(e.id);
+                      }
+                    }}
+                    className={`p-4 flex items-center justify-between cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
                   >
                     <div className="min-w-0 pr-3">
                       <div className={`font-semibold text-[14px] truncate ${active ? 'text-white font-black italic text-[15px]' : 'text-white/80 hover:text-white'}`}>

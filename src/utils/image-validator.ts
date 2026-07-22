@@ -18,14 +18,43 @@ export function isLegitimateFighterImage(
 ): boolean {
   if (!url) return false;
   const lowerUrl = url.toLowerCase();
+  
   if (
     lowerUrl.includes('silhouette') ||
     lowerUrl.includes('comingsoon') ||
-    lowerUrl.includes('placeholder')
+    lowerUrl.includes('placeholder') ||
+    lowerUrl.includes('shadow') ||
+    lowerUrl.includes('default') ||
+    lowerUrl.includes('no-image') ||
+    lowerUrl.includes('no_image')
   ) {
-    return true; // Still allow generic placeholders
+    return false;
   }
-  return true; // Pre-validated by scraper
+
+  const parts = lowerUrl.split('/');
+  const filename = parts[parts.length - 1].split('?')[0];
+
+  const cleanFirstName = (firstName || '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  const cleanLastName = (lastName || '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  const cleanFullName = (fullName || `${firstName || ''} ${lastName || ''}`).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+  if (cleanLastName && cleanLastName.length > 2 && filename.includes(cleanLastName)) return true;
+  if (cleanFirstName && cleanFirstName.length > 2 && filename.includes(cleanFirstName)) return true;
+  if (cleanFullName && cleanFullName.length > 3 && filename.includes(cleanFullName)) return true;
+
+  const nameParts = (fullName || `${firstName || ''} ${lastName || ''}`)
+    .toLowerCase()
+    .split(/[\s\-_]+/)
+    .map(p => p.replace(/[^a-zA-Z0-9]/g, ''))
+    .filter(p => p.length > 2);
+
+  for (const part of nameParts) {
+    if (filename.includes(part)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**

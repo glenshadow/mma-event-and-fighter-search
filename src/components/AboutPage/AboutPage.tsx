@@ -12,6 +12,7 @@ import {
   PieChart, 
   CheckCircle2, 
   ArrowRight,
+  ArrowUpRight,
   TrendingUp,
   Fingerprint,
   Github
@@ -69,6 +70,10 @@ export default function AboutPage() {
       desc: 'Instant profile deep-linking, automatic back-track history state cache, and smart layout scroll-restoration to guarantee responsive explorer navigation.'
     },
     {
+      title: 'Flawless Accessibility (a11y) Compliance',
+      desc: 'Full keyboard navigation with focus-visible ring indicators, semantic ARIA landmarks (role="meter", role="log", role="banner"), and WCAG contrast targets for screen-reader readability.'
+    },
+    {
       title: 'Adaptive Multi-Device Viewports',
       desc: 'Context-aware layout orchestration seamlessly reconfigures hero schematics, telemetry grids, and header controls between desktop, tablet, and mobile views.'
     },
@@ -81,17 +86,13 @@ export default function AboutPage() {
       desc: 'Custom-built client-side probability modeling engine. Real-time factor weights assess physical specifications, cage-age at bout, and style matchup dynamics.'
     },
     {
-      title: 'Bi-directional Trajectory Modeling',
-      desc: 'D3/Recharts-powered dual career metrics projecting fighter peaks, record momentum, and competitive levels through history.'
-    },
-    {
-      title: 'Optimized Image Fallbacks',
-      desc: 'Pre-flight URL validation mapped directly with fighter headshots and full-body athlete sheets, falling back gracefully to name initials or vector silhouettes.'
+      title: 'Historical Title & Champion Analytics',
+      desc: 'Chronological analysis of title bouts across weight divisions to compute active champions, title reign history, and divisional metrics.'
     }
   ];
 
   return (
-    <div className="space-y-12 pb-16 animate-fade-in" id="about-page-container">
+    <div className="space-y-8 sm:space-y-10 animate-fade-in" id="about-page-container">
       
       {/* Hero Header */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0c0d12] via-zinc-950 to-[#07080a] border border-white/10 p-8 sm:p-12">
@@ -288,7 +289,7 @@ export default function AboutPage() {
       </div>
 
       {/* Platform Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-4">
           <h3 className="text-lg font-black italic uppercase tracking-wider text-white border-b border-white/10 pb-3">
             CORE PLATFORM CAPABILITIES
@@ -312,49 +313,71 @@ export default function AboutPage() {
           <h3 className="text-lg font-black italic uppercase tracking-wider text-white border-b border-white/10 pb-3">
             COMPILER ARCHIVE DETAILS
           </h3>
-          <div className="bg-[#0b0c10]/80 border border-white/10 p-6 rounded-2xl space-y-6">
-            <div className="grid grid-cols-3 gap-3">
-              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">ATHLETES</span>
-                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">4,330</span>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Bios</span>
-              </div>
-              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">BOUTS</span>
-                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-white mt-1 block">11,701</span>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Logs</span>
-              </div>
-              <div className="bg-zinc-950/60 p-3.5 rounded-xl border border-white/5">
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block">EVENTS</span>
-                <span className="text-xl sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">1,319</span>
-                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-1">Cards</span>
-              </div>
+          <div className="bg-[#0b0c10]/80 border border-white/10 p-3.5 sm:p-5 rounded-2xl space-y-4 sm:space-y-5">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              <button
+                onClick={() => { window.location.hash = 'fighters'; }}
+                className="bg-zinc-950/60 p-2.5 sm:p-3.5 rounded-xl border border-white/5 text-left hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all fighters"
+              >
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+                </div>
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block pr-2">ATHLETES</span>
+                <span className="text-lg sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">4,330</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-0.5">Bios</span>
+              </button>
+              <button
+                onClick={() => { window.location.hash = 'events'; }}
+                className="bg-zinc-950/60 p-2.5 sm:p-3.5 rounded-xl border border-white/5 text-left hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all events and bouts"
+              >
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+                </div>
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block pr-2">BOUTS</span>
+                <span className="text-lg sm:text-2xl font-black italic tracking-tight font-mono text-white mt-1 block">11,701</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-0.5">Logs</span>
+              </button>
+              <button
+                onClick={() => { window.location.hash = 'events'; }}
+                className="bg-zinc-950/60 p-2.5 sm:p-3.5 rounded-xl border border-white/5 text-left hover:bg-amber-500/10 hover:border-amber-500/30 transition-all duration-300 cursor-pointer group relative overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label="View all events"
+              >
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <ArrowUpRight className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+                </div>
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-wider block pr-2">EVENTS</span>
+                <span className="text-lg sm:text-2xl font-black italic tracking-tight font-mono text-amber-500 mt-1 block">1,319</span>
+                <span className="text-[9px] font-mono text-zinc-600 uppercase block mt-0.5">Cards</span>
+              </button>
             </div>
 
-            <div className="space-y-3 font-mono text-xs">
-              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+            <div className="space-y-2.5 sm:space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2 text-[11px] sm:text-xs">
                 <span className="text-zinc-500">Dataset Mapping Method</span>
-                <span className="text-zinc-300 font-bold uppercase">Dynamic Key Joining</span>
+                <span className="text-zinc-300 font-bold uppercase text-right">Dynamic Key Joining</span>
               </div>
-              <div className="flex items-center justify-between border-b border-white/5 pb-2">
+              <div className="flex items-center justify-between border-b border-white/5 pb-2 text-[11px] sm:text-xs">
                 <span className="text-zinc-500">Image Asset Layering</span>
-                <span className="text-zinc-300 font-bold uppercase">Preloaded Referrer Filters</span>
+                <span className="text-zinc-300 font-bold uppercase text-right">Preloaded Referrer Filters</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between text-[11px] sm:text-xs">
                 <span className="text-zinc-500">Platform Deployment</span>
-                <span className="text-amber-500 font-bold uppercase">Cloud Run CDN Static</span>
+                <span className="text-amber-500 font-bold uppercase text-right">Cloud Run CDN Static</span>
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-1">
               <button
                 onClick={() => {
                   window.location.hash = '';
                 }}
-                className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-black uppercase text-xs rounded-xl tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20"
+                className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-zinc-950 font-mono font-black uppercase text-xs rounded-xl tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-amber-500/10 hover:shadow-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                aria-label="Initialize Simulation Dashboard"
               >
                 <span>Initialize Simulation Dashboard</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
           </div>

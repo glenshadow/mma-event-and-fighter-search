@@ -311,23 +311,26 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
       {/* Search Header */}
       <div className="p-4 border-b border-white/10 bg-black/20 space-y-3">
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/60" />
+          <label htmlFor="fighter-search-input" className="sr-only">
+            Search fighters by name or nickname
+          </label>
+          <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-300 dark:text-white/60" aria-hidden="true" />
           <input 
             type="text" 
             placeholder="Search fighters..." 
             value={searchQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-white/60 outline-none transition-all font-mono"
+            className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500 rounded-xl pl-10 pr-10 py-2 text-sm text-white placeholder-zinc-400 dark:placeholder-white/60 outline-none transition-all font-mono"
             id="fighter-search-input"
           />
           {searchQuery && (
             <button
               onClick={() => handleQueryChange('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-300 dark:text-white/60 hover:text-white rounded-full hover:bg-white/10 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
               title="Clear search"
               aria-label="Clear search"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
           )}
         </div>
@@ -338,18 +341,21 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
             <button 
               type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer ${showFilters ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-white/60 hover:border-white/25 hover:text-white'}`}
+              aria-expanded={showFilters}
+              aria-controls="fighter-filters-panel"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border font-mono transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${showFilters ? 'bg-amber-500/10 border-amber-500/40 text-amber-400 font-bold' : 'bg-white/5 border-white/10 text-zinc-200 hover:border-white/25 hover:text-white'}`}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" /> 
+              <SlidersHorizontal className="w-3.5 h-3.5" aria-hidden="true" /> 
               FILTERS
             </button>
 
             {(searchQuery || selectedStance || selectedWeight) && (
               <button 
                 onClick={handleClearFilters}
-                className="text-amber-500 hover:text-amber-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px]"
+                className="text-amber-500 hover:text-amber-400 transition-colors font-mono cursor-pointer flex items-center gap-1 font-bold uppercase text-[10px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded px-1"
+                aria-label="Reset all search filters"
               >
-                <Trash2 className="w-3.5 h-3.5" /> reset
+                <Trash2 className="w-3.5 h-3.5" aria-hidden="true" /> reset
               </button>
             )}
           </div>
@@ -369,10 +375,8 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         { value: 'default', label: 'Default' },
                         { value: 'wins', label: 'Most Wins' },
                         { value: 'losses', label: 'Most Losses' },
-                        { value: 'draws', label: 'Most Draws' },
                         { value: 'fights', label: 'Most Experienced' },
                         { value: 'winrate', label: 'Win Rate' },
-                        { value: 'stance', label: 'Stance' },
                         { value: 'name', label: 'Alphabetical' },
                         { value: 'age', label: 'Age' },
                         { value: 'weight', label: 'Weight' },
@@ -392,10 +396,8 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                         { value: 'default', label: 'Default' },
                         { value: 'wins', label: 'Most Wins' },
                         { value: 'losses', label: 'Most Losses' },
-                        { value: 'draws', label: 'Most Draws' },
                         { value: 'fights', label: 'Most Experienced' },
                         { value: 'winrate', label: 'Win Rate' },
-                        { value: 'stance', label: 'Stance' },
                         { value: 'name', label: 'Alphabetical' },
                         { value: 'age', label: 'Age' },
                         { value: 'weight', label: 'Weight' },
@@ -539,7 +541,16 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                       <tr 
                         key={fighter.id}
                         onClick={() => onSelectFighter(fighter.id)}
-                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs ${active ? 'bg-amber-500/10' : ''}`}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`View profile for ${fighter.fullName}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            onSelectFighter(fighter.id);
+                          }
+                        }}
+                        className={`hover:bg-white/[0.04] transition-all cursor-pointer text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${active ? 'bg-amber-500/10' : ''}`}
                       >
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-3">
@@ -586,7 +597,16 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
                   <div 
                     key={fighter.id}
                     onClick={() => onSelectFighter(fighter.id)}
-                    className={`p-4 flex items-center justify-between cursor-pointer transition-all ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`View profile for ${fighter.fullName}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onSelectFighter(fighter.id);
+                      }
+                    }}
+                    className={`p-4 flex items-center justify-between cursor-pointer transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${active ? 'bg-amber-500/10 border-l-4 border-amber-500' : 'hover:bg-white/[0.04] border-l-4 border-transparent'}`}
                   >
                     <div className="flex items-center gap-3 min-w-0 pr-3">
                       <FighterHeadshot fighter={fighter} className="w-9 h-9" />
@@ -623,11 +643,11 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
           <div className="p-4 text-center border-t border-white/5">
             <button 
               onClick={() => setVisibleCount(p => p + 40)}
-              className="text-xs font-mono py-2 px-4 rounded-xl bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/20 cursor-pointer transition-colors font-bold uppercase tracking-wider"
+              className="text-xs font-mono py-2 px-4 rounded-xl bg-white/5 border border-white/10 text-zinc-100 hover:bg-white/10 hover:text-white hover:border-white/20 cursor-pointer transition-colors font-bold uppercase tracking-wider focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
             >
               Load More Fighters (+40)
             </button>
-            <div className="text-[10px] text-white/65 font-mono mt-2">
+            <div className="text-[10px] text-zinc-300 dark:text-white/65 font-mono mt-2">
               Viewing {visibleCount} of {filteredFighters.length} matched athletes
             </div>
           </div>
@@ -635,7 +655,7 @@ export default function FighterList({ fighters, selectedId, onSelectFighter }: F
       </div>
 
       {/* Metadata status bar of the specific list view */}
-      <div className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-white/65 font-mono uppercase tracking-widest">
+      <div role="status" aria-live="polite" className="bg-black/30 border-t border-white/15 py-2.5 px-4 flex items-center justify-between text-[10px] text-zinc-300 dark:text-white/65 font-mono uppercase tracking-widest">
         <span>Filtered: {filteredFighters.length} / {fighters.length} ATHLETES</span>
       </div>
     </div>
