@@ -767,7 +767,7 @@ export default function App() {
             </div>
           </div>
           <div className="text-[10px] text-white/60 tracking-wider font-mono text-center md:text-right">
-            StandardMMA DATA FEEDS • v4.0.6
+            StandardMMA DATA FEEDS • v4.0.8
           </div>
         </div>
       </footer>
